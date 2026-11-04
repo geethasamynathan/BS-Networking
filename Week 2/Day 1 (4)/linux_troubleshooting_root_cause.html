@@ -1,0 +1,929 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ubuntu Linux Troubleshooting – Complete Hands-on Tutorial</title><style>
+:root{--navy:#142d4e;--blue:#2563a6;--teal:#13877f;--bg:#f3f7fb;--text:#25374e}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Segoe UI,Arial,sans-serif;line-height:1.7}header{background:linear-gradient(120deg,#122e52,#176f90);color:white;padding:45px max(28px,calc((100% - 1100px)/2))}header h1{font-size:32px;margin:0 0 8px}header p{opacity:.93;margin:0}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:1400px;margin:auto;gap:25px;padding:24px}.toc{background:white;border:1px solid #dbe5ec;border-radius:12px;padding:17px;position:sticky;top:16px;height:calc(100vh - 35px);overflow:auto}.toc h3{margin:0 0 12px;color:var(--navy)}.toc a{display:block;font-size:12px;text-decoration:none;color:#315d82;border-bottom:1px solid #edf1f5;padding:5px 0}.toc a:hover{color:#079083}main{background:white;border-radius:14px;padding:35px 44px;box-shadow:0 6px 24px #163a5a0d;min-width:0}h1{color:#153c61;font-size:31px}h2{font-size:23px;color:#176b91;border-bottom:2px solid #e0eef3;padding-bottom:7px;margin-top:45px}main>h1:not(:first-child){background:#e8f2fa;border-left:5px solid #2182b0;padding:14px;border-radius:5px;font-size:25px;margin-top:52px}h3{color:#125c76}p{margin:12px 0}table{border-collapse:collapse;width:100%;font-size:13.5px;margin:20px 0;display:block;overflow-x:auto}th,td{padding:10px 12px;border:1px solid #d8e4ec;text-align:left;vertical-align:top}th{background:#ddecf7;color:#153d63}tr:nth-child(even){background:#f8fbfd}pre{background:#13283d;color:#edf5ff;padding:18px 20px;overflow:auto;border-radius:9px;line-height:1.55;font-size:13px;margin:18px 0;white-space:pre}code{font-family:Consolas,'Courier New',monospace}p code,td code,li code{background:#eaf2f8;color:#095c89;padding:2px 5px;border-radius:4px}strong{color:#144b72}.diagram{border:1px solid #b9d8e6;background:#f6fbff;border-radius:12px;margin:20px 0;padding:18px;text-align:center}.diagram strong{display:block;font-size:17px;margin-bottom:13px}.steps{display:flex;flex-direction:column;gap:9px;align-items:center}.steps div{border:1px solid #a4cee3;background:#e0f1fa;border-radius:8px;padding:9px 18px;max-width:340px;width:100%;font-weight:600}.steps div:not(:last-child):after{content:'↓';display:block;height:0;position:relative;top:6px;font-size:17px;color:#2681a9}.steps small,.horizontal small{font-weight:normal;color:#436983}.horizontal{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap}.horizontal>div{background:#dceeff;border:1px solid #91bfdc;border-radius:8px;padding:12px;flex:1;min-width:105px;font-weight:bold}.horizontal span{font-size:22px;color:#66889d}.horizontal .green{background:#e1f4e5}.horizontal .amber{background:#fff0d2}.horizontal big{font-size:22px}li{margin:5px 0}input[type=checkbox]{accent-color:#1d88a3}a{color:#086b95}@media(max-width:850px){.layout{display:block;padding:10px}.toc{position:static;height:auto;margin-bottom:12px;max-height:220px}main{padding:20px}header{padding:26px}pre{font-size:12px}}@media print{.toc,.printbtn{display:none!important}.layout{display:block}main{box-shadow:none;padding:0}h2{break-after:avoid}pre,table,.diagram{break-inside:avoid}body{background:white}header{color:#122a44;background:none;padding:0 0 20px}}
+</style></head><body><header><h1>Ubuntu Linux Troubleshooting</h1><p>Connectivity · Services · Permissions · Disk · Processes · DNS · Root Cause Analysis</p><p>38 sections · 6 real-world incidents · commands, outputs, diagrams and practical labs</p><button class="printbtn" onclick="window.print()" style="margin-top:15px;padding:9px 15px;border:0;border-radius:7px;background:white;color:#135878;cursor:pointer">Print / Save as PDF</button></header><div class="layout"><nav class="toc"><h3>Contents</h3><a href="#s1">1. The real-world story: A day in Linux production support</a><a href="#s2">2. How professional troubleshooting works</a><a href="#s3">3. Lab environment and directory structure</a><a href="#s4">4. Incident INC-101: Employee application cannot be reached</a><a href="#s5">5. Build the sample troubleshooting application</a><a href="#s6">6. Reproduce the connectivity failure</a><a href="#s7">7. Identify, fix and verify</a><a href="#s8">8. Incident INC-102: Employee API service fails to start</a><a href="#s9">9. Create the systemd service</a><a href="#s10">10. Intentionally break the service</a><a href="#s11">11. Restore and verify</a><a href="#s12">12. Incident INC-103: Permission denied when saving a report</a><a href="#s13">13. Understand Linux permissions</a><a href="#s14">14. Reproduce permission denied</a><a href="#s15">15. Collect permission evidence</a><a href="#s16">16. Apply the correct fix</a><a href="#s17">17. Incident INC-104: Payroll job fails with “No space left on device”</a><a href="#s18">18. Essential disk investigation commands</a><a href="#s19">19. Safe disk-full simulation</a><a href="#s20">20. Other disk failure cases</a><a href="#s21">21. Incident INC-105: Application becomes slow</a><a href="#s22">22. Understand the process lifecycle</a><a href="#s23">23. Create a CPU-intensive process</a><a href="#s24">24. Simulate a background worker</a><a href="#s25">25. Incident INC-106: Employee API hostname cannot be resolved</a><a href="#s26">26. Reproduce a DNS failure</a><a href="#s27">27. Fix name resolution using a local hosts entry</a><a href="#s28">28. DNS problem reference</a><a href="#s29">29. What is Root Cause Analysis (RCA)?</a><a href="#s30">30. Understand the Five Whys technique</a><a href="#s31">31. Create a reusable RCA document</a><a href="#s32">32. Example completed incident report</a><a href="#s33">33. Create an evidence collection script</a><a href="#s34">34. Quick diagnostic command reference</a><a href="#s35">35. Six-incident comparison</a><a href="#s36">36. Final hands-on assessment</a><a href="#s37">37. Lab cleanup</a><a href="#s38">38. Key concepts to remember</a></nav><main><h1>Ubuntu Linux Troubleshooting – Complete Hands-on Tutorial</h1>
+<p><strong>Continuation of Connectivity, System Logs &amp; Evidence-Based Diagnosis | Ubuntu / WSL | Industry Scenarios | Commands, Outputs, Root Cause Analysis</strong></p>
+<h2 id="s1">1. The real-world story: A day in Linux production support</h2>
+<p>We continue with <strong>TechNova Solutions</strong>. Your Linux environment contains an Employee API, service configuration, log files and test data. Six incidents are reported. Our goal is to <strong>create each failure safely, collect evidence, fix it, and document its root cause</strong>.</p>
+<table>
+<thead>
+<tr>
+  <th>Incident</th>
+  <th>Problem</th>
+  <th>Reported symptom</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>INC-101</td>
+  <td>Connectivity failure</td>
+  <td>Employee application is unreachable</td>
+</tr>
+<tr>
+  <td>INC-102</td>
+  <td>Service failure</td>
+  <td>Employee API fails to start</td>
+</tr>
+<tr>
+  <td>INC-103</td>
+  <td>Permission denied</td>
+  <td>Application cannot save employee reports</td>
+</tr>
+<tr>
+  <td>INC-104</td>
+  <td>Disk space issue</td>
+  <td>Payroll processing fails when writing files</td>
+</tr>
+<tr>
+  <td>INC-105</td>
+  <td>Process issue</td>
+  <td>Application becomes slow or unresponsive</td>
+</tr>
+<tr>
+  <td>INC-106</td>
+  <td>DNS failure</td>
+  <td>Application cannot resolve an internal hostname</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s2">2. How professional troubleshooting works</h2>
+<p>&lt;div class=&quot;diagram&quot;&gt;&lt;strong&gt;Seven-stage incident investigation workflow&lt;/strong&gt;&lt;div class=&quot;steps&quot;&gt;&lt;div&gt;1. Reported symptom&lt;br&gt;&lt;small&gt;What is failing?&lt;/small&gt;&lt;/div&gt;&lt;div&gt;2. Reproduce the problem&lt;br&gt;&lt;small&gt;Can we observe the failure?&lt;/small&gt;&lt;/div&gt;&lt;div&gt;3. Collect evidence&lt;br&gt;&lt;small&gt;Commands, logs, exit codes, timestamps&lt;/small&gt;&lt;/div&gt;&lt;div&gt;4. Form a hypothesis&lt;br&gt;&lt;small&gt;What could explain the observations?&lt;/small&gt;&lt;/div&gt;&lt;div&gt;5. Test the hypothesis&lt;br&gt;&lt;small&gt;Isolate the suspected cause&lt;/small&gt;&lt;/div&gt;&lt;div&gt;6. Apply fix and verify&lt;br&gt;&lt;small&gt;Confirm normal operation&lt;/small&gt;&lt;/div&gt;&lt;div&gt;7. Document root cause&lt;br&gt;&lt;small&gt;Record cause, action and prevention&lt;/small&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p>Do not confuse symptoms with causes. “Connection refused” might mean a stopped application, wrong port, missing listener, or an active network rejection.</p>
+<h1>Part 1 – Prepare the Troubleshooting Lab</h1>
+<h2 id="s3">3. Lab environment and directory structure</h2>
+<pre><code class="language-text">~/Linuxtraining/
+└── troubleshooting-lab/
+    ├── app/
+    ├── config/
+    ├── data/
+    ├── logs/
+    ├── reports/
+    ├── scripts/
+    └── evidence/
+</code></pre>
+<p><strong>Step 1 – Verify Ubuntu</strong></p>
+<pre><code class="language-bash">whoami
+pwd
+cat /etc/os-release
+</code></pre>
+<p><strong>Step 2 – Create directories</strong></p>
+<pre><code class="language-bash">mkdir -p ~/Linuxtraining/troubleshooting-lab/{app,config,data,logs,reports,scripts,evidence}
+cd ~/Linuxtraining/troubleshooting-lab
+ls -l
+</code></pre>
+<p><strong>Step 3 – Install tools</strong></p>
+<pre><code class="language-bash">sudo apt update
+sudo apt install -y \
+  curl iproute2 iputils-ping dnsutils \
+  netcat-openbsd lsof procps psmisc traceroute \
+  python3 openssh-client util-linux
+</code></pre>
+<p><strong>Step 4 – Check systemd</strong></p>
+<pre><code class="language-bash">ps -p 1 -o comm=
+</code></pre>
+<p>If <code>systemd</code> is displayed, systemd service labs can run. If not, use the process-based labs or enable WSL systemd using the setup in the preceding tutorial.</p>
+<p><strong>Step 5 – Store lab location</strong></p>
+<pre><code class="language-bash">export LAB=&quot;$HOME/Linuxtraining/troubleshooting-lab&quot;
+cd &quot;$LAB&quot;
+</code></pre>
+<h1>Part 2 – Resolving Connectivity Issues</h1>
+<h2 id="s4">4. Incident INC-101: Employee application cannot be reached</h2>
+<p>The API should respond at <code>http://127.0.0.1:8090/health</code>, but employees report a connection error. Build an actual local application to use in later labs.</p>
+<h2 id="s5">5. Build the sample troubleshooting application</h2>
+<p><strong>Step 1 – Create app:</strong></p>
+<pre><code class="language-bash">nano &quot;$LAB/app/server.py&quot;
+</code></pre>
+<p>Paste:</p>
+<pre><code class="language-python">from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
+from datetime import datetime, timezone
+import json
+import os
+
+BASE = Path(__file__).resolve().parent.parent
+REPORT_DIR = Path(
+    os.environ.get(&quot;REPORT_DIR&quot;, str(BASE / &quot;reports&quot;))
+)
+
+class Handler(BaseHTTPRequestHandler):
+
+    def send_json(self, status, data):
+        body = json.dumps(data).encode(&quot;utf-8&quot;)
+        self.send_response(status)
+        self.send_header(&quot;Content-Type&quot;, &quot;application/json&quot;)
+        self.send_header(&quot;Content-Length&quot;, str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        if self.path == &quot;/health&quot;:
+            self.send_json(200, {
+                &quot;status&quot;: &quot;healthy&quot;,
+                &quot;time&quot;: datetime.now(timezone.utc).isoformat()
+            })
+
+        elif self.path == &quot;/report&quot;:
+            try:
+                REPORT_DIR.mkdir(parents=True, exist_ok=True)
+                path = REPORT_DIR / &quot;employees.txt&quot;
+                path.write_text(&quot;101,Geetha,Training\n102,Ravi,IT\n&quot;)
+                self.send_json(200, {&quot;result&quot;: &quot;report saved&quot;})
+            except OSError as error:
+                print(f&quot;REPORT_ERROR: {error}&quot;, flush=True)
+                self.send_json(500, {
+                    &quot;error&quot;: &quot;Report could not be saved&quot;
+                })
+
+        else:
+            self.send_json(404, {&quot;error&quot;: &quot;not found&quot;})
+
+    def log_message(self, fmt, *args):
+        print(
+            f&quot;{datetime.now(timezone.utc).isoformat()} &quot;
+            f&quot;{self.client_address[0]} {fmt % args}&quot;,
+            flush=True
+        )
+
+HTTPServer((&quot;127.0.0.1&quot;, 8090), Handler).serve_forever()
+</code></pre>
+<p>Endpoints:</p>
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/health</code></td>
+  <td>Returns application health</td>
+</tr>
+<tr>
+  <td><code>/report</code></td>
+  <td>Creates employee report</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 2 – Start in terminal 1</strong></p>
+<pre><code class="language-bash">cd &quot;$LAB&quot;
+python3 app/server.py
+</code></pre>
+<p><strong>Step 3 – In terminal 2</strong></p>
+<pre><code class="language-bash">export LAB=&quot;$HOME/Linuxtraining/troubleshooting-lab&quot;
+</code></pre>
+<p><strong>Step 4 – Test</strong></p>
+<pre><code class="language-bash">curl -i http://127.0.0.1:8090/health
+</code></pre>
+<p>Expected: <code>HTTP/1.0 200 OK</code> and JSON containing <code>&quot;status&quot;:&quot;healthy&quot;</code>.</p>
+<h2 id="s6">6. Reproduce the connectivity failure</h2>
+<p>Stop application in terminal 1 with <strong>Ctrl+C</strong>. Diagnose in terminal 2:</p>
+<pre><code class="language-bash">curl -v --connect-timeout 3 http://127.0.0.1:8090/health
+</code></pre>
+<p>Expected: <code>Failed to connect to 127.0.0.1 port 8090</code>.</p>
+<p><strong>Diagnosis 1 – IP / loopback</strong></p>
+<pre><code class="language-bash">ip -br addr
+ip addr show lo
+</code></pre>
+<p><strong>Diagnosis 2 – Port listener</strong></p>
+<pre><code class="language-bash">ss -ltnp '( sport = :8090 )'
+</code></pre>
+<p>No output indicates no matching listener.</p>
+<p><strong>Diagnosis 3 – Process</strong></p>
+<pre><code class="language-bash">pgrep -af 'python3 app/server.py'
+</code></pre>
+<p><strong>Diagnosis 4 – TCP</strong></p>
+<pre><code class="language-bash">nc -vz -w 3 127.0.0.1 8090
+</code></pre>
+<p>Expected: Connection refused.</p>
+<h2 id="s7">7. Identify, fix and verify</h2>
+<table>
+<thead>
+<tr>
+  <th>Evidence</th>
+  <th>Result</th>
+  <th>Conclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>ip addr</code></td>
+  <td>Loopback available</td>
+  <td>Local IP interface exists</td>
+</tr>
+<tr>
+  <td><code>ss</code></td>
+  <td>No port 8090 listener</td>
+  <td>No accepting application socket</td>
+</tr>
+<tr>
+  <td><code>pgrep</code></td>
+  <td>No application process</td>
+  <td>Application stopped</td>
+</tr>
+<tr>
+  <td><code>curl</code></td>
+  <td>Connection refused</td>
+  <td>HTTP request cannot connect</td>
+</tr>
+</tbody>
+</table>
+<p>Restart in terminal 1:</p>
+<pre><code class="language-bash">cd &quot;$LAB&quot;
+python3 app/server.py
+</code></pre>
+<p>Verify from terminal 2:</p>
+<pre><code class="language-bash">curl -i http://127.0.0.1:8090/health
+</code></pre>
+<p><strong>Confirmed root cause:</strong> Application process stopped; no listener on port 8090.</p>
+<table>
+<thead>
+<tr>
+  <th>Symptom</th>
+  <th>Next investigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Connection refused</td>
+  <td>Listener, port, rejection</td>
+</tr>
+<tr>
+  <td>Connection timed out</td>
+  <td>Routing, firewall, destination, loss</td>
+</tr>
+<tr>
+  <td>No route to host</td>
+  <td>Routing and path</td>
+</tr>
+<tr>
+  <td>Name not resolved</td>
+  <td>DNS / hosts</td>
+</tr>
+<tr>
+  <td>TCP succeeds, HTTP 500</td>
+  <td>Application</td>
+</tr>
+<tr>
+  <td>HTTP 502</td>
+  <td>Proxy/backend</td>
+</tr>
+<tr>
+  <td>TLS certificate error</td>
+  <td>Certificate, name, trust</td>
+</tr>
+</tbody>
+</table>
+<h1>Part 3 – Resolving Service Issues</h1>
+<h2 id="s8">8. Incident INC-102: Employee API service fails to start</h2>
+<p>The application works manually but fails after deployment as a service.</p>
+<p>&lt;div class=&quot;diagram&quot;&gt;&lt;strong&gt;Service lifecycle&lt;/strong&gt;&lt;div class=&quot;horizontal&quot;&gt;&lt;div&gt;systemd&lt;br&gt;&lt;small&gt;Service manager&lt;/small&gt;&lt;/div&gt;&lt;span&gt;→&lt;/span&gt;&lt;div&gt;Python&lt;br&gt;&lt;small&gt;Application process&lt;/small&gt;&lt;/div&gt;&lt;span&gt;→&lt;/span&gt;&lt;div&gt;8090&lt;br&gt;&lt;small&gt;Listening port&lt;/small&gt;&lt;/div&gt;&lt;/div&gt;&lt;p&gt;If Python cannot execute or exits, systemd reports a failure and the port can become unavailable.&lt;/p&gt;&lt;/div&gt;</p>
+<h2 id="s9">9. Create the systemd service</h2>
+<p>Stop the manually running Python app first (Ctrl+C).</p>
+<pre><code class="language-bash">export LAB=&quot;$HOME/Linuxtraining/troubleshooting-lab&quot;
+LABUSER=&quot;$(id -un)&quot;
+
+sudo tee /etc/systemd/system/technova-api.service &gt; /dev/null &lt;&lt;EOF
+[Unit]
+Description=TechNova Troubleshooting API
+After=network.target
+
+[Service]
+Type=simple
+User=$LABUSER
+WorkingDirectory=$LAB
+ExecStart=/usr/bin/python3 $LAB/app/server.py
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
+EOF
+</code></pre>
+<p>Register/start:</p>
+<pre><code class="language-bash">sudo systemctl daemon-reload
+sudo systemctl start technova-api
+systemctl status technova-api --no-pager
+curl http://127.0.0.1:8090/health
+</code></pre>
+<p>Expected: <code>Active: active (running)</code> and healthy HTTP response.</p>
+<h2 id="s10">10. Intentionally break the service</h2>
+<p><strong>Backup:</strong></p>
+<pre><code class="language-bash">sudo cp /etc/systemd/system/technova-api.service \
+  /etc/systemd/system/technova-api.service.bak
+</code></pre>
+<p><strong>Introduce wrong Python path:</strong></p>
+<pre><code class="language-bash">sudo sed -i \
+  's#/usr/bin/python3#/usr/bin/python3-missing#' \
+  /etc/systemd/system/technova-api.service
+</code></pre>
+<p><strong>Restart and inspect:</strong></p>
+<pre><code class="language-bash">sudo systemctl daemon-reload
+sudo systemctl restart technova-api
+systemctl status technova-api --no-pager
+sudo journalctl -u technova-api -n 30 --no-pager
+systemctl cat technova-api
+ls -l /usr/bin/python3
+ls -l /usr/bin/python3-missing
+</code></pre>
+<p>Expected: <code>Active: failed</code>, often <code>status=203/EXEC</code>, and messages such as <code>Failed at step EXEC</code>.</p>
+<h2 id="s11">11. Restore and verify</h2>
+<pre><code class="language-bash">sudo cp /etc/systemd/system/technova-api.service.bak \
+  /etc/systemd/system/technova-api.service
+sudo systemctl daemon-reload
+sudo systemctl reset-failed technova-api
+sudo systemctl restart technova-api
+systemctl is-active technova-api
+curl -i http://127.0.0.1:8090/health
+</code></pre>
+<p>Root cause: nonexistent executable in <code>ExecStart</code>. Prevent with configuration and executable-path validation.</p>
+<pre><code class="language-bash">sudo systemd-analyze verify /etc/systemd/system/technova-api.service
+systemctl show technova-api -p ExecStart -p User -p WorkingDirectory
+systemctl --failed
+</code></pre>
+<h1>Part 4 – Resolving Permission Issues</h1>
+<h2 id="s12">12. Incident INC-103: Permission denied when saving a report</h2>
+<p>The API health endpoint works, but <code>/report</code> fails because its process cannot write to the report directory. A running process does not guarantee it can access every directory.</p>
+<h2 id="s13">13. Understand Linux permissions</h2>
+<p>&lt;div class=&quot;diagram&quot;&gt;&lt;strong&gt;Permission model: -rwxr-xr-- (754)&lt;/strong&gt;&lt;div class=&quot;horizontal&quot;&gt;&lt;div class=&quot;blue&quot;&gt;Owner&lt;br&gt;&lt;big&gt;rwx&lt;/big&gt;&lt;br&gt;&lt;small&gt;Read, write, execute&lt;/small&gt;&lt;/div&gt;&lt;div class=&quot;green&quot;&gt;Group&lt;br&gt;&lt;big&gt;r-x&lt;/big&gt;&lt;br&gt;&lt;small&gt;Read and execute&lt;/small&gt;&lt;/div&gt;&lt;div class=&quot;amber&quot;&gt;Others&lt;br&gt;&lt;big&gt;r--&lt;/big&gt;&lt;br&gt;&lt;small&gt;Read only&lt;/small&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<table>
+<thead>
+<tr>
+  <th>Permission</th>
+  <th>File meaning</th>
+  <th>Directory meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>r</code> (4)</td>
+  <td>Read contents</td>
+  <td>List entries</td>
+</tr>
+<tr>
+  <td><code>w</code> (2)</td>
+  <td>Modify contents</td>
+  <td>Create/delete/rename entries (also needs x)</td>
+</tr>
+<tr>
+  <td><code>x</code> (1)</td>
+  <td>Execute</td>
+  <td>Traverse directory</td>
+</tr>
+</tbody>
+</table>
+<p>Examples: <code>644 = rw-r--r--</code>, <code>640 = rw-r-----</code>, <code>755 = rwxr-xr-x</code>, <code>750 = rwxr-x---</code>, <code>700 = rwx------</code>.</p>
+<h2 id="s14">14. Reproduce permission denied</h2>
+<pre><code class="language-bash">systemctl is-active technova-api
+curl -i http://127.0.0.1:8090/report
+cat &quot;$LAB/reports/employees.txt&quot;
+</code></pre>
+<p>Now remove owner write permission:</p>
+<pre><code class="language-bash">chmod 555 &quot;$LAB/reports&quot;
+</code></pre>
+<p>Temporarily restore owner write, delete test report, then disable write again so the next request must create it:</p>
+<pre><code class="language-bash">chmod 755 &quot;$LAB/reports&quot;
+rm -f &quot;$LAB/reports/employees.txt&quot;
+chmod 555 &quot;$LAB/reports&quot;
+curl -i http://127.0.0.1:8090/report
+</code></pre>
+<p>Expected: <code>HTTP/1.0 500 Internal Server Error</code>.</p>
+<h2 id="s15">15. Collect permission evidence</h2>
+<pre><code class="language-bash">ls -ld &quot;$LAB/reports&quot;
+stat -c '%U %G %A %a %n' &quot;$LAB/reports&quot;
+namei -l &quot;$LAB/reports&quot;
+systemctl show technova-api -p User
+sudo journalctl -u technova-api -n 30 --no-pager
+</code></pre>
+<p>Expected directory mode: <code>dr-xr-xr-x</code>, and a <code>REPORT_ERROR</code> with permission denied.</p>
+<h2 id="s16">16. Apply the correct fix</h2>
+<pre><code class="language-bash">chmod 755 &quot;$LAB/reports&quot;
+curl -i http://127.0.0.1:8090/report
+cat &quot;$LAB/reports/employees.txt&quot;
+</code></pre>
+<p>Expected: HTTP 200 and report content.</p>
+<p>Industry investigations:</p>
+<pre><code class="language-bash">ls -ld /path/to/directory
+id serviceuser
+namei -l /path/to/directory
+getfacl /path/to/directory
+</code></pre>
+<p>Install <code>acl</code> if <code>getfacl</code> is missing. Authorized production examples (placeholder users/groups):</p>
+<pre><code class="language-bash">sudo chown serviceuser:appgroup /path/to/directory
+sudo chmod 750 /path/to/directory
+</code></pre>
+<p><strong>Never use <code>chmod 777</code> as a quick fix</strong>. Root cause: directory lacked write permission for the service account. Prevention: deployment ownership/permissions validation and least privilege.</p>
+<h1>Part 5 – Resolving Disk Issues</h1>
+<h2 id="s17">17. Incident INC-104: Payroll job fails with “No space left on device”</h2>
+<p>A payroll job cannot save files. Possibilities include disk blocks, inode exhaustion, quotas, mount restrictions and permissions.</p>
+<p>&lt;div class=&quot;diagram&quot;&gt;&lt;strong&gt;Disk diagnostic decision tree&lt;/strong&gt;&lt;div class=&quot;steps&quot;&gt;&lt;div&gt;File write fails&lt;/div&gt;&lt;div&gt;Check blocks: df -h&lt;/div&gt;&lt;div&gt;Check inodes: df -i&lt;/div&gt;&lt;div&gt;Check mounts, quotas, permissions, read-only state&lt;/div&gt;&lt;div&gt;Locate usage: du / find / lsof&lt;/div&gt;&lt;div&gt;Apply safe corrective action&lt;/div&gt;&lt;div&gt;Retest and review logs&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<h2 id="s18">18. Essential disk investigation commands</h2>
+<pre><code class="language-bash">df -h
+df -i
+findmnt
+lsblk -f
+du -sh &quot;$LAB&quot;/*
+find &quot;$LAB&quot; -type f -size +10M -ls
+du -h --max-depth=1 &quot;$LAB&quot; | sort -hr
+sudo journalctl -k -p warning -n 50
+</code></pre>
+<h2 id="s19">19. Safe disk-full simulation</h2>
+<p><strong>Important:</strong> Do not fill the root disk. Instead, simulate a <em>file-size-limit failure</em> (not a full filesystem). It typically yields “File size limit exceeded” or “File too large,” rather than ENOSPC.</p>
+<p>Create script:</p>
+<pre><code class="language-bash">nano &quot;$LAB/scripts/disk-write-test.sh&quot;
+</code></pre>
+<pre><code class="language-bash">#!/bin/bash
+cd &quot;$HOME/Linuxtraining/troubleshooting-lab&quot; || exit 1
+ulimit -f 1024
+echo &quot;Starting file-write test&quot;
+dd if=/dev/zero of=data/large-test.bin \
+   bs=1024 count=4096 status=progress
+echo &quot;Write command exit status: $?&quot;
+</code></pre>
+<p>Run and inspect:</p>
+<pre><code class="language-bash">chmod +x &quot;$LAB/scripts/disk-write-test.sh&quot;
+bash &quot;$LAB/scripts/disk-write-test.sh&quot;
+ls -lh &quot;$LAB/data/large-test.bin&quot;
+df -h &quot;$LAB/data&quot;
+ulimit -f
+rm -f &quot;$LAB/data/large-test.bin&quot;
+</code></pre>
+<p>This confirms a per-process file-size limit, not necessarily a full disk. <strong>Root cause must match the observed error.</strong></p>
+<h2 id="s20">20. Other disk failure cases</h2>
+<p><strong>A – Blocks exhausted</strong></p>
+<pre><code class="language-bash">df -h /var
+sudo du -xhd1 /var | sort -hr
+</code></pre>
+<p><strong>B – Inodes exhausted</strong></p>
+<pre><code class="language-bash">df -i
+</code></pre>
+<p>Free bytes can coexist with no free inodes.</p>
+<p><strong>C – Deleted file still occupies space</strong></p>
+<pre><code class="language-bash">sudo lsof +L1
+</code></pre>
+<p>A running process may still hold the deleted file open. Restart only after evaluating impact.</p>
+<p><strong>D – Read-only filesystem</strong></p>
+<pre><code class="language-bash">findmnt -no SOURCE,TARGET,FSTYPE,OPTIONS /
+</code></pre>
+<p>Investigate unexpected read-only state and kernel errors rather than blindly remounting. For the exercise, root cause is imposed file-size limit; real disk RCA requires filesystem and file-growth evidence.</p>
+<h1>Part 6 – Resolving Process Issues</h1>
+<h2 id="s21">21. Incident INC-105: Application becomes slow</h2>
+<p>The infrastructure team suspects CPU consumption. Reproduce with a controlled workload.</p>
+<h2 id="s22">22. Understand the process lifecycle</h2>
+<p>&lt;div class=&quot;diagram&quot;&gt;&lt;strong&gt;Simplified process lifecycle&lt;/strong&gt;&lt;div class=&quot;horizontal&quot;&gt;&lt;div&gt;Created&lt;/div&gt;&lt;span&gt;→&lt;/span&gt;&lt;div&gt;Runnable&lt;/div&gt;&lt;span&gt;→&lt;/span&gt;&lt;div&gt;Running&lt;/div&gt;&lt;span&gt;↔&lt;/span&gt;&lt;div&gt;Sleeping&lt;/div&gt;&lt;span&gt;→&lt;/span&gt;&lt;div&gt;Exited&lt;/div&gt;&lt;/div&gt;&lt;p&gt;After exit, the parent collects the exit status. Actual Linux process state transitions are more complex.&lt;/p&gt;&lt;/div&gt;</p>
+<table>
+<thead>
+<tr>
+  <th>State</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>R</code></td>
+  <td>Running / runnable</td>
+</tr>
+<tr>
+  <td><code>S</code></td>
+  <td>Interruptible sleep</td>
+</tr>
+<tr>
+  <td><code>D</code></td>
+  <td>Uninterruptible sleep</td>
+</tr>
+<tr>
+  <td><code>T</code></td>
+  <td>Stopped / traced</td>
+</tr>
+<tr>
+  <td><code>Z</code></td>
+  <td>Zombie</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s23">23. Create a CPU-intensive process</h2>
+<pre><code class="language-bash">yes &gt; /dev/null &amp;
+CPU_PID=$!
+echo &quot;$CPU_PID&quot;
+ps -p &quot;$CPU_PID&quot; -o pid,ppid,stat,%cpu,%mem,etime,cmd
+top -p &quot;$CPU_PID&quot;
+</code></pre>
+<p>Press <code>q</code> to exit top.</p>
+<pre><code class="language-bash">ps aux --sort=-%cpu | head -n 10
+pstree -p &quot;$CPU_PID&quot;
+kill &quot;$CPU_PID&quot;
+ps -p &quot;$CPU_PID&quot;
+wait &quot;$CPU_PID&quot; 2&gt;/dev/null
+</code></pre>
+<p>A short-lived zombie entry is possible until reaped.</p>
+<h2 id="s24">24. Simulate a background worker</h2>
+<pre><code class="language-bash">nano &quot;$LAB/scripts/background-worker.sh&quot;
+</code></pre>
+<pre><code class="language-bash">#!/bin/bash
+while true
+do
+    echo &quot;$(date -Is) Worker heartbeat&quot;
+    sleep 5
+done
+</code></pre>
+<p>Run and monitor:</p>
+<pre><code class="language-bash">chmod +x &quot;$LAB/scripts/background-worker.sh&quot;
+nohup &quot;$LAB/scripts/background-worker.sh&quot; \
+  &gt; &quot;$LAB/logs/worker.log&quot; 2&gt;&amp;1 &amp;
+WORKER_PID=$!
+echo &quot;$WORKER_PID&quot;
+tail -f &quot;$LAB/logs/worker.log&quot;
+</code></pre>
+<p>Press Ctrl+C to exit tail. Then:</p>
+<pre><code class="language-bash">ps -p &quot;$WORKER_PID&quot; -o pid,stat,etime,cmd
+kill &quot;$WORKER_PID&quot;
+pgrep -af python3
+pstree -ap
+</code></pre>
+<p>Additional diagnostics (replace <code>PID</code> with actual PID):</p>
+<pre><code class="language-bash">sudo lsof -p PID
+cat /proc/PID/limits
+cat /proc/PID/status
+ps aux --sort=-%mem | head -n 10
+sudo journalctl -k | grep -Ei 'out of memory|oom|killed process'
+</code></pre>
+<p>Root cause in controlled CPU lab: <code>yes</code> produced continuous output redirected to <code>/dev/null</code>. In production, correlate CPU with request volume, expected load, changes and latency before concluding a fault.</p>
+<h1>Part 7 – Resolving DNS Issues</h1>
+<h2 id="s25">25. Incident INC-106: Employee API hostname cannot be resolved</h2>
+<p>Application works by IP, but <code>employeeapp.lab.test</code> fails.</p>
+<p>&lt;div class=&quot;diagram&quot;&gt;&lt;strong&gt;Name resolution flow&lt;/strong&gt;&lt;div class=&quot;horizontal&quot;&gt;&lt;div&gt;Client&lt;br&gt;&lt;small&gt;curl hostname&lt;/small&gt;&lt;/div&gt;&lt;span&gt;→&lt;/span&gt;&lt;div&gt;Resolver&lt;br&gt;&lt;small&gt;Hosts / DNS&lt;/small&gt;&lt;/div&gt;&lt;span&gt;→&lt;/span&gt;&lt;div&gt;127.0.0.1&lt;br&gt;&lt;small&gt;IP address&lt;/small&gt;&lt;/div&gt;&lt;span&gt;→&lt;/span&gt;&lt;div&gt;Employee API&lt;br&gt;&lt;small&gt;8090&lt;/small&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<h2 id="s26">26. Reproduce a DNS failure</h2>
+<pre><code class="language-bash">sudo systemctl start technova-api
+curl -i http://127.0.0.1:8090/health
+curl --noproxy '*' -v \
+  http://employeeapp.lab.test:8090/health
+getent ahostsv4 employeeapp.lab.test
+dig employeeapp.lab.test
+cat /etc/hosts
+cat /etc/resolv.conf
+resolvectl status
+</code></pre>
+<p>If no DNS or local hosts record exists, name resolution fails. <code>dig</code> may show <code>NXDOMAIN</code>. Do not overwrite managed <code>/etc/resolv.conf</code> blindly.</p>
+<h2 id="s27">27. Fix name resolution using a local hosts entry</h2>
+<pre><code class="language-bash">sudo cp /etc/hosts /etc/hosts.technova.bak
+echo &quot;127.0.0.1 employeeapp.lab.test&quot; | \
+sudo tee -a /etc/hosts
+getent ahostsv4 employeeapp.lab.test
+curl --noproxy '*' -i \
+  http://employeeapp.lab.test:8090/health
+</code></pre>
+<p>Expected: <code>getent</code> resolves 127.0.0.1, <code>curl</code> returns HTTP 200.</p>
+<p><strong>Important difference:</strong> <code>getent</code> uses system name-service sources including <code>/etc/hosts</code>; <code>dig</code> normally queries DNS directly. Thus <code>getent</code> may succeed while <code>dig</code> still finds no DNS record.</p>
+<p>Clean up only the line created:</p>
+<pre><code class="language-bash">sudo sed -i \
+  '/^127\.0\.0\.1 employeeapp\.lab\.test$/d' \
+  /etc/hosts
+grep employeeapp.lab.test /etc/hosts
+</code></pre>
+<h2 id="s28">28. DNS problem reference</h2>
+<table>
+<thead>
+<tr>
+  <th>Symptom</th>
+  <th>Diagnostic command</th>
+  <th>Possible cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Hostname not resolving</td>
+  <td><code>getent hosts HOST</code></td>
+  <td>Invalid / absent name</td>
+</tr>
+<tr>
+  <td>DNS query fails</td>
+  <td><code>dig HOST</code></td>
+  <td>DNS service / record</td>
+</tr>
+<tr>
+  <td>DNS server unreachable</td>
+  <td><code>dig @DNS_SERVER HOST</code></td>
+  <td>Resolver connectivity</td>
+</tr>
+<tr>
+  <td>Wrong IP</td>
+  <td><code>dig +short HOST</code></td>
+  <td>Incorrect / outdated record</td>
+</tr>
+<tr>
+  <td>Resolver issue</td>
+  <td><code>resolvectl status</code></td>
+  <td>Resolver configuration</td>
+</tr>
+<tr>
+  <td>Different tool results</td>
+  <td><code>getent</code> vs <code>dig</code></td>
+  <td>NSS / hosts / DNS</td>
+</tr>
+<tr>
+  <td>DNS succeeds, application fails</td>
+  <td><code>curl -v URL</code></td>
+  <td>TCP, service, HTTP, TLS</td>
+</tr>
+</tbody>
+</table>
+<p>Use approved company DNS configuration, rather than arbitrary public resolvers.</p>
+<h1>Part 8 – Root Cause Analysis and Documentation</h1>
+<h2 id="s29">29. What is Root Cause Analysis (RCA)?</h2>
+<p>RCA determines the underlying reason for an incident, beyond the symptom. It should explain: What happened? When? What was affected? What evidence was collected? What caused it? How was it resolved? How will recurrence be prevented?</p>
+<h2 id="s30">30. Understand the Five Whys technique</h2>
+<table>
+<thead>
+<tr>
+  <th>Why</th>
+  <th>Question</th>
+  <th>Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>Why can't employees access API?</td>
+  <td>The service is not running.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Why isn't it running?</td>
+  <td>The process failed to start.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Why did it fail?</td>
+  <td>systemd could not execute the command.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Why couldn't it execute?</td>
+  <td>ExecStart points to a nonexistent executable.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Why was it deployed?</td>
+  <td>The lab deployment lacked path validation.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Technical root cause:</strong> Invalid executable path. <strong>Process improvement:</strong> Validate unit files and executable paths pre-deployment. Confirm Whys with real evidence.</p>
+<h2 id="s31">31. Create a reusable RCA document</h2>
+<pre><code class="language-text">INCIDENT ROOT CAUSE ANALYSIS
+
+Incident ID:
+Incident title:
+Date and time:
+Affected service:
+Reported by:
+Severity:
+Status:
+
+1. BUSINESS IMPACT
+What business functions or users were affected?
+
+2. SYMPTOMS
+What specific errors or abnormal behavior were observed?
+
+3. TIMELINE
+When was the issue detected, investigated, fixed and verified?
+
+4. EVIDENCE
+Commands executed:
+Log entries:
+Observations:
+Related changes:
+
+5. ROOT CAUSE
+What caused the issue, and how does the evidence establish it?
+
+6. CORRECTIVE ACTION
+What was changed to restore service?
+
+7. VERIFICATION
+Which tests confirmed recovery?
+
+8. PREVENTIVE ACTIONS
+What monitoring, testing or process improvements are needed?
+
+9. OWNER AND FOLLOW-UP
+Action owner:
+Target completion date:
+Final status:
+</code></pre>
+<h2 id="s32">32. Example completed incident report</h2>
+<p><strong>Incident ID:</strong> INC-102<br />
+<strong>Title:</strong> Employee API service failure<br />
+<strong>Status:</strong> Resolved (lab simulation)<br />
+<strong>Service:</strong> <code>technova-api</code><br />
+<strong>Port:</strong> <code>8090</code><br />
+<strong>Root-cause category:</strong> Service configuration</p>
+<p><strong>Summary:</strong> Employee API became unavailable after the service's Python executable path was changed.</p>
+<p><strong>Evidence:</strong></p>
+<pre><code class="language-text">systemctl status technova-api
+Active: failed
+status=203/EXEC
+</code></pre>
+<p>Inspection confirmed <code>ExecStart</code> referenced <code>/usr/bin/python3-missing</code>.</p>
+<p><strong>Corrective action:</strong> Restored original unit, reloaded systemd and restarted the service.</p>
+<p><strong>Verification:</strong></p>
+<pre><code class="language-text">systemctl is-active technova-api
+active
+
+curl -i http://127.0.0.1:8090/health
+HTTP/1.0 200 OK
+</code></pre>
+<p><strong>Prevention:</strong> Add <code>systemd-analyze verify</code>, executable-path checks and health-check tests to deployment.</p>
+<h2 id="s33">33. Create an evidence collection script</h2>
+<pre><code class="language-bash">nano &quot;$LAB/scripts/incident-evidence.sh&quot;
+</code></pre>
+<pre><code class="language-bash">#!/bin/bash
+set -u
+LAB=&quot;$HOME/Linuxtraining/troubleshooting-lab&quot;
+OUT=&quot;$LAB/evidence&quot;
+STAMP=$(date +%Y%m%d_%H%M%S)
+REPORT=&quot;$OUT/diagnosis_$STAMP.txt&quot;
+mkdir -p &quot;$OUT&quot;
+{
+  echo &quot;TechNova Incident Evidence&quot;
+  echo &quot;==========================&quot;
+  date -Is
+  hostname
+  echo; echo &quot;=== IP ADDRESSES ===&quot;
+  ip -br addr
+  echo; echo &quot;=== ROUTES ===&quot;
+  ip route
+  echo; echo &quot;=== DNS ===&quot;
+  getent ahostsv4 example.com || true
+  echo; echo &quot;=== FILESYSTEM ===&quot;
+  df -h
+  df -i
+  echo; echo &quot;=== MEMORY ===&quot;
+  free -h
+  echo; echo &quot;=== CPU / PROCESSES ===&quot;
+  ps aux --sort=-%cpu | head -n 10
+  echo; echo &quot;=== TCP LISTENERS ===&quot;
+  ss -ltn
+  echo; echo &quot;=== APPLICATION SERVICE ===&quot;
+  systemctl status technova-api --no-pager || true
+  echo; echo &quot;=== HTTP HEALTH ===&quot;
+  curl --noproxy '*' -sS \
+    --connect-timeout 3 \
+    -o /dev/null \
+    -w 'HTTP_CODE=%{http_code}\n' \
+    http://127.0.0.1:8090/health || true
+  echo; echo &quot;=== PERMISSIONS ===&quot;
+  stat -c '%U:%G %A %a %n' &quot;$LAB/reports&quot;
+  echo; echo &quot;=== RECENT SERVICE LOGS ===&quot;
+  journalctl -u technova-api -n 30 --no-pager || true
+} &gt; &quot;$REPORT&quot; 2&gt;&amp;1
+
+echo &quot;Evidence saved: $REPORT&quot;
+</code></pre>
+<p>Execute:</p>
+<pre><code class="language-bash">chmod +x &quot;$LAB/scripts/incident-evidence.sh&quot;
+&quot;$LAB/scripts/incident-evidence.sh&quot;
+ls -lt &quot;$LAB/evidence&quot;
+less &quot;$(ls -t &quot;$LAB&quot;/evidence/diagnosis_*.txt | head -n 1)&quot;
+</code></pre>
+<p>Run it while healthy, stop the service, run it again, restart, and run a third time:</p>
+<pre><code class="language-bash">sudo systemctl stop technova-api
+&quot;$LAB/scripts/incident-evidence.sh&quot;
+sudo systemctl start technova-api
+&quot;$LAB/scripts/incident-evidence.sh&quot;
+</code></pre>
+<p>Compare selected generated reports (replace placeholders):</p>
+<pre><code class="language-bash">diff -u evidence/diagnosis_FILE1.txt evidence/diagnosis_FILE2.txt
+</code></pre>
+<p>Differences in timestamps and dynamic process details are expected. Redact secrets and sensitive information before sharing production evidence.</p>
+<h1>Part 9 – Practical Troubleshooting Reference</h1>
+<h2 id="s34">34. Quick diagnostic command reference</h2>
+<table>
+<thead>
+<tr>
+  <th>Issue</th>
+  <th>Main commands</th>
+  <th>Expected evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Connectivity</td>
+  <td><code>ip addr</code>, <code>ip route</code>, <code>ping</code>, <code>nc</code>, <code>curl</code></td>
+  <td>Network, route, TCP/HTTP</td>
+</tr>
+<tr>
+  <td>Service</td>
+  <td><code>systemctl status</code>, <code>journalctl -u</code>, <code>systemctl cat</code></td>
+  <td>State / startup errors</td>
+</tr>
+<tr>
+  <td>Permission</td>
+  <td><code>ls -l</code>, <code>stat</code>, <code>namei -l</code>, <code>id</code>, <code>getfacl</code></td>
+  <td>Ownership / access</td>
+</tr>
+<tr>
+  <td>Disk</td>
+  <td><code>df -h</code>, <code>df -i</code>, <code>du</code>, <code>find</code>, <code>lsof +L1</code></td>
+  <td>Capacity / inodes / files</td>
+</tr>
+<tr>
+  <td>Process</td>
+  <td><code>ps</code>, <code>top</code>, <code>pgrep</code>, <code>pstree</code>, <code>kill</code></td>
+  <td>PID, state, resources</td>
+</tr>
+<tr>
+  <td>DNS</td>
+  <td><code>getent</code>, <code>dig</code>, <code>resolvectl</code>, <code>/etc/hosts</code></td>
+  <td>Resolution / configuration</td>
+</tr>
+<tr>
+  <td>Evidence</td>
+  <td><code>journalctl</code>, <code>grep</code>, <code>date</code>, <code>diff</code></td>
+  <td>Event chronology</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s35">35. Six-incident comparison</h2>
+<table>
+<thead>
+<tr>
+  <th>Incident</th>
+  <th>Symptom</th>
+  <th>Confirmed lab root cause</th>
+  <th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>INC-101</td>
+  <td>Connection refused</td>
+  <td>Application stopped</td>
+  <td>Start application</td>
+</tr>
+<tr>
+  <td>INC-102</td>
+  <td>Service failed</td>
+  <td>Invalid executable path</td>
+  <td>Restore ExecStart</td>
+</tr>
+<tr>
+  <td>INC-103</td>
+  <td>Report HTTP 500</td>
+  <td>Directory not writable</td>
+  <td>Restore permissions</td>
+</tr>
+<tr>
+  <td>INC-104</td>
+  <td>File write limit error</td>
+  <td>Process file-size limit</td>
+  <td>Remove restrictive limit</td>
+</tr>
+<tr>
+  <td>INC-105</td>
+  <td>High CPU</td>
+  <td>CPU-intensive background process</td>
+  <td>Stop controlled workload</td>
+</tr>
+<tr>
+  <td>INC-106</td>
+  <td>Hostname failure</td>
+  <td>Missing mapping</td>
+  <td>Add authorized hosts entry</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s36">36. Final hands-on assessment</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>1. Create the complete troubleshooting-lab directory structure.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>2. Run the Employee API and verify both endpoints.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>3. Stop the application and investigate connection refused.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>4. Create and run the technova-api systemd service.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>5. Introduce an invalid executable path and inspect service logs.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>6. Restore the service and confirm the health endpoint succeeds.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>7. Reproduce a report write-permission failure.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>8. Use stat, namei and journalctl to confirm the permission problem.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>9. Restore least-privilege access and verify report creation.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>10. Investigate filesystem blocks, inodes and largest directories.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>11. Reproduce the controlled file-size limit error.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>12. Run and investigate a CPU-intensive background process.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>13. Create a background worker, inspect its PID and terminate it.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>14. Reproduce hostname resolution failure with employeeapp.lab.test.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>15. Compare dig and getent after adding the hosts-file mapping.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>16. Run incident evidence collector before and after a failure.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>17. Create a completed RCA containing evidence, resolution and prevention.</li>
+</ul>
+<h2 id="s37">37. Lab cleanup</h2>
+<pre><code class="language-bash">sudo systemctl disable --now technova-api
+sudo rm -f \
+  /etc/systemd/system/technova-api.service \
+  /etc/systemd/system/technova-api.service.bak
+sudo systemctl daemon-reload
+sudo systemctl reset-failed
+</code></pre>
+<p>Ensure the test hosts entry is removed and report directory write permissions restored. Lab files remain in <code>~/Linuxtraining/troubleshooting-lab</code> until you choose to delete them.</p>
+<h2 id="s38">38. Key concepts to remember</h2>
+<p>A service can be active yet fail to write files. A host can answer ping while HTTP fails. DNS can resolve a name while a port remains closed. A write failure can involve permissions, quota, full filesystem, inode shortage, read-only mount, or a per-process file limit.</p>
+<p><strong>Observe → collect evidence → isolate failed layer → diagnose cause → apply smallest safe fix → verify → document.</strong></p>
+<p><strong>References:</strong> <a href="https://ubuntu.com/server/docs/">Ubuntu Server documentation</a> · <a href="https://wiki.freedesktop.org/www/Software/systemd/Debugging/">systemd debugging</a>.</p>
+</main></div></body></html>
