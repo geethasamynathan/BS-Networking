@@ -1,0 +1,181 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Linux Shell Scripting — Basic to Advanced | Sections 1–14</title><style>
+:root{--bg:#f5f7fc;--card:#fff;--ink:#182b46;--muted:#5d7088;--accent:#0f62b8;--line:#dce5f2;--code:#101e30}*{box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink);margin:0;line-height:1.7}header{background:linear-gradient(115deg,#082c56,#0d5f9f 65%,#138d98);color:#fff;padding:45px max(25px,calc((100vw - 1180px)/2));}header h1{font-size:clamp(29px,4vw,44px);margin:0 0 12px;line-height:1.2}header p{max-width:750px;margin:0;color:#e2f4ff;font-size:17px}.topnote{margin-top:19px;display:inline-block;background:#ffffff22;padding:6px 13px;border:1px solid #ffffff55;border-radius:20px;font-size:13px}.layout{max-width:1280px;margin:auto;display:grid;grid-template-columns:255px minmax(0,1fr);gap:24px;padding:24px}.sidebar{position:sticky;top:18px;align-self:start;max-height:calc(100vh - 36px);overflow-y:auto;background:white;border:1px solid var(--line);border-radius:15px;padding:20px}.sidebar h2{font-size:17px;margin:0 0 12px}.sidebar a{display:block;text-decoration:none;color:#314c6d;padding:8px 11px;border-radius:8px;font-size:13px;line-height:1.4}.sidebar a:hover,.sidebar a:focus{background:#e5f1fd;color:#07549a}.content{min-width:0}.lesson{background:var(--card);padding:29px 33px;margin-bottom:22px;border:1px solid var(--line);border-radius:16px;box-shadow:0 5px 20px #1d3b6010;scroll-margin-top:18px}.lesson h2{font-size:26px;color:#0a4f91;line-height:1.25;margin:0 0 17px;border-bottom:2px solid #e7f1fc;padding-bottom:13px}.lesson h3{font-size:18px;color:#194c78;margin-top:25px;margin-bottom:10px}.lesson p{margin:10px 0 16px}.lesson p code,.lesson td code,.note code{background:#edf3fa;padding:2px 5px;border-radius:4px;color:#a03258;font-size:.91em;overflow-wrap:anywhere}.codebar{display:flex;align-items:center;justify-content:space-between;background:#233950;color:#b6dffb;border-radius:9px 9px 0 0;margin-top:16px;padding:6px 13px;font-size:11px;letter-spacing:.7px;font-weight:bold}.copy{border:1px solid #7993a8;border-radius:6px;background:#ffffff14;color:white;padding:4px 11px;cursor:pointer;font-size:12px}.copy:hover{background:#ffffff33}pre{margin:0 0 19px;background:var(--code);border-radius:0 0 9px 9px;padding:16px 19px;overflow:auto;line-height:1.6;color:#d6f5e8;font-size:13px;tab-size:4}pre code{font-family:Consolas,"Cascadia Code",monospace} .tablewrap{overflow-x:auto;margin:16px 0 22px}table{border-collapse:collapse;width:100%;font-size:14px}th{background:#e8f3fe;color:#153d68;text-align:left}td,th{border:1px solid #dce6f0;padding:11px 13px;vertical-align:top}tr:nth-child(even){background:#f8fbff}.note{background:#fff8e7;border-left:4px solid #e6a42f;border-radius:7px;padding:13px 17px;margin:17px 0}.diagram{max-width:540px;margin:25px auto;text-align:center;border:1px solid var(--line);background:#f8fbff;border-radius:14px;padding:25px}.dnode{margin:auto;max-width:350px;border-radius:9px;font-weight:650;padding:11px;border:1px solid #9daec1}.blue{background:#dcecff}.green{background:#d2f6e7}.yellow{background:#fff1c7}.purple{background:#eee4ff}.down{font-size:24px;color:#55738d;height:35px}.diagram small{display:block;margin-top:18px;color:#60788c}.loopdiagram{border:1px solid var(--line);border-radius:13px;background:#f7fbff;text-align:center;padding:22px;margin:20px auto;max-width:450px}.pill{border:1px solid #69a0d8;border-radius:8px;background:#e2efff;padding:9px 15px;max-width:220px;margin:auto;font-weight:600}.pill.success{background:#d5f5e5;border-color:#68b78d}.arr{color:#3c729e;font-size:22px}.diamond{margin:auto;display:flex;align-items:center;justify-content:center;width:115px;height:70px;background:#fff1c7;border:1px solid #d8ae50;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);font-weight:600}.branches{display:flex;justify-content:space-around;font-size:12px;color:#45738a;margin:6px 0 14px}kbd{border:1px solid #c9d7e7;background:#eff4fa;border-bottom-width:3px;border-radius:4px;padding:2px 6px}.footer{text-align:center;padding:15px 15px 40px;color:#69809a;font-size:13px}.jump{display:flex;justify-content:space-between;margin-top:22px;gap:10px}.jump a{text-decoration:none;color:#0c65ac;font-weight:600;font-size:13px}.print{position:fixed;right:20px;bottom:20px;background:#1267aa;border:0;color:white;border-radius:30px;padding:11px 17px;box-shadow:0 6px 20px #0003;cursor:pointer;font-weight:bold}@media(max-width:800px){.layout{display:block;padding:12px}.sidebar{position:static;max-height:none;margin-bottom:16px}.lesson{padding:19px 17px}.lesson h2{font-size:22px}header{padding:33px 19px}.print{bottom:8px;right:8px}}@media print{body{background:white}.sidebar,.print,.copy{display:none!important}.layout{display:block;padding:0}.lesson{box-shadow:none;border:0;break-inside:auto;padding:8px 0}.lesson h2{break-after:avoid}.codebar,pre,.diagram,table{break-inside:avoid}header{padding:15px;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body id="top"><header><h1>Linux Shell Scripting<br>Basic to Advanced</h1><p>An incremental, hands-on Bash tutorial for Ubuntu and WSL — from your first script through variables, input, conditions, loops, arrays, functions, and command-line arguments.</p><span class="topnote">14 lessons · Step-by-step commands · Examples and expected output</span></header><div class="layout"><nav class="sidebar" aria-label="Tutorial chapters"><h2>📘 Tutorial Contents</h2><a href="#section-1">1. What is shell scripting?</a><a href="#section-2">2. Prepare your Ubuntu environment</a><a href="#section-3">3. Your first shell script</a><a href="#section-4">4. Different ways to execute shell scripts</a><a href="#section-5">5. Variables in shell scripting</a><a href="#section-6">6. Accept user input</a><a href="#section-7">7. Arithmetic operations</a><a href="#section-8">8. Conditions — if, else, elif</a><a href="#section-9">9. File and directory conditions</a><a href="#section-10">10. Case statements</a><a href="#section-11">11. Looping in Bash</a><a href="#section-12">12. Arrays</a><a href="#section-13">13. Functions</a><a href="#section-14">14. Command-line arguments</a></nav><main class="content"><section id="section-1" class="lesson"><h2>1. What is shell scripting?</h2><p>A <strong>shell</strong> is a command interpreter that accepts commands and communicates with the operating system. A <strong>shell script</strong> is a text file containing multiple shell commands that can be executed together to automate tasks.</p><div class="diagram"><div class="dnode blue">User / Linux Administrator</div><div class="down">↓</div><div class="dnode green">Bash Shell Script (.sh)</div><div class="down">↓</div><div class="dnode yellow">Linux Commands and Utilities</div><div class="down">↓</div><div class="dnode purple">Linux Kernel / Operating System</div><small>How a Bash script interacts with Linux</small></div><h3>Why do companies use shell scripting?</h3><p>Imagine an e-commerce company managing a Linux server. Every day, an administrator must check disk space, verify services, archive log files, and generate reports. Instead of typing these commands manually, a shell script performs them automatically.</p><div class="tablewrap"><table><thead><tr><th>Manual task</th><th>Shell script automation</th></tr></thead><tbody><tr><td>Check disk usage</td><td>Run <code>df -h</code> automatically</td></tr><tr><td>Check running processes</td><td>Use <code>ps</code> or <code>pgrep</code></td></tr><tr><td>Create backups</td><td>Use <code>tar</code> with timestamps</td></tr><tr><td>Check application health</td><td>Use <code>curl</code></td></tr><tr><td>Monitor server logs</td><td>Search with <code>grep</code></td></tr><tr><td>Schedule maintenance</td><td>Use <code>cron</code></td></tr></tbody></table></div><div class="jump"><span></span><a href="#section-2">Next →</a></div></section><section id="section-2" class="lesson"><h2>2. Prepare your Ubuntu environment</h2><p>Open the Ubuntu terminal in Linux or WSL.</p><h3>Step 1 — Check the Bash version</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>bash --version</code></pre><h3>Step 2 — Create a working directory</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>mkdir -p ~/shell-training
+cd ~/shell-training
+pwd</code></pre><p>Example working directory:</p><div class="codebar"><span>TEXT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>/home/geetha/shell-training</code></pre><div class="note">Your Linux username may be different.</div><h3>Step 3 — Check your text editor</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>nano --version</code></pre><p>If Nano is unavailable:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>sudo apt update
+sudo apt install nano</code></pre><p><code>nano</code> is a terminal text editor, not a scripting language.</p><div class="jump"><a href="#section-1">← Previous</a><a href="#section-3">Next →</a></div></section><section id="section-3" class="lesson"><h2>3. Your first shell script</h2><h3>Step 1 — Create the file</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>nano hello.sh</code></pre><p>Type the following code in Nano:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+echo &quot;Welcome to Linux Shell Scripting&quot;
+echo &quot;This is my first Bash program&quot;
+date
+whoami
+pwd</code></pre><h3>Step 2 — Save the file</h3><ol><li>Press <kbd>Ctrl</kbd> + <kbd>O</kbd> to write the file.</li><li>Press <kbd>Enter</kbd> to confirm the filename.</li><li>Press <kbd>Ctrl</kbd> + <kbd>X</kbd> to exit Nano.</li></ol><h3>Step 3 — Execute the script</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>bash hello.sh</code></pre><p>Example output:</p><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>Welcome to Linux Shell Scripting
+This is my first Bash program
+Thu Nov 5 10:40:00 IST 2026
+geetha
+/home/geetha/shell-training</code></pre><h3>Understand each line</h3><div class="tablewrap"><table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td><code>#!/bin/bash</code></td><td>Shebang identifying the Bash interpreter</td></tr><tr><td><code>echo</code></td><td>Prints text on the terminal</td></tr><tr><td><code>date</code></td><td>Displays the current date and time</td></tr><tr><td><code>whoami</code></td><td>Displays the current username</td></tr><tr><td><code>pwd</code></td><td>Prints the working directory</td></tr></tbody></table></div><div class="note">The first line <code>#!/bin/bash</code> is particularly important when executing the script directly.</div><div class="jump"><a href="#section-2">← Previous</a><a href="#section-4">Next →</a></div></section><section id="section-4" class="lesson"><h2>4. Different ways to execute shell scripts</h2><p>Assume your script is named <code>hello.sh</code>.</p><div class="tablewrap"><table><thead><tr><th>Method</th><th>Command</th><th>Explanation</th></tr></thead><tbody><tr><td>Bash interpreter</td><td><code>bash hello.sh</code></td><td>Runs using Bash; execute permission is not required on the script.</td></tr><tr><td>Shell interpreter</td><td><code>sh hello.sh</code></td><td>Runs with sh; Bash-specific features may fail.</td></tr><tr><td>Direct execution</td><td><code>./hello.sh</code></td><td>Requires executable permission and a valid interpreter.</td></tr><tr><td>Absolute path</td><td><code>/home/geetha/shell-training/hello.sh</code></td><td>Runs from any directory when permission is granted.</td></tr><tr><td>Source</td><td><code>source hello.sh</code></td><td>Runs in the current shell.</td></tr><tr><td>Dot command</td><td><code>. ./hello.sh</code></td><td>Equivalent to source for this use.</td></tr><tr><td>Background</td><td><code>./hello.sh &amp;</code></td><td>Starts the script in the background.</td></tr></tbody></table></div><h3>Make the file executable</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>chmod +x hello.sh
+./hello.sh</code></pre><h3>Inspect permissions</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>ls -l hello.sh</code></pre><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>-rwxr-xr-x 1 geetha geetha 125 Nov 5 hello.sh</code></pre><p>The <code>x</code> permission indicates executable access.</p><div class="note"><strong>Key distinction:</strong> <code>bash hello.sh</code> launches a new shell process. <code>source hello.sh</code> executes in your current shell, so variable assignments and directory changes can affect the terminal session.</div><div class="jump"><a href="#section-3">← Previous</a><a href="#section-5">Next →</a></div></section><section id="section-5" class="lesson"><h2>5. Variables in shell scripting</h2><p>A variable stores a value, such as an employee name, server, directory, or number.</p><p>Create a script using <code>nano variables.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+company=&quot;TechNova&quot;
+employee=&quot;Ravi&quot;
+salary=45000
+
+echo &quot;Company: $company&quot;
+echo &quot;Employee: $employee&quot;
+echo &quot;Salary: $salary&quot;
+
+echo &quot;Home directory: $HOME&quot;
+echo &quot;Current user: $USER&quot;</code></pre><h3>Execute</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>bash variables.sh</code></pre><h3>Example output</h3><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>Company: TechNova
+Employee: Ravi
+Salary: 45000
+Home directory: /home/geetha
+Current user: geetha</code></pre><h3>Variable assignment rules</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>name=&quot;Ravi&quot;       # Correct
+name = &quot;Ravi&quot;     # Incorrect</code></pre><p>Bash variable assignment does not permit spaces around <code>=</code>. Use quoted expansions such as <code>"$company"</code> when working with paths or strings.</p><h3>Read-only variables</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>readonly company=&quot;TechNova&quot;</code></pre><h3>Environment variables</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>export APP_ENV=&quot;production&quot;</code></pre><p>Exported variables are inherited by child processes.</p><div class="jump"><a href="#section-4">← Previous</a><a href="#section-6">Next →</a></div></section><section id="section-6" class="lesson"><h2>6. Accept user input</h2><p>Use the <code>read</code> command to collect values from a user. Create <code>input.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+read -r -p &quot;Enter employee name: &quot; name
+read -r -p &quot;Enter department: &quot; department
+
+echo &quot;Employee: $name&quot;
+echo &quot;Department: $department&quot;</code></pre><h3>Run</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>bash input.sh</code></pre><h3>Example output</h3><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>Enter employee name: Ravi
+Enter department: IT
+Employee: Ravi
+Department: IT</code></pre><p><code>read</code> accepts user input, <code>-p</code> shows a prompt, and <code>-r</code> prevents backslash escapes from being processed.</p><div class="jump"><a href="#section-5">← Previous</a><a href="#section-7">Next →</a></div></section><section id="section-7" class="lesson"><h2>7. Arithmetic operations</h2><p>Use <code>$((...))</code> for integer calculations in Bash. Create <code>arithmetic.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+a=20
+b=5
+
+echo &quot;Addition: $((a+b))&quot;
+echo &quot;Subtraction: $((a-b))&quot;
+echo &quot;Multiplication: $((a*b))&quot;
+echo &quot;Division: $((a/b))&quot;
+echo &quot;Remainder: $((a%b))&quot;</code></pre><h3>Output</h3><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>Addition: 25
+Subtraction: 15
+Multiplication: 100
+Division: 4
+Remainder: 0</code></pre><div class="note">Bash arithmetic uses integers by default: <code>7 / 2</code> gives <code>3</code>.</div><div class="jump"><a href="#section-6">← Previous</a><a href="#section-8">Next →</a></div></section><section id="section-8" class="lesson"><h2>8. Conditions — if, else, elif</h2><p>Conditional statements let your script decide what action to take. Example: an alert based on a disk-usage percentage entered by a user.</p><p>Create <code>disk-check.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+read -r -p &quot;Enter disk usage percentage: &quot; usage
+
+if ! [[ &quot;$usage&quot; =~ ^[0-9]+$ ]] || (( usage &gt; 100 )); then
+    echo &quot;Invalid percentage&quot;
+    exit 1
+fi
+
+if (( usage &gt;= 90 )); then
+    echo &quot;CRITICAL: Disk usage is high&quot;
+elif (( usage &gt;= 75 )); then
+    echo &quot;WARNING: Disk usage is increasing&quot;
+else
+    echo &quot;NORMAL: Disk usage is healthy&quot;
+fi</code></pre><h3>Execute</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>bash disk-check.sh</code></pre><h3>Example output</h3><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>Enter disk usage percentage: 92
+CRITICAL: Disk usage is high</code></pre><h3>Useful conditional operators</h3><div class="tablewrap"><table><thead><tr><th>Operator</th><th>Meaning</th></tr></thead><tbody><tr><td><code>-eq</code></td><td>Equal</td></tr><tr><td><code>-ne</code></td><td>Not equal</td></tr><tr><td><code>-gt</code></td><td>Greater than</td></tr><tr><td><code>-lt</code></td><td>Less than</td></tr><tr><td><code>-ge</code></td><td>Greater than or equal</td></tr><tr><td><code>-le</code></td><td>Less than or equal</td></tr><tr><td><code>-f</code></td><td>Regular file exists</td></tr><tr><td><code>-d</code></td><td>Directory exists</td></tr><tr><td><code>-r</code></td><td>Read permission exists</td></tr><tr><td><code>-w</code></td><td>Write permission exists</td></tr><tr><td><code>-x</code></td><td>Execute permission exists</td></tr></tbody></table></div><div class="jump"><a href="#section-7">← Previous</a><a href="#section-9">Next →</a></div></section><section id="section-9" class="lesson"><h2>9. File and directory conditions</h2><p>Check whether configuration files exist before processing them. Create <code>file-check.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+file=&quot;/etc/hosts&quot;
+
+if [[ -f &quot;$file&quot; ]]; then
+    echo &quot;File exists&quot;
+    echo &quot;File content:&quot;
+    cat &quot;$file&quot;
+else
+    echo &quot;File not found&quot;
+fi</code></pre><p>Run with <code>bash file-check.sh</code>. The <code>-f</code> test checks for a regular file; <code>-d</code> tests for a directory.</p><div class="jump"><a href="#section-8">← Previous</a><a href="#section-10">Next →</a></div></section><section id="section-10" class="lesson"><h2>10. Case statements</h2><p>Use a <code>case</code> statement when users choose from a fixed menu. Create <code>menu.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+echo &quot;1. Show date&quot;
+echo &quot;2. Show current user&quot;
+echo &quot;3. Show disk usage&quot;
+echo &quot;4. Exit&quot;
+
+read -r -p &quot;Choose an option: &quot; choice
+
+case &quot;$choice&quot; in
+    1) date ;;
+    2) whoami ;;
+    3) df -h ;;
+    4) echo &quot;Goodbye&quot; ;;
+    *) echo &quot;Invalid option&quot; ;;
+esac</code></pre><p>The <code>*)</code> branch handles any input that does not match options 1–4. Execute with <code>bash menu.sh</code>.</p><div class="jump"><a href="#section-9">← Previous</a><a href="#section-11">Next →</a></div></section><section id="section-11" class="lesson"><h2>11. Looping in Bash</h2><p>Loops repeat a block of commands. The three common forms are <strong>for</strong>, <strong>while</strong>, and <strong>until</strong>.</p><div class="loopdiagram"><div class="pill">Start loop</div><div class="arr">↓</div><div class="diamond">Condition?</div><div class="branches"><span>True ↓</span><span>False → Stop</span></div><div class="pill success">Execute commands</div><div class="arr">↺ Repeat</div></div><h3>11.1 For loop</h3><p>Create <code>for-loop.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+for number in 1 2 3 4 5
+do
+    echo &quot;Processing task $number&quot;
+done</code></pre><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>Processing task 1
+Processing task 2
+Processing task 3
+Processing task 4
+Processing task 5</code></pre><h3>11.2 C-style for loop</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>for ((i=1; i&lt;=5; i++))
+do
+    echo &quot;Iteration $i&quot;
+done</code></pre><h3>11.3 While loop</h3><p>Create <code>while-loop.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+count=1
+
+while (( count &lt;= 5 ))
+do
+    echo &quot;Count: $count&quot;
+    ((count+=1))
+done</code></pre><h3>11.4 Until loop</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>count=1
+
+until (( count &gt; 5 ))
+do
+    echo &quot;Count: $count&quot;
+    ((count+=1))
+done</code></pre><p>A <code>while</code> loop runs while its condition is true; an <code>until</code> loop runs while its condition is false.</p><h3>11.5 Break and continue</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>for ((i=1; i&lt;=10; i++))
+do
+    if (( i == 3 )); then
+        continue
+    fi
+
+    if (( i == 8 )); then
+        break
+    fi
+
+    echo &quot;$i&quot;
+done</code></pre><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>1
+2
+4
+5
+6
+7</code></pre><p><code>continue</code> skips the current iteration. <code>break</code> exits the loop.</p><div class="jump"><a href="#section-10">← Previous</a><a href="#section-12">Next →</a></div></section><section id="section-12" class="lesson"><h2>12. Arrays</h2><p>Bash indexed arrays store multiple values under a single name. Create <code>arrays.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+servers=(&quot;web01&quot; &quot;db01&quot; &quot;app01&quot;)
+
+echo &quot;First server: ${servers[0]}&quot;
+echo &quot;Number of servers: ${#servers[@]}&quot;
+
+for server in &quot;${servers[@]}&quot;
+do
+    echo &quot;Checking $server&quot;
+done</code></pre><h3>Output</h3><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>First server: web01
+Number of servers: 3
+Checking web01
+Checking db01
+Checking app01</code></pre><div class="tablewrap"><table><thead><tr><th>Expression</th><th>Meaning</th></tr></thead><tbody><tr><td><code>${servers[0]}</code></td><td>First array item (index 0)</td></tr><tr><td><code>${#servers[@]}</code></td><td>Number of array items</td></tr><tr><td><code>"${servers[@]}"</code></td><td>All array items, with each item kept separate</td></tr></tbody></table></div><div class="jump"><a href="#section-11">← Previous</a><a href="#section-13">Next →</a></div></section><section id="section-13" class="lesson"><h2>13. Functions</h2><p>A function groups reusable commands. Create <code>functions.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+greet() {
+    echo &quot;Welcome, $1&quot;
+}
+
+add() {
+    local result=$(( $1 + $2 ))
+    echo &quot;$result&quot;
+}
+
+greet &quot;Ravi&quot;
+
+total=$(add 20 30)
+echo &quot;Total: $total&quot;</code></pre><h3>Output</h3><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>Welcome, Ravi
+Total: 50</code></pre><p><code>$1</code> and <code>$2</code> are function arguments. <code>local</code> limits a variable to the function. <code>$(add 20 30)</code> captures what the function prints.</p><div class="note"><strong>Important:</strong> Bash <code>return</code> provides a numeric exit status, not a general-purpose value. To produce text or a computed result, a function can print it using <code>echo</code> and the caller can capture that output.</div><div class="jump"><a href="#section-12">← Previous</a><a href="#section-14">Next →</a></div></section><section id="section-14" class="lesson"><h2>14. Command-line arguments</h2><p>Scripts can accept arguments passed directly on the command line. Create <code>arguments.sh</code>:</p><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>#!/bin/bash
+
+echo &quot;Script name: $0&quot;
+echo &quot;First argument: ${1:-not supplied}&quot;
+echo &quot;Second argument: ${2:-not supplied}&quot;
+echo &quot;Total arguments: $#&quot;
+
+echo &quot;All arguments:&quot;
+printf &#x27;%s\n&#x27; &quot;$@&quot;</code></pre><h3>Execute</h3><div class="codebar"><span>BASH</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>bash arguments.sh Ravi IT</code></pre><h3>Output</h3><div class="codebar"><span>OUTPUT</span><button class="copy" onclick="copyCode(this)">Copy code</button></div><pre><code>Script name: arguments.sh
+First argument: Ravi
+Second argument: IT
+Total arguments: 2
+All arguments:
+Ravi
+IT</code></pre><div class="tablewrap"><table><thead><tr><th>Parameter</th><th>Meaning</th></tr></thead><tbody><tr><td><code>$0</code></td><td>Name/path used to invoke the script</td></tr><tr><td><code>$1</code>, <code>$2</code></td><td>First and second positional arguments</td></tr><tr><td><code>$#</code></td><td>Number of positional arguments</td></tr><tr><td><code>"$@"</code></td><td>All arguments, preserving each argument boundary</td></tr><tr><td><code>$?</code></td><td>Status of the previously executed command</td></tr><tr><td><code>$$</code></td><td>Process ID of the current shell</td></tr></tbody></table></div><p>The expression <code>${1:-not supplied}</code> uses the fallback text when the first argument is unset or empty.</p><div class="jump"><a href="#section-13">← Previous</a><a href="#top">Back to top ↑</a></div></section></main></div><div class="footer">Linux Shell Scripting Tutorial — Sections 1–14</div><button class="print" onclick="window.print()">Print / Save PDF</button><script>function copyCode(b){const pre=b.parentElement.nextElementSibling;const text=pre.innerText;navigator.clipboard.writeText(text).then(()=>{b.textContent='Copied!';setTimeout(()=>b.textContent='Copy code',1500)}).catch(()=>{b.textContent='Select code to copy'})};</script></body></html>
