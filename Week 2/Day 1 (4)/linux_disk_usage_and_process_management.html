@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linux Commands – Disk Usage and Process Management</title>
+<style>
+:root{color-scheme:light;--ink:#17263b;--muted:#52657a;--accent:#1258a5;--bg:#f4f7fb;--line:#dce5ef}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 system-ui,-apple-system,Segoe UI,Arial,sans-serif}.container{max-width:1000px;margin:36px auto;background:white;padding:44px 54px;border-radius:16px;box-shadow:0 8px 35px #20385512}h1{font-size:2.2rem;line-height:1.25;color:#103e70;margin:0 0 18px}h2{font-size:1.65rem;color:#154b82;border-bottom:2px solid #deebf7;padding-bottom:8px;margin-top:46px}h3{font-size:1.2rem;color:#194e7b;margin-top:30px}p{margin:12px 0}pre{white-space:pre;overflow:auto;padding:16px 19px;background:#122235;color:#e9f4ff;border-radius:10px;font:14px/1.6 Consolas,Monaco,monospace}code{font-family:Consolas,Monaco,monospace}p code,li code,td code{background:#edf3f9;color:#123e68;border-radius:4px;padding:2px 5px}ul{padding-left:25px}li{margin:4px 0}table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15px}th,td{border:1px solid var(--line);padding:11px 12px;text-align:left;vertical-align:top}th{background:#e8f2fc;color:#16487b}.diagram{border:1px solid var(--line);border-radius:12px;padding:20px;margin:20px auto;text-align:center;max-width:560px}.diagram .node{background:#f0f5fb;border-radius:8px;padding:12px;margin:0 auto;width:80%}.diagram .node:nth-of-type(2){background:#e7f0fc}.diagram .arrow{color:#45647e;font-size:25px;line-height:1.3}.note{border-left:4px solid #3273b9;background:#f0f6fd;padding:13px 17px;border-radius:4px}.subtitle{color:var(--muted)}@media(max-width:650px){.container{margin:0;padding:24px 18px;border-radius:0}h1{font-size:1.7rem}pre{font-size:12px}}@media print{body{background:white}.container{box-shadow:none;margin:0;padding:10px;max-width:none}h2,h3{break-after:avoid}pre,table,.diagram{break-inside:avoid}}
+</style></head><body><main class="container">
+<h1>Linux Commands – Disk Usage and Process Management</h1>
+<p>These commands work in <strong>Ubuntu Linux / WSL</strong>. We will cover disk monitoring first, followed by process monitoring and management, with commands, sample outputs, and explanations.</p>
+<h2>Part 1: Disk Usage Commands</h2>
+<h3>1. <code>df -h</code> – Check disk space</h3><pre>df -h</pre><p><strong>Example output:</strong></p><pre>Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       100G   45G   55G  45% /
+tmpfs           3.9G   20M  3.8G   1% /run</pre><p>Explanation:</p><ul><li><code>Size</code> – Total filesystem size</li><li><code>Used</code> – Used disk space</li><li><code>Avail</code> – Available disk space</li><li><code>Use%</code> – Percentage used</li><li><code>Mounted on</code> – Filesystem mount point</li></ul><p><code>-h</code> means human-readable format (KB, MB, GB).</p>
+<h3>2. <code>du -sh</code> – Check directory size</h3><pre>du -sh /home/geetha</pre><p>Example output:</p><pre>2.5G    /home/geetha</pre><p>Check the current directory:</p><pre>du -sh .</pre><p>Check individual directories:</p><pre>du -sh *</pre><p>Example output:</p><pre>120M    projects
+50M     backups
+10M     reports</pre>
+<h3>3. Find the largest directories</h3><pre>du -h --max-depth=1 ~ | sort -hr</pre><p>Example output:</p><pre>2.5G    /home/geetha
+1.5G    /home/geetha/projects
+600M    /home/geetha/backups
+200M    /home/geetha/reports</pre><p>Useful when a server is running out of disk space.</p>
+<h3>4. <code>lsblk</code> – Display disk and partition information</h3><pre>lsblk</pre><p>Example output:</p><pre>NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0  100G  0 disk
+└─sda1   8:1    0  100G  0 part /</pre><p>For filesystem details:</p><pre>lsblk -f</pre>
+<h3>5. <code>df -i</code> – Check inode usage</h3><pre>df -i</pre><p>Useful when Linux reports no space left even though the filesystem still has free storage.</p>
+<h2>Part 2: Linux Process Management</h2><p>A <strong>process</strong> is a running instance of a program.</p><p>For example, when you execute <code>sleep 100</code>, Linux creates a process that waits for 100 seconds.</p>
+<div class="diagram"><strong>How a Linux process works</strong><div class="node"><strong>User executes command</strong><br><code>sleep 100</code></div><div class="arrow">↓</div><div class="node"><strong>Linux creates process</strong><br>Assigns a PID</div><div class="arrow">↓</div><div class="node"><strong>Process runs</strong><br>Uses memory and CPU as needed</div><div class="arrow">↓</div><div class="node"><strong>Process terminates</strong><br>Resources are released</div></div>
+<h2>Important Process Commands</h2>
+<h3>1. <code>ps</code> – Display processes</h3><pre>ps</pre><p>Example output:</p><pre>PID   TTY       TIME CMD
+1201  pts/0 00:00:00 bash
+1302  pts/0 00:00:00 ps</pre><p>Display all processes:</p><pre>ps -ef</pre><p>Display detailed process information:</p><pre>ps aux</pre>
+<h3>2. <code>top</code> – Monitor processes in real time</h3><pre>top</pre><p>Shows:</p><ul><li>CPU utilization</li><li>Memory utilization</li><li>Running processes</li><li>Process IDs</li><li>Process state</li></ul><p>Press <code>q</code> to exit.</p><p>Sort by CPU consumption inside <code>top</code>: Press <code>P</code>.</p><p>Sort by memory consumption: Press <code>M</code>.</p>
+<h3>3. <code>htop</code> – Interactive process monitoring</h3><p>Install:</p><pre>sudo apt update
+sudo apt install htop</pre><p>Execute:</p><pre>htop</pre><p>This provides a more interactive process monitoring interface. Press <code>q</code> to exit.</p>
+<h3>4. <code>sleep</code> – Create a sample process</h3><p>Run:</p><pre>sleep 300</pre><p>This creates a process that waits for 300 seconds.</p><p>To run it in the background:</p><pre>sleep 300 &amp;</pre><p>Example output:</p><pre>[1] 2456</pre><p>Here <code>2456</code> is the process ID (PID).</p>
+<h3>5. <code>jobs</code> – Display background jobs</h3><pre>jobs</pre><p>Example:</p><pre>[1]+ Running sleep 300 &amp;</pre><p>Bring the job to the foreground:</p><pre>fg %1</pre><p>Stop the foreground job temporarily using <code>Ctrl + Z</code>.</p><p>Resume it in the background:</p><pre>bg %1</pre>
+<h3>6. <code>pgrep</code> – Find process IDs</h3><pre>pgrep sleep</pre><p>Example output:</p><pre>2456</pre><p>To display the command name:</p><pre>pgrep -a sleep</pre>
+<h3>7. <code>kill</code> – Terminate a process</h3><pre>kill 2456</pre><p>This sends the default <code>SIGTERM</code> signal, asking the process to terminate.</p><p>Forcefully kill if normal termination fails:</p><pre>kill -9 2456</pre><p>Use <code>kill -9</code> only when necessary because the process cannot handle the signal or perform normal cleanup.</p>
+<h3>8. <code>pkill</code> – Terminate processes by name</h3><pre>pkill sleep</pre><p>This terminates matching processes.</p>
+<h3>9. <code>free -h</code> – Monitor memory usage</h3><pre>free -h</pre><p>Example output:</p><pre>               total  used  free shared buff/cache available
+Mem:            16Gi  4Gi   8Gi   200Mi       4Gi      11Gi
+Swap:            4Gi  0Gi   4Gi</pre><p>This checks RAM and swap, not disk storage.</p>
+<h3>10. <code>uptime</code> – Check system uptime and load</h3><pre>uptime</pre><p>Example output:</p><pre>21:30:00 up 2 days, 3:20, 2 users, load average: 0.25, 0.40, 0.35</pre><p>Load averages represent approximately the last 1, 5, and 15 minutes of system load.</p>
+<h2>Part 3: Hands-on Industry Scenario – Linux Server Monitoring</h2><p><strong>Scenario:</strong> You are a Linux administrator. Your application server is becoming slow. You need to determine whether the problem involves disk space, memory, or CPU usage.</p><p>Execute these commands in order.</p>
+<table><thead><tr><th>Step</th><th>Command</th><th>Purpose</th></tr></thead><tbody><tr><td>1</td><td><code>df -h</code></td><td>Check disk space</td></tr><tr><td>2</td><td><code>du -sh /var/log</code></td><td>Check log directory size</td></tr><tr><td>3</td><td><code>du -sh *</code></td><td>Check sizes of current directory contents</td></tr><tr><td>4</td><td><code>free -h</code></td><td>Check RAM usage</td></tr><tr><td>5</td><td><code>top</code></td><td>Monitor CPU and processes</td></tr><tr><td>6</td><td><code>ps aux --sort=-%cpu | head</code></td><td>Find CPU-consuming processes</td></tr><tr><td>7</td><td><code>ps aux --sort=-%mem | head</code></td><td>Find memory-consuming processes</td></tr><tr><td>8</td><td><code>pgrep -a python</code></td><td>Find Python processes</td></tr><tr><td>9</td><td><code>uptime</code></td><td>Check server uptime and load</td></tr><tr><td>10</td><td><code>kill PID</code></td><td>Terminate a selected process safely</td></tr></tbody></table>
+<h2>Part 4: Practical Process Lab</h2><p>Try this in your Ubuntu terminal.</p>
+<p><strong>Step 1. Create three background processes.</strong></p><pre>sleep 600 &amp;
+sleep 700 &amp;
+sleep 800 &amp;</pre>
+<p><strong>Step 2. Display background jobs.</strong></p><pre>jobs -l</pre>
+<p><strong>Step 3. Find process details.</strong></p><pre>pgrep -a sleep</pre>
+<p><strong>Step 4. Monitor processes.</strong></p><pre>top</pre><p>Press <code>q</code> to exit.</p>
+<p><strong>Step 5. Terminate a specific process.</strong></p><pre>kill &lt;PID&gt;</pre><p>Replace <code>&lt;PID&gt;</code> with the actual process ID returned in Step 3.</p>
+<p><strong>Step 6. Verify.</strong></p><pre>pgrep -a sleep</pre>
+<p><strong>Step 7. Terminate remaining sleep processes.</strong></p><pre>pkill -x sleep</pre>
+<p><strong>Step 8. Verify all processes have stopped.</strong></p><pre>jobs -l
+pgrep -a sleep</pre><p>If <code>pgrep</code> returns no output, no matching running process was found.</p>
+<p class="note"><strong>Important distinction:</strong> <code>df</code> and <code>du</code> monitor disk usage, <code>free</code> monitors RAM usage, and <code>ps</code>/<code>top</code> monitor running processes.</p>
+<p>For your next Linux administration practice, the natural continuation is <strong>services management using <code>systemctl</code>, process priority using <code>nice</code> and <code>renice</code>, and application monitoring using <code>journalctl</code> and <code>nohup</code></strong>. These connect process management to real production server operations.</p>
+</main></body></html>

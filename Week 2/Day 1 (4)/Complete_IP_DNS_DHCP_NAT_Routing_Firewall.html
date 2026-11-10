@@ -1,0 +1,1231 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Complete Networking Tutorial — IP, DNS, DHCP, NAT, Routing, Ports & Firewall</title><style> :root{--ink:#17283c;--muted:#61738a;--navy:#102b4b;--accent:#176eb0;--bg:#f1f5fb;--line:#dde5f0;--paper:white}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 'Segoe UI',Arial,sans-serif}.hero{background:linear-gradient(125deg,#0c2343,#17528a 60%,#237b87);color:white;padding:58px 30px 52px}.wrap{max-width:1040px;margin:auto}.hero h1{font-size:clamp(29px,4.4vw,48px);line-height:1.17;max-width:850px;margin:14px 0}.hero p{opacity:.94;max-width:780px}.kicker{letter-spacing:.17em;text-transform:uppercase;font-size:13px;font-weight:800;color:#91e2e8}.hero-tags span{display:inline-block;border:1px solid #ffffff55;border-radius:99px;padding:5px 11px;margin:4px 4px 0 0;font-size:12px;background:#ffffff16}.layout{max-width:1200px;margin:28px auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:22px;padding:0 22px}.sidebar{position:sticky;top:15px;align-self:start;background:#fff;border:1px solid var(--line);padding:18px;border-radius:13px;max-height:calc(100vh - 28px);overflow:auto}.sidebar strong{color:#123b67}.sidebar a{display:block;text-decoration:none;font-size:13px;line-height:1.4;padding:7px 8px;color:#4b637e;border-radius:6px}.sidebar a:hover{background:#e9f3fc;color:#0c5e9c}.main{background:#fff;border:1px solid var(--line);box-shadow:0 5px 35px #192d4410;padding:40px 46px;border-radius:16px;min-width:0}.main>h1:first-child{display:none}h1,h2,h3{line-height:1.3;color:#123b67}h1{font-size:34px}h2{font-size:24px;border-bottom:2px solid #e5eff8;padding-bottom:10px;margin-top:45px}h3{font-size:19px;margin-top:25px}p,li{max-width:920px}li{margin:3px 0}code{background:#eff4f8;color:#12547c;padding:2px 5px;border-radius:4px;font-size:.92em}pre{position:relative;background:#101f35;color:#e4efff;border:1px solid #263b58;border-radius:11px;padding:20px;overflow:auto;line-height:1.55;white-space:pre;font:13px/1.6 Consolas,'Cascadia Code',monospace;margin:18px 0 23px}pre code{color:inherit;background:none;padding:0}pre .copy{position:absolute;top:9px;right:9px;background:#274564;color:#f2f9ff;border:1px solid #56708b;border-radius:6px;padding:4px 9px;cursor:pointer;font-size:11px}table{width:100%;border-collapse:collapse;margin:18px 0 27px;font-size:14px;display:block;overflow-x:auto}th{background:#e8f2fc;color:#164f7b;text-align:left}th,td{padding:10px 13px;border:1px solid #dce6f0;vertical-align:top}tr:nth-child(even) td{background:#f7faff}blockquote{border-left:5px solid #edb954;background:#fff9e9;padding:9px 18px;margin:20px 0;border-radius:0 9px 9px 0}blockquote p{margin:7px 0}.diagram{background:linear-gradient(135deg,#f8fbff,#f5f8fe);border:1px solid #d6e4f2;border-radius:14px;padding:22px;margin:22px 0;overflow:hidden}.diagram figcaption{font-weight:800;font-size:16px;color:#1c4f76;margin-bottom:16px}.flowrow{display:flex;align-items:center;justify-content:space-between;gap:7px}.flow-node,.device{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:7px;padding:13px;border-radius:11px;border:1px solid;flex:1;min-width:0}.flow-node strong{font-size:13px;line-height:1.25}.flow-node small,.device small{font-size:11px;line-height:1.3}.flow-num{font-size:11px;font-weight:800;opacity:.6}.flow-arrow,.big-arr{color:#4185b1;font-size:25px;font-weight:800}.blue{background:#e3edff;border-color:#a9c2e8;color:#224f83}.mint{background:#dcf4e8;border-color:#9acfb3;color:#1f674c}.violet{background:#eee5fb;border-color:#c8addf;color:#664a8c}.amber{background:#fff0d9;border-color:#e5c48c;color:#85591b}.rose{background:#ffe5e9;border-color:#eab1be;color:#9a3f50}.diagram-note{color:#687b90;font-size:12px;margin:14px 0 0}.network-top{display:flex;align-items:center;flex-direction:column}.network-top .device{width:min(430px,100%)}.network-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.vertical-connector{height:25px;width:2px;background:#8aa7bf}.binary{font:clamp(12px,2vw,18px) Consolas,monospace;white-space:nowrap;overflow:auto;text-align:center;padding:15px 3px}.netbits{background:#dceafe;color:#174c7d}.hostbits{background:#fae6ba;color:#755018}.binary-legend{display:flex;justify-content:center;gap:25px;flex-wrap:wrap;font-size:12px}.binary-legend span:first-child{color:#174c7d}.binary-legend span:last-child{color:#755018}.lanes{display:grid;gap:10px}.lane{display:flex;align-items:flex-start;gap:14px;background:white;border:1px solid #dbe7f2;padding:13px 15px;border-radius:10px}.lane-num{display:grid;place-items:center;flex-shrink:0;width:31px;height:31px;border-radius:50%;background:#d5eafa;color:#115b94;font-weight:bold}.lane strong{color:#194f7a}.lane p{font-size:13px;color:#5a6f82;margin:3px 0}.nat-layout{display:flex;gap:10px;align-items:center;justify-content:space-between}.nat-clients{display:grid;gap:8px;flex:1}.nat-clients .device{padding:10px;font-size:12px}.nat-layout>.device{flex:1.2}.port-server{max-width:550px;margin:0 auto;border:2px solid #7fb0d4;border-radius:11px;overflow:hidden}.port-server-head{background:#d9ebfc;text-align:center;padding:13px}.port-line{display:flex;gap:15px;padding:12px 17px;border-top:1px solid #cde3ee}.port-line b{min-width:115px;color:#176a9d}.calculator{background:#e9f5ff;border:1px solid #c2dff2;border-radius:14px;padding:20px;margin:20px 0}.calc-inputs{display:flex;gap:15px;flex-wrap:wrap}.calc-inputs label{display:grid;gap:5px;font-weight:bold;font-size:13px}.calc-inputs input,.calc-inputs select{border:1px solid #8cb9d5;border-radius:7px;padding:9px;background:white;color:#1e3954;font:inherit}.calc-results{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}.calc-row{background:white;border-radius:8px;padding:10px}.calc-row small{display:block;color:#5a748d}.calc-row strong{font-size:16px;color:#154e78}.exercise-list{display:grid;gap:7px;margin-top:17px}.exercise{display:flex;gap:12px;align-items:flex-start;border:1px solid #dce8f2;background:#f8fbff;padding:11px;border-radius:8px;cursor:pointer}.exercise input{margin-top:6px;accent-color:#187aaf}.exercise small{display:block;color:#5c6e82}.exercise input:checked+span b{text-decoration:line-through;color:#719187}.progress-count{font-weight:700;color:#1c6e99}.footer{text-align:center;color:#607992;font-size:13px;padding:30px}.print-button{position:fixed;bottom:19px;right:19px;border:0;background:#176da9;color:#fff;padding:11px 17px;border-radius:9px;font-weight:bold;box-shadow:0 5px 22px #173f6b45;cursor:pointer}a{color:#126ea6}@media(max-width:850px){.layout{display:block;padding:0 12px;margin:14px auto}.sidebar{position:static;max-height:230px;margin-bottom:12px}.main{padding:20px}.flowrow{flex-wrap:wrap}.flow-node{min-width:125px}.network-grid{grid-template-columns:repeat(2,1fr)}.nat-layout{flex-wrap:wrap}.nat-layout>.device{min-width:135px}.hero{padding:35px 17px}.calc-results{grid-template-columns:1fr}}@media print{body{background:white}.hero{padding:24px;color:#102b4b;background:#dcefff!important}.layout{display:block;margin:0;padding:0}.sidebar,.print-button,.copy{display:none!important}.main{padding:12px;box-shadow:none;border:0}h1,h2,h3{break-after:avoid}pre,table,.diagram,blockquote{break-inside:avoid}pre{white-space:pre-wrap;overflow-wrap:anywhere} .diagram{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body><header class="hero"><div class="wrap"><div class="kicker">TechNova Solutions · Industry Networking Lab</div><h1>Complete Networking Tutorial</h1><p>IP Addressing, DNS, DHCP, NAT, Routing, Ports and Firewalls — one connected real-world company story, Ubuntu / WSL commands, output examples, architectural illustrations and labs.</p><div class="hero-tags"><span>10 modules</span><span>41 lessons</span><span>Colorful diagrams</span><span>Interactive subnet calculator</span><span>Copyable commands</span><span>Offline HTML</span></div></div></header><div class="layout"><nav class="sidebar"><strong>📚 Tutorial contents</strong><a href="#section-1">1. Understanding networking through a real-world story</a><a href="#section-2">2. Our company network architecture</a><a href="#section-3">3. Preparing the Ubuntu lab environment</a><a href="#section-4">Module 1 — IP Addressing</a><a href="#section-5">4. What is an IP address?</a><a href="#section-6">5. Types of IP addresses</a><a href="#section-7">6. Hands-on: Find your Ubuntu IP address</a><a href="#section-8">7. Subnet masks and CIDR</a><a href="#section-9">Module 2 — DNS (Domain Name System)</a><a href="#section-10">8. What is DNS?</a><a href="#section-11">9. How DNS resolution works</a><a href="#section-12">10. DNS hands-on lab</a><a href="#section-13">11. Local name resolution with /etc/hosts</a><a href="#section-14">Module 3 — DHCP (Dynamic Host Configuration Protocol)</a><a href="#section-15">12. What is DHCP?</a><a href="#section-16">13. DORA — How DHCP works</a><a href="#section-17">14. DHCP verification commands</a><a href="#section-18">15. Real DHCP server configuration (isolated Ubuntu VM only)</a><a href="#section-19">Module 4 — NAT (Network Address Translation)</a><a href="#section-20">16. Why do we need NAT?</a><a href="#section-21">17. NAT storytelling example</a><a href="#section-22">18. NAT hands-on verification</a><a href="#section-23">19. SNAT vs DNAT</a><a href="#section-24">Module 5 — Routing Basics</a><a href="#section-25">20. What is routing?</a><a href="#section-26">21. Routing architecture</a><a href="#section-27">22. Understanding the Linux routing table</a><a href="#section-28">23. Static routing demonstration</a><a href="#section-29">24. Trace a route</a><a href="#section-30">25. Static vs dynamic routing</a><a href="#section-31">Module 6 — Ports and Network Services</a><a href="#section-32">26. What is a port?</a><a href="#section-33">27. Important TCP and UDP ports</a><a href="#section-34">28. Hands-on: Create a real web server in Ubuntu</a><a href="#section-35">29. TCP vs UDP</a><a href="#section-36">Module 7 — Firewall Concepts</a><a href="#section-37">30. What is a firewall?</a><a href="#section-38">31. How firewall rules work</a><a href="#section-39">32. Firewall terminology</a><a href="#section-40">33. Ubuntu firewall: UFW</a><a href="#section-41">34. Restrict database access</a><a href="#section-42">Module 8 — Complete End-to-End Industry Lab</a><a href="#section-43">35. Story: Employee accesses the company portal</a><a href="#section-44">36. Follow one request through the network</a><a href="#section-45">37. Reproduce the application locally in Ubuntu/WSL</a><a href="#section-46">Module 9 — Real Network Troubleshooting</a><a href="#section-47">38. Scenario: Employee reports &quot;The website is not working&quot;</a><a href="#section-48">Module 10 — Essential Linux Networking Commands</a><a href="#section-49">39. Mini practice assignments</a><a href="#section-50">40. Final scenario: Explain everything together</a><a href="#section-51">41. What you should remember</a></nav><main class="main"><h1 id="section-0">Complete Networking Tutorial: IP Addressing, DNS, DHCP, NAT, Routing, Ports and Firewalls</h1>
+<p><strong>Practical Linux / Ubuntu Networking — Real-World Corporate Scenarios, Architecture, Commands, Expected Outputs and Troubleshooting</strong></p>
+<h2 id="section-1">1. Understanding networking through a real-world story</h2>
+<p>Imagine you joined <strong>TechNova Solutions</strong>, an IT company with 100 employees, as a Linux System Administrator. The company has a website, an internal application, a database server and employees connecting to the internet. One morning, your manager asks you to:</p>
+<ol>
+<li>Assign an IP address to every computer.</li>
+<li>Allow employees to access the company website by its name.</li>
+<li>Automatically assign network settings when employees connect.</li>
+<li>Allow employees to share a public internet connection.</li>
+<li>Connect the HR and IT department networks.</li>
+<li>Run applications on different ports.</li>
+<li>Protect servers from unauthorized connections.</li>
+</ol>
+<table>
+<thead>
+<tr>
+  <th>Requirement</th>
+  <th>Networking concept</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Identify every computer</td>
+  <td>IP Addressing</td>
+</tr>
+<tr>
+  <td>Find websites by name</td>
+  <td>DNS</td>
+</tr>
+<tr>
+  <td>Automatically assign addresses</td>
+  <td>DHCP</td>
+</tr>
+<tr>
+  <td>Share internet access</td>
+  <td>NAT</td>
+</tr>
+<tr>
+  <td>Connect multiple networks</td>
+  <td>Routing</td>
+</tr>
+<tr>
+  <td>Identify application services</td>
+  <td>Ports</td>
+</tr>
+<tr>
+  <td>Allow/block network traffic</td>
+  <td>Firewall</td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-2">2. Our company network architecture</h2>
+<figure class="diagram"><figcaption>TechNova Solutions — conceptual company network</figcaption><div class="network-top"><div class="device blue">☁️ <strong>Internet</strong><small>External web services</small></div><div class="vertical-connector"></div><div class="device mint">🛡️ <strong>Company gateway</strong><small>192.168.10.1 — routing / NAT / DHCP / firewall</small></div><div class="vertical-connector"></div></div><div class="network-grid"><div class="device blue">💻 <strong>IT laptop</strong><small>192.168.10.10</small></div><div class="device amber">🖥️ <strong>Web server</strong><small>192.168.10.20</small></div><div class="device violet">📖 <strong>DNS server</strong><small>192.168.10.53</small></div><div class="device rose">🏢 <strong>HR network</strong><small>192.168.20.0/24 via 192.168.20.1</small></div></div><p class="diagram-note">Conceptual connections; the HR subnet needs a router interface/VLAN. The public address used elsewhere in examples is documentation-only.</p></figure>
+<p>We will use the following example addresses throughout. <strong>203.0.113.10 is reserved for documentation; never configure it as a usable public internet IP.</strong></p>
+<table>
+<thead>
+<tr>
+  <th>Device</th>
+  <th>IP address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>IT computer</td>
+  <td><code>192.168.10.10</code></td>
+</tr>
+<tr>
+  <td>Web server</td>
+  <td><code>192.168.10.20</code></td>
+</tr>
+<tr>
+  <td>DNS server</td>
+  <td><code>192.168.10.53</code></td>
+</tr>
+<tr>
+  <td>Default gateway</td>
+  <td><code>192.168.10.1</code></td>
+</tr>
+<tr>
+  <td>HR computer</td>
+  <td><code>192.168.20.10</code></td>
+</tr>
+<tr>
+  <td>HR gateway</td>
+  <td><code>192.168.20.1</code></td>
+</tr>
+<tr>
+  <td>Example public IP</td>
+  <td><code>203.0.113.10</code></td>
+</tr>
+</tbody>
+</table>
+<p>The router needs interfaces or VLANs on both subnets to route traffic between them.</p>
+<h2 id="section-3">3. Preparing the Ubuntu lab environment</h2>
+<p><strong>Step 1 — Open Ubuntu terminal:</strong></p>
+<pre><code class="language-bash">whoami
+hostname
+pwd
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">geetha
+LAPTOP-0TBPBTEL
+/home/geetha
+</code></pre>
+<p><strong>Step 2 — Install utilities:</strong></p>
+<pre><code class="language-bash">sudo apt update
+sudo apt install -y iproute2 iputils-ping \
+  dnsutils traceroute curl net-tools \
+  netcat-openbsd tcpdump
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Command</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>ip addr</code></td>
+  <td>Display IP addresses</td>
+</tr>
+<tr>
+  <td><code>ip route</code></td>
+  <td>Display routing table</td>
+</tr>
+<tr>
+  <td><code>ping</code></td>
+  <td>Test IP reachability</td>
+</tr>
+<tr>
+  <td><code>dig</code></td>
+  <td>Query DNS</td>
+</tr>
+<tr>
+  <td><code>ss</code></td>
+  <td>Inspect sockets and ports</td>
+</tr>
+<tr>
+  <td><code>curl</code></td>
+  <td>Test HTTP/HTTPS services</td>
+</tr>
+<tr>
+  <td><code>traceroute</code></td>
+  <td>Inspect network hops</td>
+</tr>
+<tr>
+  <td><code>tcpdump</code></td>
+  <td>Capture network packets</td>
+</tr>
+<tr>
+  <td><code>nc</code></td>
+  <td>Test TCP/UDP connectivity</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Windows 11 / WSL note:</strong> WSL2 commonly uses virtualized networking with NAT, though mirrored networking is also supported. Ubuntu IP, gateway and DNS settings may differ from a normal server. We will separate safe WSL labs from labs requiring an isolated VM.</p>
+</blockquote>
+<h1 id="section-4">Module 1 — IP Addressing</h1>
+<h2 id="section-5">4. What is an IP address?</h2>
+<p><strong>IP means Internet Protocol.</strong> Like an office desk number helps locate an employee, an IP address identifies an interface used for network communication. Example: Computer A = <code>192.168.10.10</code>; Computer B = <code>192.168.10.20</code>.</p>
+<figure class="diagram"><figcaption>IP packets have a source and destination</figcaption><div class="flowrow"><div class="flow-node blue"><span class="flow-num">01</span><strong>Computer A</strong><small>192.168.10.10</small></div><div class="flow-arrow">→</div><div class="flow-node mint"><span class="flow-num">02</span><strong>IP packet</strong><small>Source → destination</small></div><div class="flow-arrow">→</div><div class="flow-node violet"><span class="flow-num">03</span><strong>Computer B</strong><small>192.168.10.20</small></div></div><p class="diagram-note"></p></figure>
+<p>An IP packet includes source and destination IP addresses. On an Ethernet LAN, ARP normally resolves a neighboring IPv4 address (destination or next hop) to a MAC address.</p>
+<h2 id="section-6">5. Types of IP addresses</h2>
+<p><strong>Private addresses:</strong> Used inside offices, homes and internal cloud networks. Examples: <code>192.168.1.10</code>, <code>10.0.0.10</code>, <code>172.16.5.20</code>.</p>
+<table>
+<thead>
+<tr>
+  <th>RFC 1918 private range</th>
+  <th>Prefix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>10.0.0.0</code> – <code>10.255.255.255</code></td>
+  <td><code>/8</code></td>
+</tr>
+<tr>
+  <td><code>172.16.0.0</code> – <code>172.31.255.255</code></td>
+  <td><code>/12</code></td>
+</tr>
+<tr>
+  <td><code>192.168.0.0</code> – <code>192.168.255.255</code></td>
+  <td><code>/16</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Public addresses:</strong> Used for publicly routable internet communication. Documentation examples: <code>203.0.113.10</code> and <code>198.51.100.25</code> (not real public IPs to deploy).</p>
+<p><strong>Static IP:</strong> Configured manually or permanently reserved; typical for servers and routers. <strong>Dynamic IP:</strong> Automatically supplied, often via DHCP; typical for laptops.</p>
+<h2 id="section-7">6. Hands-on: Find your Ubuntu IP address</h2>
+<p><strong>Step 1:</strong></p>
+<pre><code class="language-bash">ip addr
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt;
+    inet 127.0.0.1/8 scope host lo
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+    inet 172.28.96.10/20 scope global eth0
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Output</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>lo</code></td>
+  <td>Loopback interface</td>
+</tr>
+<tr>
+  <td><code>127.0.0.1</code></td>
+  <td>This computer itself</td>
+</tr>
+<tr>
+  <td><code>eth0</code></td>
+  <td>Network interface name</td>
+</tr>
+<tr>
+  <td><code>172.28.96.10</code></td>
+  <td>Example IPv4 address</td>
+</tr>
+<tr>
+  <td><code>/20</code></td>
+  <td>Network prefix length</td>
+</tr>
+<tr>
+  <td><code>UP</code></td>
+  <td>Active interface</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 2 — Show IPv4:</strong> <code>ip -4 addr</code></p>
+<p><strong>Step 3 — Show host addresses:</strong> <code>hostname -I</code></p>
+<p>Example: <code>172.28.96.10</code></p>
+<p><strong>Step 4 — Show interfaces:</strong> <code>ip link show</code></p>
+<p>Depending on installation, an interface might be called <code>eth0</code>, <code>ens33</code> or <code>enp0s8</code>.</p>
+<h2 id="section-8">7. Subnet masks and CIDR</h2>
+<p>Consider <code>192.168.10.10/24</code>. <code>/24</code> means that 24 of the 32 IPv4 bits describe the network prefix.</p>
+<pre><code class="language-text">IP Address       : 192.168.10.10
+Subnet Mask      : 255.255.255.0
+Network Address  : 192.168.10.0
+Broadcast Address: 192.168.10.255
+Usable Hosts     : 192.168.10.1 - 192.168.10.254
+</code></pre>
+<figure class="diagram"><figcaption>How 192.168.10.10/24 splits into network and host bits</figcaption><div class="binary"><span class="netbits">11000000 . 10101000 . 00001010</span><span class="hostbits"> . 00001010</span></div><div class="binary-legend"><span>■ First 24 bits: network</span><span>■ Last 8 bits: host</span></div><p class="diagram-note">A conventional /24 IPv4 LAN has 256 total addresses and 254 typical usable host addresses.</p></figure>
+<h3>Interactive subnet calculator</h3>
+<div class="calculator"><div class="calc-inputs"><label>Last octet of 192.168.10.x <input id="octet" type="number" min="0" max="255" value="10"></label><label>CIDR prefix <select id="cidr"><option value="24">/24</option><option value="25">/25</option><option value="26">/26</option><option value="27">/27</option><option value="28">/28</option></select></label></div><div class="calc-results" id="calc-results"></div><p class="diagram-note">Conventional IPv4 LAN subnets /24 through /28; this calculator operates entirely offline.</p></div>
+<p><strong>Lab — Test loopback:</strong></p>
+<pre><code class="language-bash">ping -c 4 127.0.0.1
+</code></pre>
+<p>Typical output:</p>
+<pre><code class="language-text">64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.04 ms
+64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.03 ms
+</code></pre>
+<p>This checks the local TCP/IP stack, not internet connectivity.</p>
+<p><strong>Test external IP reachability:</strong></p>
+<pre><code class="language-bash">ping -c 4 1.1.1.1
+</code></pre>
+<p>A failed ping may mean that ICMP is filtered, not necessarily that the internet is unavailable.</p>
+<blockquote>
+<p><strong>Industry story:</strong> A new employee cannot access internal applications. First inspect laptop IP, subnet and default gateway.</p>
+</blockquote>
+<h1 id="section-9">Module 2 — DNS (Domain Name System)</h1>
+<h2 id="section-10">8. What is DNS?</h2>
+<p>DNS helps translate domain names to IP addresses and provides other records. An employee enters <code>https://www.example.com</code> and the computer discovers which address to contact. Think of DNS as a telephone directory for names.</p>
+<figure class="diagram"><figcaption>DNS lookup and website access</figcaption><div class="flowrow"><div class="flow-node blue"><span class="flow-num">01</span><strong>Browser</strong><small>example.com</small></div><div class="flow-arrow">→</div><div class="flow-node mint"><span class="flow-num">02</span><strong>DNS resolver</strong><small>Looks up address</small></div><div class="flow-arrow">→</div><div class="flow-node violet"><span class="flow-num">03</span><strong>IP address</strong><small>Returned to client</small></div><div class="flow-arrow">→</div><div class="flow-node amber"><span class="flow-num">04</span><strong>Web server</strong><small>Browser connects</small></div></div><p class="diagram-note"></p></figure>
+<h2 id="section-11">9. How DNS resolution works</h2>
+<ol>
+<li>Employee enters a website name.</li>
+<li>The OS checks local sources such as caches and hosts-file mappings where applicable.</li>
+<li>If needed, a query goes to the configured resolver.</li>
+<li>The resolver uses cache or queries the DNS hierarchy.</li>
+<li>DNS returns an appropriate answer.</li>
+<li>The browser connects to an address returned for the website.</li>
+</ol>
+<p>The public DNS hierarchy includes root, top-level-domain and authoritative name servers.</p>
+<h2 id="section-12">10. DNS hands-on lab</h2>
+<p><strong>Step 1 — Inspect DNS configuration:</strong></p>
+<pre><code class="language-bash">cat /etc/resolv.conf
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">nameserver 10.255.255.254
+</code></pre>
+<p>WSL may show a local proxy or DNS tunneling address.</p>
+<p><strong>Step 2 — Resolve a name:</strong></p>
+<pre><code class="language-bash">nslookup example.com
+</code></pre>
+<p>Illustrative output (actual IP varies):</p>
+<pre><code class="language-text">Server:         10.255.255.254
+Address:        10.255.255.254#53
+Non-authoritative answer:
+Name:   example.com
+Address: 104.20.x.x
+</code></pre>
+<p><strong>Step 3 — Query A records:</strong></p>
+<pre><code class="language-bash">dig example.com A
+dig +short example.com A
+</code></pre>
+<p><strong>Step 4 — Query other record types:</strong></p>
+<pre><code class="language-bash">dig example.com AAAA
+dig gmail.com MX
+dig example.com NS
+dig example.com TXT
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Record</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>A</td>
+  <td>IPv4 address</td>
+</tr>
+<tr>
+  <td>AAAA</td>
+  <td>IPv6 address</td>
+</tr>
+<tr>
+  <td>MX</td>
+  <td>Mail exchange server</td>
+</tr>
+<tr>
+  <td>CNAME</td>
+  <td>Domain alias</td>
+</tr>
+<tr>
+  <td>NS</td>
+  <td>Authoritative name servers</td>
+</tr>
+<tr>
+  <td>TXT</td>
+  <td>Text data, verification and mail policies</td>
+</tr>
+<tr>
+  <td>PTR</td>
+  <td>Reverse DNS</td>
+</tr>
+</tbody>
+</table>
+<h2>11. Local name resolution with <code>/etc/hosts</code></h2>
+<p><strong>Step 1 — Add local name:</strong></p>
+<pre><code class="language-bash">echo &quot;127.0.0.1 training.test&quot; | sudo tee -a /etc/hosts
+</code></pre>
+<p><strong>Step 2 — Verify:</strong></p>
+<pre><code class="language-bash">getent hosts training.test
+</code></pre>
+<p>Expected:</p>
+<pre><code class="language-text">127.0.0.1 training.test
+</code></pre>
+<p><strong>Step 3 — Test:</strong></p>
+<pre><code class="language-bash">ping -c 2 training.test
+</code></pre>
+<p>The name maps to the local machine. <strong>This is hosts-file resolution, not a DNS server</strong>; <code>dig</code> may not show this mapping because it queries DNS.</p>
+<p><strong>Remove test entry:</strong></p>
+<pre><code class="language-bash">sudo sed -i '/^127\.0\.0\.1 training\.test$/d' /etc/hosts
+</code></pre>
+<blockquote>
+<p><strong>Industry story:</strong> <code>portal.company.example</code> fails while its IP works. Investigate resolver, DNS entries, cache, search domains and local overrides.</p>
+</blockquote>
+<h1 id="section-14">Module 3 — DHCP (Dynamic Host Configuration Protocol)</h1>
+<h2 id="section-15">12. What is DHCP?</h2>
+<p>Your company hires 100 employees. Without DHCP, the administrator may manually set IP address, subnet mask, default gateway and DNS for every laptop. DHCP automatically supplies network configuration. Think of it as a reception desk allocating temporary desk numbers.</p>
+<h2 id="section-16">13. DORA — How DHCP works</h2>
+<figure class="diagram"><figcaption>DHCPv4: the four-message DORA sequence</figcaption><div class="lanes"><div class="lane"><span class="lane-num">1</span><div><strong>Discover — laptop → server</strong><p>Who can give me a network configuration?</p></div></div><div class="lane"><span class="lane-num">2</span><div><strong>Offer — server → laptop</strong><p>I can offer 192.168.10.101.</p></div></div><div class="lane"><span class="lane-num">3</span><div><strong>Request — laptop → server</strong><p>I request that offered address.</p></div></div><div class="lane"><span class="lane-num">4</span><div><strong>Acknowledge — server → laptop</strong><p>Lease and options are confirmed.</p></div></div></div></figure>
+<p>The DHCP server can be configured with:</p>
+<pre><code class="language-text">Subnet           : 192.168.10.0/24
+DHCP Pool Start  : 192.168.10.100
+DHCP Pool End    : 192.168.10.200
+Gateway          : 192.168.10.1
+DNS Server       : 192.168.10.53
+Lease Duration   : 24 hours
+</code></pre>
+<p>Example laptop settings:</p>
+<pre><code class="language-text">IP Address       : 192.168.10.101
+Subnet Mask      : 255.255.255.0
+Default Gateway  : 192.168.10.1
+DNS Server       : 192.168.10.53
+</code></pre>
+<p>Leases are temporary and normally renewed before expiration. DHCPv4 uses UDP 67 (server) and 68 (client).</p>
+<h2 id="section-17">14. DHCP verification commands</h2>
+<p><strong>Ubuntu:</strong></p>
+<pre><code class="language-bash">ip -4 addr
+ip route
+cat /etc/resolv.conf
+</code></pre>
+<p>On systems with NetworkManager:</p>
+<pre><code class="language-bash">nmcli device status
+nmcli device show
+</code></pre>
+<p>On systems using systemd-networkd:</p>
+<pre><code class="language-bash">networkctl status
+</code></pre>
+<p>These may be unavailable or provide limited details on WSL.</p>
+<p><strong>Windows PowerShell:</strong></p>
+<pre><code class="language-powershell">ipconfig /all
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">DHCP Enabled     : Yes
+DHCP Server      : 192.168.1.1
+IPv4 Address     : 192.168.1.105
+Default Gateway  : 192.168.1.1
+</code></pre>
+<h2 id="section-18">15. Real DHCP server configuration (isolated Ubuntu VM only)</h2>
+<blockquote>
+<p><strong>Safety:</strong> Never run an experimental DHCP server on the active corporate LAN or ordinary WSL instance; use a private lab network with no competing DHCP server.</p>
+</blockquote>
+<pre><code class="language-bash">sudo apt install isc-dhcp-server
+</code></pre>
+<p>Example <code>/etc/dhcp/dhcpd.conf</code>:</p>
+<pre><code class="language-conf">authoritative;
+default-lease-time 3600;
+max-lease-time 86400;
+
+subnet 192.168.10.0 netmask 255.255.255.0 {
+    range 192.168.10.100 192.168.10.150;
+    option routers 192.168.10.1;
+    option domain-name-servers 192.168.10.53;
+    option subnet-mask 255.255.255.0;
+}
+</code></pre>
+<p>Choose a VM interface already connected to your isolated test subnet and configure the server's static IP there. Example <code>/etc/default/isc-dhcp-server</code>:</p>
+<pre><code class="language-conf">INTERFACESv4=&quot;enp0s8&quot;
+</code></pre>
+<p><code>enp0s8</code> is illustrative. Validate, start and inspect:</p>
+<pre><code class="language-bash">sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf
+sudo systemctl restart isc-dhcp-server
+sudo systemctl status isc-dhcp-server
+sudo cat /var/lib/dhcp/dhcpd.leases
+</code></pre>
+<blockquote>
+<p><strong>Industry story:</strong> New laptops cannot obtain addresses. Check pool exhaustion, lease status, network connectivity, DHCP relay and server logs.</p>
+</blockquote>
+<h1 id="section-19">Module 4 — NAT (Network Address Translation)</h1>
+<h2 id="section-20">16. Why do we need NAT?</h2>
+<p>The company has 100 laptops with private IPv4 addresses but only one public IPv4 address. Standard IPv4 internet access commonly uses PAT (Port Address Translation), also called NAT overload, allowing many internal devices to share one public address.</p>
+<h2 id="section-21">17. NAT storytelling example</h2>
+<figure class="diagram"><figcaption>Three private devices sharing one public IPv4 through PAT</figcaption><div class="nat-layout"><div class="nat-clients"><div class="device blue">💻 192.168.10.10:51001</div><div class="device blue">💻 192.168.10.11:51001</div><div class="device blue">💻 192.168.10.12:51001</div></div><div class="big-arr">➜</div><div class="device mint">🔀 <strong>NAT gateway</strong><small>203.0.113.10</small><small>Source ports 61001, 61002, 61003</small></div><div class="big-arr">➜</div><div class="device violet">☁️ <strong>Internet</strong><small>Remote website</small></div></div><p class="diagram-note">203.0.113.10 is a reserved illustration address. The NAT state maps replies back to the appropriate employee.</p></figure>
+<p>Example translation state:</p>
+<table>
+<thead>
+<tr>
+  <th>Internal source</th>
+  <th>Translated public source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>192.168.10.10:51001</code></td>
+  <td><code>203.0.113.10:61001</code></td>
+</tr>
+<tr>
+  <td><code>192.168.10.11:51001</code></td>
+  <td><code>203.0.113.10:61002</code></td>
+</tr>
+<tr>
+  <td><code>192.168.10.12:51001</code></td>
+  <td><code>203.0.113.10:61003</code></td>
+</tr>
+</tbody>
+</table>
+<p>These are documentation examples, not real public endpoints.</p>
+<ol>
+<li>Employee A opens a connection from <code>192.168.10.10:51001</code>.</li>
+<li>The NAT gateway translates the source to <code>203.0.113.10:61001</code>.</li>
+<li>The internet server receives the translated connection.</li>
+<li>It replies to the public IP and port.</li>
+<li>The gateway looks up its translation state.</li>
+<li>Return traffic reaches Employee A.</li>
+</ol>
+<p>Protocol and destination details can also be tracked by PAT.</p>
+<h2 id="section-22">18. NAT hands-on verification</h2>
+<pre><code class="language-bash">hostname -I
+curl -4 https://api.ipify.org
+</code></pre>
+<p>Illustrative comparison:</p>
+<pre><code class="language-text">Linux IP         : 172.28.96.10
+Observed Public  : 198.51.100.25
+</code></pre>
+<p>The example public IP is reserved for documentation. The externally observed address may differ due to NAT, VPN or a proxy. Ordinary WSL2 NAT can introduce one translation at Windows plus another at the home/office router.</p>
+<h2 id="section-23">19. SNAT vs DNAT</h2>
+<table>
+<thead>
+<tr>
+  <th>Type</th>
+  <th>Purpose</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>SNAT</td>
+  <td>Changes source address</td>
+  <td>Laptop reaching internet</td>
+</tr>
+<tr>
+  <td>DNAT</td>
+  <td>Changes destination address</td>
+  <td>Public request forwarded to internal web server</td>
+</tr>
+<tr>
+  <td>PAT</td>
+  <td>Translates addresses and ports</td>
+  <td>Multiple laptops share public IPv4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Port-forwarding example:</strong> A gateway receives traffic on public port 8080 and forwards it to internal <code>192.168.10.20:80</code>. This needs a DNAT rule and compatible firewall permissions on infrastructure you control.</p>
+<pre><code class="language-text">Public IP:8080
+     |
+     v
+192.168.10.20:80
+</code></pre>
+<blockquote>
+<p><strong>Industry story:</strong> An internal application works on office Wi-Fi but not from outside. Check public IP, destination NAT, forwarding permissions, firewall, server listening socket and ISP restrictions.</p>
+</blockquote>
+<h1 id="section-24">Module 5 — Routing Basics</h1>
+<h2 id="section-25">20. What is routing?</h2>
+<p>Routing selects where to forward IP packets. TechNova has IT network <code>192.168.10.0/24</code> and HR network <code>192.168.20.0/24</code>. Their hosts cannot communicate directly as same-subnet peers; a router or Layer 3 switch forwards between them.</p>
+<h2 id="section-26">21. Routing architecture</h2>
+<figure class="diagram"><figcaption>Inter-subnet delivery</figcaption><div class="flowrow"><div class="flow-node blue"><span class="flow-num">01</span><strong>IT laptop</strong><small>192.168.10.10/24</small></div><div class="flow-arrow">→</div><div class="flow-node mint"><span class="flow-num">02</span><strong>Router: IT side</strong><small>192.168.10.1</small></div><div class="flow-arrow">→</div><div class="flow-node violet"><span class="flow-num">03</span><strong>Router: HR side</strong><small>192.168.20.1</small></div><div class="flow-arrow">→</div><div class="flow-node amber"><span class="flow-num">04</span><strong>HR server</strong><small>192.168.20.20/24</small></div></div><p class="diagram-note"></p></figure>
+<ol>
+<li>The IT laptop sees that HR's destination IP is outside its subnet.</li>
+<li>It forwards the packet toward <code>192.168.10.1</code>.</li>
+<li>The router checks its routing table.</li>
+<li>The router forwards to the HR subnet.</li>
+<li>The HR host receives the packet.</li>
+<li>An appropriate return route delivers the reply.</li>
+</ol>
+<h2 id="section-27">22. Understanding the Linux routing table</h2>
+<pre><code class="language-bash">ip route
+</code></pre>
+<p>Illustrative output:</p>
+<pre><code class="language-text">default via 192.168.10.1 dev eth0
+192.168.10.0/24 dev eth0 proto kernel scope link src 192.168.10.10
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Entry</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>default</code></td>
+  <td>Fallback route for destinations without a more specific match</td>
+</tr>
+<tr>
+  <td><code>via 192.168.10.1</code></td>
+  <td>Next-hop gateway</td>
+</tr>
+<tr>
+  <td><code>dev eth0</code></td>
+  <td>Outgoing interface</td>
+</tr>
+<tr>
+  <td><code>192.168.10.0/24</code></td>
+  <td>Directly connected subnet</td>
+</tr>
+<tr>
+  <td><code>src 192.168.10.10</code></td>
+  <td>Preferred source IP</td>
+</tr>
+</tbody>
+</table>
+<p>Default IPv4 route means <code>0.0.0.0/0</code>.</p>
+<p><strong>Find the chosen route:</strong></p>
+<pre><code class="language-bash">ip route get 1.1.1.1
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">1.1.1.1 via 192.168.10.1 dev eth0 src 192.168.10.10
+</code></pre>
+<h2 id="section-28">23. Static routing demonstration</h2>
+<p>If a real lab router for HR is reachable at <code>192.168.10.2</code>, an example route is:</p>
+<pre><code class="language-bash">sudo ip route add 192.168.20.0/24 via 192.168.10.2
+ip route show
+sudo ip route del 192.168.20.0/24 via 192.168.10.2
+</code></pre>
+<blockquote>
+<p><strong>Caution:</strong> Do not add the route on your active WSL or office computer unless this gateway exists. Routing must also work on the return path. <code>ip route add</code> changes the current routing table and is normally nonpersistent.</p>
+</blockquote>
+<h2 id="section-29">24. Trace a route</h2>
+<pre><code class="language-bash">traceroute example.com
+traceroute -n 1.1.1.1
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">1  192.168.10.1
+2  10.10.1.1
+3  *
+4  1.1.1.1
+</code></pre>
+<p>A <code>*</code> means no probe response arrived before timeout, not necessarily that data cannot cross that hop.</p>
+<h2 id="section-30">25. Static vs dynamic routing</h2>
+<table>
+<thead>
+<tr>
+  <th>Static routing</th>
+  <th>Dynamic routing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Manually configured</td>
+  <td>Routers exchange routes</td>
+</tr>
+<tr>
+  <td>Suitable for simple networks</td>
+  <td>Useful for larger networks</td>
+</tr>
+<tr>
+  <td>No routing protocol needed</td>
+  <td>Protocols include OSPF and BGP</td>
+</tr>
+<tr>
+  <td>Requires manual changes</td>
+  <td>Can adapt to topology changes</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Industry story:</strong> HR cannot access an IT application. Check network prefixes, gateways, routing and return routes, and firewall policy.</p>
+</blockquote>
+<h1 id="section-31">Module 6 — Ports and Network Services</h1>
+<h2 id="section-32">26. What is a port?</h2>
+<p>The IP address locates a network interface, but a server may run many services: SSH, a website, APIs and databases. Transport-layer <strong>port numbers</strong> help distinguish the intended service. Think of an office building address (IP) and department extension numbers (ports).</p>
+<figure class="diagram"><figcaption>One server IP, multiple application ports</figcaption><div class="port-server"><div class="port-server-head">🖥️ Server IP: <strong>192.168.10.20</strong></div><div class="port-line"><b>TCP 22</b><span>🔐 SSH administration</span></div><div class="port-line"><b>TCP 80 / 443</b><span>🌍 Website / HTTPS</span></div><div class="port-line"><b>TCP 5432</b><span>🗄️ PostgreSQL</span></div></div></figure>
+<p>A socket or connection is identified by more than its port: transport protocol and source/destination addresses and ports matter.</p>
+<h2 id="section-33">27. Important TCP and UDP ports</h2>
+<table>
+<thead>
+<tr>
+  <th>Port</th>
+  <th>Transport</th>
+  <th>Common service</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>20, 21</td>
+  <td>TCP</td>
+  <td>FTP (classic data/control)</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td>TCP</td>
+  <td>SSH</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td>TCP</td>
+  <td>SMTP</td>
+</tr>
+<tr>
+  <td>53</td>
+  <td>UDP/TCP</td>
+  <td>DNS</td>
+</tr>
+<tr>
+  <td>67, 68</td>
+  <td>UDP</td>
+  <td>DHCPv4</td>
+</tr>
+<tr>
+  <td>80</td>
+  <td>TCP</td>
+  <td>HTTP</td>
+</tr>
+<tr>
+  <td>110</td>
+  <td>TCP</td>
+  <td>POP3</td>
+</tr>
+<tr>
+  <td>123</td>
+  <td>UDP</td>
+  <td>NTP</td>
+</tr>
+<tr>
+  <td>143</td>
+  <td>TCP</td>
+  <td>IMAP</td>
+</tr>
+<tr>
+  <td>443</td>
+  <td>TCP/UDP</td>
+  <td>HTTPS, including HTTP/3 over UDP</td>
+</tr>
+<tr>
+  <td>445</td>
+  <td>TCP</td>
+  <td>SMB</td>
+</tr>
+<tr>
+  <td>3306</td>
+  <td>TCP</td>
+  <td>MySQL</td>
+</tr>
+<tr>
+  <td>3389</td>
+  <td>TCP/UDP</td>
+  <td>RDP</td>
+</tr>
+<tr>
+  <td>5432</td>
+  <td>TCP</td>
+  <td>PostgreSQL</td>
+</tr>
+<tr>
+  <td>6379</td>
+  <td>TCP</td>
+  <td>Redis</td>
+</tr>
+<tr>
+  <td>8080</td>
+  <td>TCP</td>
+  <td>Alternate HTTP port</td>
+</tr>
+</tbody>
+</table>
+<p>These are common/default assignments; individual apps can use different ports.</p>
+<h2 id="section-34">28. Hands-on: Create a real web server in Ubuntu</h2>
+<p>This works in Ubuntu and usually WSL2.</p>
+<p><strong>Step 1 — Create project directory:</strong></p>
+<pre><code class="language-bash">mkdir -p ~/networking-lab/company-web
+cd ~/networking-lab/company-web
+</code></pre>
+<p><strong>Step 2 — Create a webpage:</strong></p>
+<pre><code class="language-bash">cat &gt; index.html &lt;&lt;'EOF'
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;TechNova Portal&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome to TechNova Solutions&lt;/h1&gt;
+    &lt;p&gt;Our Linux networking lab is working!&lt;/p&gt;
+    &lt;p&gt;Application: Company Employee Portal&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+EOF
+</code></pre>
+<p><strong>Step 3 — Start web server:</strong></p>
+<pre><code class="language-bash">python3 -m http.server 8080 --bind 127.0.0.1
+</code></pre>
+<p>Expected:</p>
+<pre><code class="language-text">Serving HTTP on 127.0.0.1 port 8080 ...
+</code></pre>
+<p>If needed: <code>sudo apt install python3</code>.</p>
+<p><strong>Step 4 — In another terminal, request the page:</strong></p>
+<pre><code class="language-bash">curl http://127.0.0.1:8080
+</code></pre>
+<p>Expected response is the HTML created in Step 2, including the heading <code>Welcome to TechNova Solutions</code>.</p>
+<p><strong>Step 5 — From Windows browser on same computer:</strong> open <code>http://localhost:8080</code>. Typical WSL2 setups forward Linux services to Windows localhost.</p>
+<p><strong>Step 6 — Inspect listening sockets:</strong></p>
+<pre><code class="language-bash">ss -lntp
+ss -lntp '( sport = :8080 )'
+</code></pre>
+<p>Example relevant output:</p>
+<pre><code class="language-text">LISTEN 0 5 127.0.0.1:8080 0.0.0.0:*
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>LISTEN</code></td>
+  <td>Waiting for TCP connections</td>
+</tr>
+<tr>
+  <td><code>127.0.0.1:8080</code></td>
+  <td>Local address and port</td>
+</tr>
+<tr>
+  <td><code>0.0.0.0:*</code></td>
+  <td>Unspecified remote for listening socket</td>
+</tr>
+<tr>
+  <td><code>-t</code></td>
+  <td>Select TCP sockets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 7 — Check a port without a server:</strong></p>
+<pre><code class="language-bash">curl --max-time 3 http://127.0.0.1:9090
+</code></pre>
+<p>If unused, typical result:</p>
+<pre><code class="language-text">curl: (7) Failed to connect to 127.0.0.1 port 9090
+</code></pre>
+<p>An IP can be reachable while a particular application port is not.</p>
+<p><strong>Step 8 — Stop server:</strong> Press <code>Ctrl+C</code> in server terminal, then verify:</p>
+<pre><code class="language-bash">ss -lntp '( sport = :8080 )'
+</code></pre>
+<p>No matching listening socket should remain.</p>
+<h2 id="section-35">29. TCP vs UDP</h2>
+<table>
+<thead>
+<tr>
+  <th>TCP</th>
+  <th>UDP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Reliable ordered byte stream</td>
+  <td>Connectionless datagrams</td>
+</tr>
+<tr>
+  <td>Uses handshake, acknowledgements and retransmission</td>
+  <td>No built-in guarantee of delivery or ordering</td>
+</tr>
+<tr>
+  <td>Examples: SSH, PostgreSQL, HTTP/1.1, HTTP/2</td>
+  <td>Examples: DHCP, many DNS queries, QUIC/HTTP/3</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Inspect TCP/UDP:</strong></p>
+<pre><code class="language-bash">ss -lnt
+ss -lun
+ss -tuna
+sudo ss -tulpn
+</code></pre>
+<p><strong>Check a TCP service:</strong> Start the Python HTTP server again in one terminal and run:</p>
+<pre><code class="language-bash">nc -vz 127.0.0.1 8080
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">Connection to 127.0.0.1 8080 port [tcp/*] succeeded!
+</code></pre>
+<p>This shows the TCP connection worked, not necessarily application health or security.</p>
+<h1 id="section-36">Module 7 — Firewall Concepts</h1>
+<h2 id="section-37">30. What is a firewall?</h2>
+<p>A firewall controls incoming and outgoing network traffic based on rules. For TechNova: public website traffic can reach 80/443, SSH 22 is restricted to administrators, and PostgreSQL 5432 stays internal.</p>
+<figure class="diagram"><figcaption>Firewall filters requests before services receive them</figcaption><div class="flowrow"><div class="flow-node blue"><span class="flow-num">01</span><strong>Incoming traffic</strong><small>Employee or internet</small></div><div class="flow-arrow">→</div><div class="flow-node mint"><span class="flow-num">02</span><strong>Firewall rules</strong><small>443 allow · 22 restricted · 5432 deny</small></div><div class="flow-arrow">→</div><div class="flow-node violet"><span class="flow-num">03</span><strong>Application server</strong><small>Only permitted traffic arrives</small></div></div><p class="diagram-note"></p></figure>
+<h2 id="section-38">31. How firewall rules work</h2>
+<p>A firewall evaluates packets against a policy, such as <strong>allow TCP 443</strong>, <strong>restrict TCP 22 to the admin subnet</strong>, <strong>deny unauthorized connections to TCP 5432</strong>. Stateful firewalls can track established connections and allow appropriate return traffic.</p>
+<h2 id="section-39">32. Firewall terminology</h2>
+<table>
+<thead>
+<tr>
+  <th>Term</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Inbound</td>
+  <td>Traffic arriving at host/network</td>
+</tr>
+<tr>
+  <td>Outbound</td>
+  <td>Traffic leaving host/network</td>
+</tr>
+<tr>
+  <td>Allow</td>
+  <td>Permit matching traffic</td>
+</tr>
+<tr>
+  <td>Deny/Drop</td>
+  <td>Block matching traffic</td>
+</tr>
+<tr>
+  <td>Reject</td>
+  <td>Explicitly refuse traffic where supported</td>
+</tr>
+<tr>
+  <td>Stateful</td>
+  <td>Track connection state</td>
+</tr>
+<tr>
+  <td>Default policy</td>
+  <td>What happens when nothing explicitly permits traffic</td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-40">33. Ubuntu firewall: UFW</h2>
+<p>Install on a <strong>dedicated Ubuntu VM or server</strong>, not as a casual experiment on a critical host:</p>
+<pre><code class="language-bash">sudo apt install ufw
+sudo ufw status
+sudo ufw status verbose
+</code></pre>
+<p>A safe example policy to review and apply on an isolated VM:</p>
+<pre><code class="language-bash">sudo ufw allow from 192.168.10.0/24 to any port 22 proto tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 8080/tcp
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+</code></pre>
+<p>After confirming remote management remains permitted:</p>
+<pre><code class="language-bash">sudo ufw enable
+sudo ufw status numbered
+</code></pre>
+<p>Illustrative output:</p>
+<pre><code class="language-text">Status: active
+[ 1] 22/tcp     ALLOW IN    192.168.10.0/24
+[ 2] 443/tcp    ALLOW IN    Anywhere
+[ 3] 80/tcp     ALLOW IN    Anywhere
+[ 4] 8080/tcp   ALLOW IN    Anywhere
+</code></pre>
+<p>Remove the training port rule and disable if appropriate:</p>
+<pre><code class="language-bash">sudo ufw delete allow 8080/tcp
+sudo ufw disable
+</code></pre>
+<blockquote>
+<p><strong>Warning:</strong> Never enable restrictive firewall defaults on a remote production server until you are sure that administrator access is allowed. Cloud firewall policies and OS firewall rules are separate. Windows Firewall and Hyper-V firewall can also affect WSL traffic; use a VM to test predictable UFW enforcement.</p>
+</blockquote>
+<h2 id="section-41">34. Restrict database access</h2>
+<p>PostgreSQL database server: <code>192.168.10.30:5432</code>. Only application server <code>192.168.10.20</code> should connect.</p>
+<pre><code class="language-bash">sudo ufw allow from 192.168.10.20 to any port 5432 proto tcp
+</code></pre>
+<p>Combined with a default-deny incoming policy, this permits that source. PostgreSQL must separately listen on the desired interface and enforce authentication; firewall allow is not database authorization.</p>
+<p>Common mistakes: opening every port, unrestricted SSH, public database exposure, forgetting that services must listen, and overlooking cloud network security rules.</p>
+<h1 id="section-42">Module 8 — Complete End-to-End Industry Lab</h1>
+<h2 id="section-43">35. Story: Employee accesses the company portal</h2>
+<p><strong>Requirement:</strong> An employee opens <code>http://portal.training.test:8080</code> from a corporate laptop.</p>
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Employee laptop</td>
+  <td><code>192.168.10.101</code></td>
+</tr>
+<tr>
+  <td>DHCP server</td>
+  <td><code>192.168.10.1</code></td>
+</tr>
+<tr>
+  <td>DNS server</td>
+  <td><code>192.168.10.53</code></td>
+</tr>
+<tr>
+  <td>Gateway</td>
+  <td><code>192.168.10.1</code></td>
+</tr>
+<tr>
+  <td>Portal web server</td>
+  <td><code>192.168.20.20</code></td>
+</tr>
+<tr>
+  <td>Web server subnet</td>
+  <td><code>192.168.20.0/24</code></td>
+</tr>
+<tr>
+  <td>Portal service</td>
+  <td>TCP 8080</td>
+</tr>
+</tbody>
+</table>
+<p>DHCP provides initial settings; DNS resolves the name; routing joins the subnets; port identifies the service; firewall controls access. NAT is not necessary for this purely internal route, but may be required for public IPv4 internet access.</p>
+<h2 id="section-44">36. Follow one request through the network</h2>
+<figure class="diagram"><figcaption>Complete employee-to-application journey</figcaption><div class="lanes"><div class="lane"><span class="lane-num">1</span><div><strong>DHCP</strong><p>Laptop receives valid network settings.</p></div></div><div class="lane"><span class="lane-num">2</span><div><strong>DNS</strong><p>portal.training.test resolves to 192.168.20.20.</p></div></div><div class="lane"><span class="lane-num">3</span><div><strong>Routing</strong><p>Router forwards traffic from IT subnet to HR subnet.</p></div></div><div class="lane"><span class="lane-num">4</span><div><strong>Firewall and ports</strong><p>TCP 8080 is evaluated and permitted.</p></div></div><div class="lane"><span class="lane-num">5</span><div><strong>HTTP response</strong><p>Server returns the employee portal. NAT is unnecessary for the internal path.</p></div></div></div></figure>
+<h2 id="section-45">37. Reproduce the application locally in Ubuntu/WSL</h2>
+<p>This demonstrates <strong>local name resolution, HTTP, a listening port and packet troubleshooting</strong>. It does not create a real DHCP service or multi-subnet router.</p>
+<p><strong>Step 1 — Prepare project:</strong></p>
+<pre><code class="language-bash">mkdir -p ~/networking-lab/portal
+cd ~/networking-lab/portal
+</code></pre>
+<p><strong>Create page:</strong></p>
+<pre><code class="language-bash">cat &gt; index.html &lt;&lt;'EOF'
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Employee Portal&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;TechNova Employee Portal&lt;/h1&gt;
+    &lt;h2&gt;Networking Lab&lt;/h2&gt;
+    &lt;p&gt;Application is running on TCP port 8080.&lt;/p&gt;
+    &lt;p&gt;Networking concepts demonstrated:&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;li&gt;IP Address&lt;/li&gt;
+        &lt;li&gt;Local Name Resolution&lt;/li&gt;
+        &lt;li&gt;TCP Port&lt;/li&gt;
+        &lt;li&gt;HTTP Request and Response&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+EOF
+</code></pre>
+<p><strong>Step 2 — Start HTTP server (leave running):</strong></p>
+<pre><code class="language-bash">python3 -m http.server 8080 --bind 127.0.0.1
+</code></pre>
+<p><strong>Step 3 — In another terminal, create local mapping:</strong></p>
+<pre><code class="language-bash">echo &quot;127.0.0.1 portal.training.test&quot; | sudo tee -a /etc/hosts
+getent ahostsv4 portal.training.test
+</code></pre>
+<p>Expected to include:</p>
+<pre><code class="language-text">127.0.0.1 STREAM portal.training.test
+</code></pre>
+<p><strong>Step 4 — Inspect local configuration and route:</strong></p>
+<pre><code class="language-bash">ip -4 addr
+ip route
+ip route get 127.0.0.1
+</code></pre>
+<p><strong>Step 5 — Check listening port:</strong></p>
+<pre><code class="language-bash">ss -lntp '( sport = :8080 )'
+</code></pre>
+<p><strong>Step 6 — Request page by name:</strong></p>
+<pre><code class="language-bash">curl --noproxy '*' http://portal.training.test:8080
+curl --noproxy '*' -I http://portal.training.test:8080
+</code></pre>
+<p>Expected status response includes:</p>
+<pre><code class="language-text">HTTP/1.0 200 OK
+Content-type: text/html
+</code></pre>
+<p><code>--noproxy '*'</code> prevents routing this local request through a configured HTTP proxy.</p>
+<p><strong>Step 7 — Third terminal, capture loopback TCP traffic:</strong></p>
+<pre><code class="language-bash">sudo tcpdump -i lo -nn tcp port 8080
+</code></pre>
+<p>Repeat the <code>curl</code> request. Illustrative output:</p>
+<pre><code class="language-text">127.0.0.1.51000 &gt; 127.0.0.1.8080: Flags [S]
+127.0.0.1.8080 &gt; 127.0.0.1.51000: Flags [S.]
+127.0.0.1.51000 &gt; 127.0.0.1.8080: Flags [.]
+</code></pre>
+<figure class="diagram"><figcaption>TCP three-way handshake</figcaption><div class="lanes"><div class="lane"><span class="lane-num">1</span><div><strong>SYN — client → server</strong><p>Client requests to establish a TCP connection.</p></div></div><div class="lane"><span class="lane-num">2</span><div><strong>SYN-ACK — server → client</strong><p>Server acknowledges and responds.</p></div></div><div class="lane"><span class="lane-num">3</span><div><strong>ACK — client → server</strong><p>Connection becomes established and data can flow.</p></div></div></div></figure>
+<p>The client source port changes across executions. Stop capture with <code>Ctrl+C</code>.</p>
+<p><strong>Step 8 — Browser test:</strong> Inside Ubuntu open <code>http://portal.training.test:8080</code>. From the Windows browser use <code>http://localhost:8080</code>; the Linux <code>/etc/hosts</code> entry does not automatically propagate to Windows.</p>
+<p><strong>Step 9 — Cleanup:</strong> Stop the Python server with <code>Ctrl+C</code>, then:</p>
+<pre><code class="language-bash">sudo sed -i '/^127\.0\.0\.1 portal\.training\.test$/d' /etc/hosts
+</code></pre>
+<h1 id="section-46">Module 9 — Real Network Troubleshooting</h1>
+<h2 id="section-47">38. Scenario: Employee reports &quot;The website is not working&quot;</h2>
+<p>Check the network <strong>from lower-level configuration toward the application</strong>, finding the first failing layer.</p>
+<figure class="diagram"><figcaption>Troubleshooting sequence</figcaption><div class="lanes"><div class="lane"><span class="lane-num">1</span><div><strong>IP configuration</strong><p>Is the IP and subnet valid?</p></div></div><div class="lane"><span class="lane-num">2</span><div><strong>Route / gateway</strong><p>Is there a usable path?</p></div></div><div class="lane"><span class="lane-num">3</span><div><strong>DNS</strong><p>Does the hostname resolve?</p></div></div><div class="lane"><span class="lane-num">4</span><div><strong>Port / firewall</strong><p>Can the application port be reached?</p></div></div><div class="lane"><span class="lane-num">5</span><div><strong>Application</strong><p>Is the HTTP server healthy and responding?</p></div></div></div></figure>
+<h3>Case 1 — No valid IP address</h3>
+<pre><code class="language-bash">ip -4 addr
+ip link show
+</code></pre>
+<p>Investigate interface status, DHCP and physical/virtual network connectivity.</p>
+<h3>Case 2 — Gateway unreachable</h3>
+<pre><code class="language-bash">ip route
+ip route get 1.1.1.1
+</code></pre>
+<p>Inspect the chosen next hop and test it where ICMP is permitted.</p>
+<h3>Case 3 — IP connectivity works but website name fails</h3>
+<pre><code class="language-bash">ping -c 2 1.1.1.1
+dig example.com
+getent hosts example.com
+</code></pre>
+<p>Investigate DNS configuration, reachable resolvers and local mapping.</p>
+<h3>Case 4 — DNS works but application fails</h3>
+<pre><code class="language-bash">curl -I https://example.com
+nc -vz 127.0.0.1 8080
+ss -lntp '( sport = :8080 )'
+</code></pre>
+<p>Check whether the process is running, listening at the right address and port, and permitted by the firewall.</p>
+<h3>Case 5 — Connection times out</h3>
+<p>Possible reasons: firewall dropping packets, invalid route or return route, host down, security policy, or service bound to an unexpected address.</p>
+<h3>Case 6 — Connection refused</h3>
+<p>Often the host is reachable, but no service accepts the target port; an explicit firewall reject can look similar.</p>
+<h3>Case 7 — Slow application</h3>
+<pre><code class="language-bash">ping -c 10 1.1.1.1
+traceroute -n 1.1.1.1
+curl -w '\nTotal time: %{time_total}s\n' -o /dev/null -s https://example.com
+</code></pre>
+<p>Distinguish latency, packet loss, DNS delays and application processing delays.</p>
+<h1 id="section-48">Module 10 — Essential Linux Networking Commands</h1>
+<table>
+<thead>
+<tr>
+  <th>Requirement</th>
+  <th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Display all interfaces and IPs</td>
+  <td><code>ip addr</code></td>
+</tr>
+<tr>
+  <td>Display IPv4 addresses</td>
+  <td><code>ip -4 addr</code></td>
+</tr>
+<tr>
+  <td>Display interface status</td>
+  <td><code>ip link show</code></td>
+</tr>
+<tr>
+  <td>Display host IPs</td>
+  <td><code>hostname -I</code></td>
+</tr>
+<tr>
+  <td>Display routing table</td>
+  <td><code>ip route</code></td>
+</tr>
+<tr>
+  <td>Find route to destination</td>
+  <td><code>ip route get 1.1.1.1</code></td>
+</tr>
+<tr>
+  <td>Test loopback</td>
+  <td><code>ping -c 4 127.0.0.1</code></td>
+</tr>
+<tr>
+  <td>Test external reachability</td>
+  <td><code>ping -c 4 1.1.1.1</code></td>
+</tr>
+<tr>
+  <td>Check DNS</td>
+  <td><code>nslookup example.com</code></td>
+</tr>
+<tr>
+  <td>Query DNS A record</td>
+  <td><code>dig example.com A</code></td>
+</tr>
+<tr>
+  <td>Show DNS config</td>
+  <td><code>cat /etc/resolv.conf</code></td>
+</tr>
+<tr>
+  <td>Show host resolution</td>
+  <td><code>getent hosts example.com</code></td>
+</tr>
+<tr>
+  <td>Trace route</td>
+  <td><code>traceroute -n 1.1.1.1</code></td>
+</tr>
+<tr>
+  <td>Show listening TCP sockets</td>
+  <td><code>ss -lnt</code></td>
+</tr>
+<tr>
+  <td>Show listening TCP/UDP sockets</td>
+  <td><code>ss -tuln</code></td>
+</tr>
+<tr>
+  <td>Show listening ports and processes</td>
+  <td><code>sudo ss -tulpn</code></td>
+</tr>
+<tr>
+  <td>Check HTTP server</td>
+  <td><code>curl -I https://example.com</code></td>
+</tr>
+<tr>
+  <td>Test TCP port</td>
+  <td><code>nc -vz 127.0.0.1 8080</code></td>
+</tr>
+<tr>
+  <td>Capture packets</td>
+  <td><code>sudo tcpdump -i lo -nn</code></td>
+</tr>
+<tr>
+  <td>Check UFW status</td>
+  <td><code>sudo ufw status</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-49">39. Mini practice assignments</h2>
+<div class="exercise-list" id="exercises"><label class="exercise"><input type="checkbox"><span><b>1. Identify the Linux IP address</b><small>Find IPv4 address and interface.</small></span></label><label class="exercise"><input type="checkbox"><span><b>2. Identify the default gateway</b><small>Find the route to 1.1.1.1.</small></span></label><label class="exercise"><input type="checkbox"><span><b>3. Resolve a website</b><small>Show A and AAAA records.</small></span></label><label class="exercise"><input type="checkbox"><span><b>4. Inspect DNS configuration</b><small>Identify configured resolver.</small></span></label><label class="exercise"><input type="checkbox"><span><b>5. Understand DHCP</b><small>Check whether Windows adapter uses DHCP.</small></span></label><label class="exercise"><input type="checkbox"><span><b>6. Identify private/public IPv4</b><small>Compare local and externally observed IPs.</small></span></label><label class="exercise"><input type="checkbox"><span><b>7. Trace an external route</b><small>Explain the first hop.</small></span></label><label class="exercise"><input type="checkbox"><span><b>8. Run an HTTP server</b><small>Host HTML using Python on TCP 8080.</small></span></label><label class="exercise"><input type="checkbox"><span><b>9. Inspect a listening port</b><small>Use ss to find the HTTP server.</small></span></label><label class="exercise"><input type="checkbox"><span><b>10. Test connectivity</b><small>Compare TCP 8080 with an unused port.</small></span></label><label class="exercise"><input type="checkbox"><span><b>11. Resolve a custom name</b><small>Add portal.training.test to /etc/hosts.</small></span></label><label class="exercise"><input type="checkbox"><span><b>12. Capture TCP traffic</b><small>Observe SYN, SYN-ACK and ACK.</small></span></label><label class="exercise"><input type="checkbox"><span><b>13. Review firewall policy</b><small>In an isolated VM inspect UFW rules.</small></span></label><label class="exercise"><input type="checkbox"><span><b>14. Diagnose a failure</b><small>Stop the server and interpret curl output.</small></span></label></div><p class="progress-count" id="progress">0 / 14 completed</p>
+<h2 id="section-50">40. Final scenario: Explain everything together</h2>
+<p><strong>Manager:</strong> An employee enters <code>https://portal.company.example</code> in a browser. Explain how the request reaches the application.</p>
+<ol>
+<li><strong>DHCP:</strong> Laptop obtained IP address, subnet mask, gateway and DNS configuration.</li>
+<li><strong>DNS:</strong> The laptop resolves the portal name to an IP address.</li>
+<li><strong>IP Addressing:</strong> Source and destination addresses identify the communicating interfaces.</li>
+<li><strong>Routing:</strong> Packets pass through a gateway and routers when the destination is outside the local subnet.</li>
+<li><strong>NAT:</strong> A NAT gateway can translate addresses and possibly ports if the request crosses such a boundary.</li>
+<li><strong>Ports:</strong> HTTPS normally uses TCP 443, or UDP 443 for HTTP/3.</li>
+<li><strong>Firewall:</strong> Network and host firewall policies permit or deny traffic.</li>
+<li><strong>Web Server:</strong> Server handles the request and sends a response.</li>
+<li><strong>Browser:</strong> The employee sees the portal.</li>
+</ol>
+<h2 id="section-51">41. What you should remember</h2>
+<table>
+<thead>
+<tr>
+  <th>Concept</th>
+  <th>Memory trick</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>IP Address</td>
+  <td>Which interface?</td>
+</tr>
+<tr>
+  <td>Subnet Mask</td>
+  <td>Which network does it belong to?</td>
+</tr>
+<tr>
+  <td>Gateway</td>
+  <td>Where does non-local traffic go?</td>
+</tr>
+<tr>
+  <td>DNS</td>
+  <td>What IP corresponds to this name?</td>
+</tr>
+<tr>
+  <td>DHCP</td>
+  <td>Who supplies automatic network settings?</td>
+</tr>
+<tr>
+  <td>NAT</td>
+  <td>How are addresses translated?</td>
+</tr>
+<tr>
+  <td>Routing</td>
+  <td>Which next-hop path carries the packet?</td>
+</tr>
+<tr>
+  <td>Port</td>
+  <td>Which service receives the connection?</td>
+</tr>
+<tr>
+  <td>Firewall</td>
+  <td>Is this traffic permitted?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommended learning order:</strong> Complete IP addressing, DNS, ports and the local web-server lab first in Ubuntu/WSL. Study DHCP, NAT and routed multi-subnet scenarios with the company topology, then reproduce them in isolated virtual machines using a router/firewall VM. A single WSL instance cannot simulate every part of an enterprise network.</p>
+<h2 id="section-52">Further reading</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows/wsl/networking">Microsoft WSL networking documentation</a></li>
+<li><a href="https://man7.org/linux/man-pages/man8/ip.8.html">Linux <code>ip</code> and routing reference</a></li>
+<li><a href="https://documentation.ubuntu.com/server/how-to/networking/">Ubuntu Server networking documentation</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1918">RFC 1918 — Private IPv4 addresses</a></li>
+</ul>
+</main></div><div class="footer">TechNova Solutions | Self-contained Linux networking tutorial | Illustrative IP addresses and outputs are clearly marked</div><button class="print-button" onclick="window.print()">🖨️ Print / Save PDF</button><script>const octet=document.getElementById('octet'),cidr=document.getElementById('cidr'),out=document.getElementById('calc-results');function fmt(n){return [24,16,8,0].map(s=>(n>>>s)&255).join('.')}function calc(){let o=Math.max(0,Math.min(255,Number(octet.value)||0));let p=Number(cidr.value),ip=(192*16777216+168*65536+10*256+o)>>>0,mask=(0xffffffff <<(32-p))>>>0,network=(ip&mask)>>>0,broadcast=(network|(~mask>>>0))>>>0;let vals=[['IP address',`192.168.10.${o}/${p}`],['Subnet mask',fmt(mask)],['Network address',fmt(network)],['Broadcast address',fmt(broadcast)],['Typical usable hosts',String(2**(32-p)-2)],['Usable range',fmt(network+1)+' – '+fmt(broadcast-1)]];out.innerHTML=vals.map(([k,v])=>`<div class="calc-row"><small>${k}</small><strong>${v}</strong></div>`).join('')}octet.addEventListener('input',calc);cidr.addEventListener('change',calc);calc();document.querySelectorAll('pre').forEach(pre=>{let b=document.createElement('button');b.className='copy';b.textContent='Copy';b.setAttribute('aria-label','Copy command block');b.onclick=()=>{navigator.clipboard.writeText(pre.querySelector('code').textContent).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1500)}).catch(()=>{b.textContent='Select text to copy'})};pre.appendChild(b)});let boxes=[...document.querySelectorAll('.exercise input')];function progress(){document.getElementById('progress').textContent=boxes.filter(x=>x.checked).length+' / '+boxes.length+' completed'}boxes.forEach(x=>x.addEventListener('change',progress));</script></body></html>
