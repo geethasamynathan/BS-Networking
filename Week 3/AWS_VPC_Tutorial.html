@@ -1,0 +1,1708 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AWS VPC & Subnets — Complete Hands-on Windows EC2 Tutorial</title><style>
+:root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#17243b;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(120deg,#102a43,#155e75);color:white;padding:32px 5vw}header h1{margin:0;font-size:clamp(24px,3vw,36px)}header p{opacity:.88;max-width:850px}nav{position:sticky;top:0;background:#ffffffed;backdrop-filter:blur(10px);padding:10px 5vw;display:flex;gap:10px;box-shadow:0 2px 13px #193e581a;z-index:10;align-items:center}button{border:1px solid #a8bac8;border-radius:8px;background:white;padding:9px 12px;cursor:pointer;font-weight:600;color:#17455e}button:hover{background:#e6f5f9}#layout{display:grid;grid-template-columns:265px minmax(0,1fr);max-width:1500px;margin:0 auto;gap:24px;padding:24px}aside{position:sticky;top:80px;height:calc(100vh - 90px);overflow:auto;background:white;border:1px solid #e3e8ef;border-radius:14px;padding:16px}aside a{display:block;padding:8px 6px;border-bottom:1px solid #eff2f5;text-decoration:none;color:#1c526d;font-size:12px;line-height:1.35}aside a:hover{background:#edf8fc}main{min-width:0}.intro{background:white;padding:24px;border-radius:14px;margin-bottom:16px}details.chapter{border:1px solid #e3e8ef;background:white;border-radius:14px;margin:0 0 12px;overflow:hidden;scroll-margin-top:75px}details.chapter>summary{padding:18px 22px;font-size:16px;font-weight:700;color:#163e56;cursor:pointer;background:#f8fafc;list-style:none;display:flex;align-items:center;gap:9px}details.chapter>summary::-webkit-details-marker{display:none}details.chapter>summary:before{content:'▸';color:#168a9a;font-size:19px}details.chapter[open]>summary:before{content:'▾'}.chapter-content{padding:5px 24px 25px;line-height:1.7}p,li{line-height:1.7}h2,h3{color:#143d59}table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;display:block;overflow-x:auto}th,td{border:1px solid #d8e2ec;padding:9px 12px;text-align:left;white-space:normal}th{background:#e9f3fa}tr:nth-child(even){background:#f9fbfd}pre{background:#102235;color:#e5f2ff;padding:18px;border-radius:10px;overflow:auto;font-size:12px;line-height:1.55}code{font-family:Consolas,monospace}p code,li code,td code{background:#e7f0f8;color:#164a71;border-radius:4px;padding:2px 4px}a{color:#087b98}blockquote{border-left:4px solid #1495a5;background:#eef8fa;margin-left:0;padding:10px 18px}.diagram{background:#f8fbff;border:1px solid #dce7f2;border-radius:12px;padding:16px;margin:20px 0;text-align:center}.diagram-art svg{width:100%;max-height:540px;height:auto}.diagram figcaption{font-size:12px;color:#5e768a;padding-top:6px}.muted{font-size:13px;color:#61758b}footer{padding:25px;text-align:center;color:#546b80}@media(max-width:850px){#layout{display:block;padding:14px}aside{position:static;height:auto;max-height:220px;margin-bottom:15px}.chapter-content{padding:5px 14px 20px}header{padding:24px 18px}nav{padding:10px 14px}}
+@media print{nav,aside{display:none!important}#layout{display:block}details.chapter{break-inside:avoid;box-shadow:none}body{background:white}}
+</style></head><body><header><h1>AWS VPC & Subnets — Complete Hands-on Tutorial</h1><p>Company ABC · Four Windows EC2 servers · Developer and Tester subnets · Internet Gateway · Routing · Security Groups · VPC Peering</p><p>Complete offline edition · All 10 diagrams embedded as vector graphics</p></header><nav><button onclick="document.querySelectorAll('details.chapter').forEach(x=>x.open=true)">Expand all sections</button><button onclick="document.querySelectorAll('details.chapter').forEach(x=>x.open=false)">Collapse all sections</button><button onclick="window.print()">Print / Save PDF</button></nav><div id="layout"><aside><strong>Table of contents</strong><a href="#chapter-1">1. What is a VPC? — Concept and first diagram</a><a href="#chapter-2">2. What is a subnet, and why use it? — Developer versus Tester diagram</a><a href="#chapter-3">3. IP addresses and CIDR — Full address plan</a><a href="#chapter-4">4. What is an Internet Gateway? — Diagram and explanation</a><a href="#chapter-5">5. Overall architecture — All four EC2 instances and public access diagram</a><a href="#chapter-6">6. Step 1 — Open AWS VPC Console and select Region</a><a href="#chapter-7">7. Step 2 — Create CompanyABC-VPC</a><a href="#chapter-8">8. Step 3 — Create Developer subnet</a><a href="#chapter-9">9. Step 4 — Create Testing subnet</a><a href="#chapter-10">10. Step 5 — Public IP assignment for classroom RDP</a><a href="#chapter-11">11. Step 6 — Create and attach CompanyABC-IGW</a><a href="#chapter-12">12. Step 7 — Create public route table, inspect routes, and simulate route selection</a><a href="#chapter-13">13. Step 8 — Associate both subnets with public route table</a><a href="#chapter-14">14. Part 3 — Create Developer-SG and Tester-SG security groups</a><a href="#chapter-15">15. Part 4, Step 9 — Launch DEV-A Windows Server 2022 with IIS user data</a><a href="#chapter-16">16. Step 10 — Launch DEV-B, TEST-C, and TEST-D</a><a href="#chapter-17">17. Step 11 — Connect using RDP, decrypt Administrator password, verify IIS</a><a href="#chapter-18">18. Part 5, Step 12 — DEV-A talks to DEV-B using private IP</a><a href="#chapter-19">19. Step 13 — DEV-A talks to TEST-C across two subnets</a><a href="#chapter-20">20. Step 14 — Demonstrate TCP port 5000: no listener, allowed, then blocked</a><a href="#chapter-21">21. Part 6, Scenario A — Company ABC talks to Company XYZ on the public internet</a><a href="#chapter-22">22. Part 6, Scenario B — Private company-to-company communication using VPC Peering</a><a href="#chapter-23">23. Step 15 — Optional: Create Company XYZ VPC, subnet and Windows EC2</a><a href="#chapter-24">24. Step 16 — Create and accept ABC-to-XYZ VPC peering</a><a href="#chapter-25">25. Step 17 — Add cross-VPC routes in both directions</a><a href="#chapter-26">26. Step 18 — Test DEV-A to EMP-X using private IP</a><a href="#chapter-27">27. Part 7 — Public versus private subnet comparison</a><a href="#chapter-28">28. Secure architecture diagram — Public web tier, private developers/testers, NAT</a><a href="#chapter-29">29. Part 8 — Complete student practical checklist</a><a href="#chapter-30">30. Troubleshooting — RDP, ICMP, IIS, NAT, and VPC Peering</a><a href="#chapter-31">31. Cleanup — Avoid unexpected AWS charges</a><a href="#chapter-32">32. Final recap — Component, analogy, and purpose</a></aside><main><h1>AWS VPC and Subnet — Complete Hands-on Tutorial</h1>
+<p><strong>Beginner to Intermediate | Real-world company scenario | Windows Server 2022 | AWS EC2</strong></p>
+<blockquote>
+<p><strong>How to use this tutorial:</strong> Each section has a <strong>collapsible title</strong>. Click the section title to expand its content. Diagrams are provided as Mermaid diagrams (rendered by GitHub and many Markdown editors). Use a Markdown Preview with Mermaid support in VS Code.</p>
+<p><strong>Lab scenario:</strong> Company ABC has four employees: <strong>A and B are Developers</strong>, and <strong>C and D are Testers</strong>. We will show communication within the same subnet, across subnets, through the internet, and through VPC peering to Company XYZ.</p>
+</blockquote>
+
+<details id="chapter-1" class="chapter" open<summary><strong>1. What is a VPC? — Concept and first diagram</strong></summary><div class="chapter-content"><p><strong>VPC stands for Virtual Private Cloud.</strong> A VPC is a logically isolated network inside AWS in which you control IP ranges, subnets, routing, and network permissions.</p>
+<p>Think of it as your company's private office network, but the computers are EC2 virtual machines hosted in AWS.</p>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="322pt" height="320pt"
+ viewBox="0.00 0.00 322.08 320.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 297.04)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_abc</title>
+<polygon fill="transparent" stroke="black" points="8,-8 8,-266 268,-266 268,-8 8,-8"/>
+<text text-anchor="middle" x="138" y="-249.2" font-family="Arial" font-size="16.00">Company ABC — Private Network</text>
+</g>
+<!-- A -->
+<g id="node1" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M158.5,-232C158.5,-232 75.5,-232 75.5,-232 69.5,-232 63.5,-226 63.5,-220 63.5,-220 63.5,-208 63.5,-208 63.5,-202 69.5,-196 75.5,-196 75.5,-196 158.5,-196 158.5,-196 164.5,-196 170.5,-202 170.5,-208 170.5,-208 170.5,-220 170.5,-220 170.5,-226 164.5,-232 158.5,-232"/>
+<text text-anchor="middle" x="117" y="-210.9" font-family="Arial" font-size="12.00">A · Developer</text>
+</g>
+<!-- B -->
+<g id="node2" class="node">
+<title>B</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M119,-137C119,-137 35,-137 35,-137 29,-137 23,-131 23,-125 23,-125 23,-113 23,-113 23,-107 29,-101 35,-101 35,-101 119,-101 119,-101 125,-101 131,-107 131,-113 131,-113 131,-125 131,-125 131,-131 125,-137 119,-137"/>
+<text text-anchor="middle" x="77" y="-115.9" font-family="Arial" font-size="12.00">B · Developer</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g id="edge1" class="edge">
+<title>A&#45;&gt;B</title>
+<path fill="none" stroke="#64748b" d="M106.44,-188.45C100.65,-174.98 93.48,-158.32 87.67,-144.81"/>
+<polygon fill="#64748b" stroke="#64748b" points="103.93,-189.7 109.66,-195.94 109.07,-187.49 103.93,-189.7"/>
+<polygon fill="#64748b" stroke="#64748b" points="90.16,-143.51 84.43,-137.26 85.01,-145.72 90.16,-143.51"/>
+</g>
+<!-- C -->
+<g id="node3" class="node">
+<title>C</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M240,-137C240,-137 178,-137 178,-137 172,-137 166,-131 166,-125 166,-125 166,-113 166,-113 166,-107 172,-101 178,-101 178,-101 240,-101 240,-101 246,-101 252,-107 252,-113 252,-113 252,-125 252,-125 252,-131 246,-137 240,-137"/>
+<text text-anchor="middle" x="209" y="-115.9" font-family="Arial" font-size="12.00">C · Tester</text>
+</g>
+<!-- A&#45;&gt;C -->
+<g id="edge3" class="edge">
+<title>A&#45;&gt;C</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M139.57,-190.19C153.71,-175.89 171.89,-157.51 186.1,-143.15"/>
+<polygon fill="#64748b" stroke="#64748b" points="137.51,-188.29 133.87,-195.94 141.49,-192.22 137.51,-188.29"/>
+<polygon fill="#64748b" stroke="#64748b" points="188.29,-144.92 191.92,-137.26 184.3,-140.98 188.29,-144.92"/>
+<text text-anchor="middle" x="216" y="-164" font-family="Arial" font-size="10.00">Internal communication</text>
+</g>
+<!-- D -->
+<g id="node4" class="node">
+<title>D</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M174,-52C174,-52 112,-52 112,-52 106,-52 100,-46 100,-40 100,-40 100,-28 100,-28 100,-22 106,-16 112,-16 112,-16 174,-16 174,-16 180,-16 186,-22 186,-28 186,-28 186,-40 186,-40 186,-46 180,-52 174,-52"/>
+<text text-anchor="middle" x="143" y="-30.9" font-family="Arial" font-size="12.00">D · Tester</text>
+</g>
+<!-- B&#45;&gt;D -->
+<g id="edge4" class="edge">
+<title>B&#45;&gt;D</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M95.71,-94.48C104.66,-83.22 115.35,-69.77 124.3,-58.52"/>
+<polygon fill="#64748b" stroke="#64748b" points="93.46,-92.8 90.68,-100.8 97.85,-96.28 93.46,-92.8"/>
+<polygon fill="#64748b" stroke="#64748b" points="126.55,-60.18 129.34,-52.18 122.17,-56.69 126.55,-60.18"/>
+</g>
+<!-- C&#45;&gt;D -->
+<g id="edge2" class="edge">
+<title>C&#45;&gt;D</title>
+<path fill="none" stroke="#64748b" d="M190.29,-94.48C181.34,-83.22 170.65,-69.77 161.7,-58.52"/>
+<polygon fill="#64748b" stroke="#64748b" points="188.15,-96.28 195.32,-100.8 192.54,-92.8 188.15,-96.28"/>
+<polygon fill="#64748b" stroke="#64748b" points="163.83,-56.69 156.66,-52.18 159.45,-60.18 163.83,-56.69"/>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 1 · Offline vector illustration of the network architecture</figcaption></figure>
+<p>We create the AWS VPC named <code>CompanyABC-VPC</code> and launch four EC2 instances to represent these employees.</p>
+<p><strong>Important:</strong> A private network path does not itself allow all traffic: security groups, network ACLs, and Windows Defender Firewall can still block connections.</p>
+</div></details>
+
+<details id="chapter-2" class="chapter"<summary><strong>2. What is a subnet, and why use it? — Developer versus Tester diagram</strong></summary><div class="chapter-content"><p>A <strong>subnet is a smaller IP network inside a VPC</strong>. We divide our company into Development and Testing network segments.</p>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="537pt" height="191pt"
+ viewBox="0.00 0.00 537.08 191.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 168.04)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_dev</title>
+<polygon fill="transparent" stroke="#13a88c" points="8,-8 8,-86 250,-86 250,-8 8,-8"/>
+<text text-anchor="middle" x="129" y="-69.2" font-family="Arial" font-size="16.00">Developer&#45;Subnet · 10.0.1.0/24</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_test</title>
+<polygon fill="transparent" stroke="#3b82f6" points="263,-8 263,-86 483,-86 483,-8 263,-8"/>
+<text text-anchor="middle" x="373" y="-69.2" font-family="Arial" font-size="16.00">Testing&#45;Subnet · 10.0.2.0/24</text>
+</g>
+<!-- V -->
+<g id="node1" class="node">
+<title>V</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M372.5,-145C372.5,-145 255.5,-145 255.5,-145 249.5,-145 243.5,-139 243.5,-133 243.5,-133 243.5,-111 243.5,-111 243.5,-105 249.5,-99 255.5,-99 255.5,-99 372.5,-99 372.5,-99 378.5,-99 384.5,-105 384.5,-111 384.5,-111 384.5,-133 384.5,-133 384.5,-139 378.5,-145 372.5,-145"/>
+<text text-anchor="middle" x="314" y="-125.4" font-family="Arial" font-size="12.00">CompanyABC&#45;VPC</text>
+<text text-anchor="middle" x="314" y="-112.4" font-family="Arial" font-size="12.00">10.0.0.0/16</text>
+</g>
+<!-- A -->
+<g id="node2" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M226.5,-52C226.5,-52 179.5,-52 179.5,-52 173.5,-52 167.5,-46 167.5,-40 167.5,-40 167.5,-28 167.5,-28 167.5,-22 173.5,-16 179.5,-16 179.5,-16 226.5,-16 226.5,-16 232.5,-16 238.5,-22 238.5,-28 238.5,-28 238.5,-40 238.5,-40 238.5,-46 232.5,-52 226.5,-52"/>
+<text text-anchor="middle" x="203" y="-30.9" font-family="Arial" font-size="12.00">DEV&#45;A</text>
+</g>
+<!-- V&#45;&gt;A -->
+<g id="edge1" class="edge">
+<title>V&#45;&gt;A</title>
+<path fill="none" stroke="#64748b" d="M273.79,-98.92C267.33,-94.88 260.85,-90.5 255,-86 244.15,-77.65 233.17,-67.24 224.12,-58.01"/>
+<polygon fill="#64748b" stroke="#64748b" points="226.04,-55.96 218.47,-52.14 222,-59.85 226.04,-55.96"/>
+</g>
+<!-- C -->
+<g id="node4" class="node">
+<title>C</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M453,-52C453,-52 399,-52 399,-52 393,-52 387,-46 387,-40 387,-40 387,-28 387,-28 387,-22 393,-16 399,-16 399,-16 453,-16 453,-16 459,-16 465,-22 465,-28 465,-28 465,-40 465,-40 465,-46 459,-52 453,-52"/>
+<text text-anchor="middle" x="426" y="-30.9" font-family="Arial" font-size="12.00">TEST&#45;C</text>
+</g>
+<!-- V&#45;&gt;C -->
+<g id="edge2" class="edge">
+<title>V&#45;&gt;C</title>
+<path fill="none" stroke="#64748b" d="M351.38,-98.95C357.73,-94.84 364.15,-90.43 370,-86 381.28,-77.45 392.98,-67.07 402.75,-57.91"/>
+<polygon fill="#64748b" stroke="#64748b" points="404.68,-59.94 408.56,-52.4 400.83,-55.87 404.68,-59.94"/>
+</g>
+<!-- B -->
+<g id="node3" class="node">
+<title>B</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M99.5,-52C99.5,-52 52.5,-52 52.5,-52 46.5,-52 40.5,-46 40.5,-40 40.5,-40 40.5,-28 40.5,-28 40.5,-22 46.5,-16 52.5,-16 52.5,-16 99.5,-16 99.5,-16 105.5,-16 111.5,-22 111.5,-28 111.5,-28 111.5,-40 111.5,-40 111.5,-46 105.5,-52 99.5,-52"/>
+<text text-anchor="middle" x="76" y="-30.9" font-family="Arial" font-size="12.00">DEV&#45;B</text>
+</g>
+<!-- D -->
+<g id="node5" class="node">
+<title>D</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M340,-52C340,-52 286,-52 286,-52 280,-52 274,-46 274,-40 274,-40 274,-28 274,-28 274,-22 280,-16 286,-16 286,-16 340,-16 340,-16 346,-16 352,-22 352,-28 352,-28 352,-40 352,-40 352,-46 346,-52 340,-52"/>
+<text text-anchor="middle" x="313" y="-30.9" font-family="Arial" font-size="12.00">TEST&#45;D</text>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 2 · Offline vector illustration of the network architecture</figcaption></figure>
+<p>Why create subnets?</p>
+<ol>
+<li><strong>Organization:</strong> Separate development, testing, application, and database systems.</li>
+<li><strong>Security design:</strong> Apply different routing, access controls, and other policies.</li>
+<li><strong>Internet design:</strong> Use public and private subnets for different workloads.</li>
+<li><strong>Availability:</strong> Distribute subnets across Availability Zones for resilience.</li>
+</ol>
+<p><strong>Caution:</strong> A subnet does not automatically isolate traffic from another subnet in the same VPC. Configure the relevant security controls.</p>
+</div></details>
+
+<details id="chapter-3" class="chapter"<summary><strong>3. IP addresses and CIDR — Full address plan</strong></summary><div class="chapter-content"><p>CIDR defines the IPv4 address range in a VPC or subnet.</p>
+<table>
+<thead>
+<tr>
+  <th>Resource</th>
+  <th>CIDR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Company ABC VPC</td>
+  <td><code>10.0.0.0/16</code></td>
+</tr>
+<tr>
+  <td>Developer subnet</td>
+  <td><code>10.0.1.0/24</code></td>
+</tr>
+<tr>
+  <td>Testing subnet</td>
+  <td><code>10.0.2.0/24</code></td>
+</tr>
+<tr>
+  <td>Company XYZ VPC (later)</td>
+  <td><code>10.1.0.0/16</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>10.0.0.0/16</code>: 65,536 IPv4 addresses in total.</li>
+<li><code>10.0.1.0/24</code>: 256 IPv4 addresses in total.</li>
+<li>AWS reserves 5 addresses per subnet, leaving <strong>251 usable IPv4 addresses</strong> in a <code>/24</code>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+  <th>Employee</th>
+  <th>Department</th>
+  <th>EC2 name</th>
+  <th>Private IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>A</td>
+  <td>Developer</td>
+  <td><code>DEV-A</code></td>
+  <td><code>10.0.1.10</code></td>
+</tr>
+<tr>
+  <td>B</td>
+  <td>Developer</td>
+  <td><code>DEV-B</code></td>
+  <td><code>10.0.1.11</code></td>
+</tr>
+<tr>
+  <td>C</td>
+  <td>Tester</td>
+  <td><code>TEST-C</code></td>
+  <td><code>10.0.2.10</code></td>
+</tr>
+<tr>
+  <td>D</td>
+  <td>Tester</td>
+  <td><code>TEST-D</code></td>
+  <td><code>10.0.2.11</code></td>
+</tr>
+</tbody>
+</table>
+<p>We deliberately set these private IPs when launching the servers.</p>
+</div></details>
+
+<details id="chapter-4" class="chapter"<summary><strong>4. What is an Internet Gateway? — Diagram and explanation</strong></summary><div class="chapter-content"><p>An <strong>Internet Gateway (IGW)</strong> is a component attached to a VPC that supports a path between the VPC and the public internet.</p>
+<p>Examples:</p>
+<ul>
+<li>DEV-A requests a website hosted by another company.</li>
+<li>DEV-B calls a public REST API.</li>
+<li>An external customer opens an IIS site on one of our public EC2 servers.</li>
+</ul>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="461pt" height="274pt"
+ viewBox="0.00 0.00 461.08 274.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 251.04)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_vpc</title>
+<polygon fill="transparent" stroke="black" points="8,-8 8,-86 407,-86 407,-8 8,-8"/>
+<text text-anchor="middle" x="207.5" y="-69.2" font-family="Arial" font-size="16.00">CompanyABC&#45;VPC</text>
+</g>
+<!-- NET -->
+<g id="node1" class="node">
+<title>NET</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M296.5,-228C296.5,-228 109.5,-228 109.5,-228 103.5,-228 97.5,-222 97.5,-216 97.5,-216 97.5,-204 97.5,-204 97.5,-198 103.5,-192 109.5,-192 109.5,-192 296.5,-192 296.5,-192 302.5,-192 308.5,-198 308.5,-204 308.5,-204 308.5,-216 308.5,-216 308.5,-222 302.5,-228 296.5,-228"/>
+<text text-anchor="middle" x="203" y="-206.9" font-family="Arial" font-size="12.00">Public Internet / Other companies</text>
+</g>
+<!-- IGW -->
+<g id="node2" class="node">
+<title>IGW</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M260.5,-145C260.5,-145 145.5,-145 145.5,-145 139.5,-145 133.5,-139 133.5,-133 133.5,-133 133.5,-111 133.5,-111 133.5,-105 139.5,-99 145.5,-99 145.5,-99 260.5,-99 260.5,-99 266.5,-99 272.5,-105 272.5,-111 272.5,-111 272.5,-133 272.5,-133 272.5,-139 266.5,-145 260.5,-145"/>
+<text text-anchor="middle" x="203" y="-125.4" font-family="Arial" font-size="12.00">CompanyABC&#45;IGW</text>
+<text text-anchor="middle" x="203" y="-112.4" font-family="Arial" font-size="12.00">Internet Gateway</text>
+</g>
+<!-- NET&#45;&gt;IGW -->
+<g id="edge1" class="edge">
+<title>NET&#45;&gt;IGW</title>
+<path fill="none" stroke="#64748b" d="M203,-183.25C203,-173.9 203,-163.25 203,-153.53"/>
+<polygon fill="#64748b" stroke="#64748b" points="200.2,-183.6 203,-191.6 205.8,-183.6 200.2,-183.6"/>
+<polygon fill="#64748b" stroke="#64748b" points="205.8,-153.29 203,-145.29 200.2,-153.29 205.8,-153.29"/>
+</g>
+<!-- DEV -->
+<g id="node3" class="node">
+<title>DEV</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M386.5,-52C386.5,-52 229.5,-52 229.5,-52 223.5,-52 217.5,-46 217.5,-40 217.5,-40 217.5,-28 217.5,-28 217.5,-22 223.5,-16 229.5,-16 229.5,-16 386.5,-16 386.5,-16 392.5,-16 398.5,-22 398.5,-28 398.5,-28 398.5,-40 398.5,-40 398.5,-46 392.5,-52 386.5,-52"/>
+<text text-anchor="middle" x="308" y="-30.9" font-family="Arial" font-size="12.00">Developer subnet · A and B</text>
+</g>
+<!-- IGW&#45;&gt;DEV -->
+<g id="edge2" class="edge">
+<title>IGW&#45;&gt;DEV</title>
+<path fill="none" stroke="#64748b" d="M236.47,-93.59C250.72,-81.91 267.13,-68.47 280.64,-57.41"/>
+<polygon fill="#64748b" stroke="#64748b" points="234.45,-91.62 230.04,-98.85 238,-95.95 234.45,-91.62"/>
+<polygon fill="#64748b" stroke="#64748b" points="282.6,-59.42 287.02,-52.19 279.05,-55.09 282.6,-59.42"/>
+</g>
+<!-- TEST -->
+<g id="node4" class="node">
+<title>TEST</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M170,-52C170,-52 28,-52 28,-52 22,-52 16,-46 16,-40 16,-40 16,-28 16,-28 16,-22 22,-16 28,-16 28,-16 170,-16 170,-16 176,-16 182,-22 182,-28 182,-28 182,-40 182,-40 182,-46 176,-52 170,-52"/>
+<text text-anchor="middle" x="99" y="-30.9" font-family="Arial" font-size="12.00">Testing subnet · C and D</text>
+</g>
+<!-- IGW&#45;&gt;TEST -->
+<g id="edge3" class="edge">
+<title>IGW&#45;&gt;TEST</title>
+<path fill="none" stroke="#64748b" d="M169.85,-93.59C155.73,-81.91 139.48,-68.47 126.1,-57.41"/>
+<polygon fill="#64748b" stroke="#64748b" points="168.27,-95.91 176.22,-98.85 171.84,-91.6 168.27,-95.91"/>
+<polygon fill="#64748b" stroke="#64748b" points="127.73,-55.13 119.78,-52.19 124.17,-59.44 127.73,-55.13"/>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 3 · Offline vector illustration of the network architecture</figcaption></figure>
+<p>For <strong>direct IPv4 internet communication</strong>, a public EC2 normally requires <strong>(1) a public IPv4 address, (2) a route to the Internet Gateway, and (3) security permissions</strong>. Merely attaching an IGW does not make an instance accessible.</p>
+<p>AWS reference: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html">Internet gateways</a>.</p>
+</div></details>
+
+<details id="chapter-5" class="chapter"<summary><strong>5. Overall architecture — All four EC2 instances and public access diagram</strong></summary><div class="chapter-content"><p>For the <strong>initial classroom lab</strong>, both subnets are public to simplify direct RDP access. Later we introduce private subnets.</p>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="358pt" height="706pt"
+ viewBox="0.00 0.00 357.58 706.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 683.04)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_vpc</title>
+<polygon fill="transparent" stroke="black" points="8,-8 8,-411 266,-411 266,-8 8,-8"/>
+<text text-anchor="middle" x="137" y="-394.2" font-family="Arial" font-size="16.00">CompanyABC&#45;VPC · 10.0.0.0/16</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_dev</title>
+<polygon fill="transparent" stroke="#13a88c" points="16,-214 16,-377 258,-377 258,-214 16,-214"/>
+<text text-anchor="middle" x="137" y="-360.2" font-family="Arial" font-size="16.00">Developer&#45;Subnet · 10.0.1.0/24</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_test</title>
+<polygon fill="transparent" stroke="#3b82f6" points="31,-16 31,-179 251,-179 251,-16 31,-16"/>
+<text text-anchor="middle" x="141" y="-162.2" font-family="Arial" font-size="16.00">Testing&#45;Subnet · 10.0.2.0/24</text>
+</g>
+<!-- NET -->
+<g id="node1" class="node">
+<title>NET</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M296,-660C296,-660 158,-660 158,-660 152,-660 146,-654 146,-648 146,-648 146,-636 146,-636 146,-630 152,-624 158,-624 158,-624 296,-624 296,-624 302,-624 308,-630 308,-636 308,-636 308,-648 308,-648 308,-654 302,-660 296,-660"/>
+<text text-anchor="middle" x="227" y="-638.9" font-family="Arial" font-size="12.00">Internet / Company XYZ</text>
+</g>
+<!-- IGW -->
+<g id="node2" class="node">
+<title>IGW</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M284.5,-575C284.5,-575 169.5,-575 169.5,-575 163.5,-575 157.5,-569 157.5,-563 157.5,-563 157.5,-551 157.5,-551 157.5,-545 163.5,-539 169.5,-539 169.5,-539 284.5,-539 284.5,-539 290.5,-539 296.5,-545 296.5,-551 296.5,-551 296.5,-563 296.5,-563 296.5,-569 290.5,-575 284.5,-575"/>
+<text text-anchor="middle" x="227" y="-553.9" font-family="Arial" font-size="12.00">CompanyABC&#45;IGW</text>
+</g>
+<!-- NET&#45;&gt;IGW -->
+<g id="edge1" class="edge">
+<title>NET&#45;&gt;IGW</title>
+<path fill="none" stroke="#64748b" d="M227,-615.62C227,-605.38 227,-593.58 227,-583.34"/>
+<polygon fill="#64748b" stroke="#64748b" points="224.2,-615.8 227,-623.8 229.8,-615.8 224.2,-615.8"/>
+<polygon fill="#64748b" stroke="#64748b" points="229.8,-583.18 227,-575.18 224.2,-583.18 229.8,-583.18"/>
+</g>
+<!-- RT -->
+<g id="node3" class="node">
+<title>RT</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M299.5,-490C299.5,-490 154.5,-490 154.5,-490 148.5,-490 142.5,-484 142.5,-478 142.5,-478 142.5,-456 142.5,-456 142.5,-450 148.5,-444 154.5,-444 154.5,-444 299.5,-444 299.5,-444 305.5,-444 311.5,-450 311.5,-456 311.5,-456 311.5,-478 311.5,-478 311.5,-484 305.5,-490 299.5,-490"/>
+<text text-anchor="middle" x="227" y="-470.4" font-family="Arial" font-size="12.00">CompanyABC&#45;Public&#45;RT</text>
+<text text-anchor="middle" x="227" y="-457.4" font-family="Arial" font-size="12.00">0.0.0.0/0 → IGW</text>
+</g>
+<!-- IGW&#45;&gt;RT -->
+<g id="edge2" class="edge">
+<title>IGW&#45;&gt;RT</title>
+<path fill="none" stroke="#64748b" d="M227,-530.25C227,-520.18 227,-508.57 227,-498.12"/>
+<polygon fill="#64748b" stroke="#64748b" points="224.2,-530.61 227,-538.61 229.8,-530.61 224.2,-530.61"/>
+<polygon fill="#64748b" stroke="#64748b" points="229.8,-498.04 227,-490.04 224.2,-498.04 229.8,-498.04"/>
+</g>
+<!-- A -->
+<g id="node4" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M221,-343C221,-343 115,-343 115,-343 109,-343 103,-337 103,-331 103,-331 103,-319 103,-319 103,-313 109,-307 115,-307 115,-307 221,-307 221,-307 227,-307 233,-313 233,-319 233,-319 233,-331 233,-331 233,-337 227,-343 221,-343"/>
+<text text-anchor="middle" x="168" y="-321.9" font-family="Arial" font-size="12.00">DEV&#45;A · 10.0.1.10</text>
+</g>
+<!-- RT&#45;&gt;A -->
+<g id="edge6" class="edge">
+<title>RT&#45;&gt;A</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M217.65,-443.82C206.99,-418.52 189.61,-377.27 178.49,-350.9"/>
+<polygon fill="#64748b" stroke="#64748b" points="180.95,-349.51 175.26,-343.22 175.79,-351.68 180.95,-349.51"/>
+</g>
+<!-- C -->
+<g id="node6" class="node">
+<title>C</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M229.5,-145C229.5,-145 116.5,-145 116.5,-145 110.5,-145 104.5,-139 104.5,-133 104.5,-133 104.5,-121 104.5,-121 104.5,-115 110.5,-109 116.5,-109 116.5,-109 229.5,-109 229.5,-109 235.5,-109 241.5,-115 241.5,-121 241.5,-121 241.5,-133 241.5,-133 241.5,-139 235.5,-145 229.5,-145"/>
+<text text-anchor="middle" x="173" y="-123.9" font-family="Arial" font-size="12.00">TEST&#45;C · 10.0.2.10</text>
+</g>
+<!-- RT&#45;&gt;C -->
+<g id="edge7" class="edge">
+<title>RT&#45;&gt;C</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M246.36,-443.76C253.35,-434.32 260.41,-422.78 264,-411 289.55,-327.25 298.64,-294.41 264,-214 252.51,-187.34 228.25,-165.09 207.66,-149.91"/>
+<polygon fill="#64748b" stroke="#64748b" points="209.26,-147.61 201.13,-145.23 206,-152.16 209.26,-147.61"/>
+</g>
+<!-- B -->
+<g id="node5" class="node">
+<title>B</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M221,-258C221,-258 115,-258 115,-258 109,-258 103,-252 103,-246 103,-246 103,-234 103,-234 103,-228 109,-222 115,-222 115,-222 221,-222 221,-222 227,-222 233,-228 233,-234 233,-234 233,-246 233,-246 233,-252 227,-258 221,-258"/>
+<text text-anchor="middle" x="168" y="-236.9" font-family="Arial" font-size="12.00">DEV&#45;B · 10.0.1.11</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g id="edge3" class="edge">
+<title>A&#45;&gt;B</title>
+<path fill="none" stroke="#64748b" d="M168,-298.62C168,-288.38 168,-276.58 168,-266.34"/>
+<polygon fill="#64748b" stroke="#64748b" points="165.2,-298.8 168,-306.8 170.8,-298.8 165.2,-298.8"/>
+<polygon fill="#64748b" stroke="#64748b" points="170.8,-266.18 168,-258.18 165.2,-266.18 170.8,-266.18"/>
+</g>
+<!-- B&#45;&gt;C -->
+<g id="edge5" class="edge">
+<title>B&#45;&gt;C</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M169.15,-213.52C169.96,-195.53 171.04,-171.52 171.85,-153.52"/>
+<polygon fill="#64748b" stroke="#64748b" points="166.34,-213.54 168.78,-221.66 171.94,-213.79 166.34,-213.54"/>
+<polygon fill="#64748b" stroke="#64748b" points="174.66,-153.34 172.22,-145.22 169.07,-153.09 174.66,-153.34"/>
+<text text-anchor="middle" x="195" y="-190" font-family="Arial" font-size="10.00">If permitted</text>
+</g>
+<!-- D -->
+<g id="node7" class="node">
+<title>D</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M229.5,-60C229.5,-60 116.5,-60 116.5,-60 110.5,-60 104.5,-54 104.5,-48 104.5,-48 104.5,-36 104.5,-36 104.5,-30 110.5,-24 116.5,-24 116.5,-24 229.5,-24 229.5,-24 235.5,-24 241.5,-30 241.5,-36 241.5,-36 241.5,-48 241.5,-48 241.5,-54 235.5,-60 229.5,-60"/>
+<text text-anchor="middle" x="173" y="-38.9" font-family="Arial" font-size="12.00">TEST&#45;D · 10.0.2.11</text>
+</g>
+<!-- C&#45;&gt;D -->
+<g id="edge4" class="edge">
+<title>C&#45;&gt;D</title>
+<path fill="none" stroke="#64748b" d="M173,-100.62C173,-90.38 173,-78.58 173,-68.34"/>
+<polygon fill="#64748b" stroke="#64748b" points="170.2,-100.8 173,-108.8 175.8,-100.8 170.2,-100.8"/>
+<polygon fill="#64748b" stroke="#64748b" points="175.8,-68.18 173,-60.18 170.2,-68.18 175.8,-68.18"/>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 4 · Offline vector illustration of the network architecture</figcaption></figure>
+<table>
+<thead>
+<tr>
+  <th>Test</th>
+  <th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>A → B by private IP</td>
+  <td>Allowed</td>
+</tr>
+<tr>
+  <td>C → D by private IP</td>
+  <td>Allowed</td>
+</tr>
+<tr>
+  <td>A → C by private IP</td>
+  <td>Allowed if permitted</td>
+</tr>
+<tr>
+  <td>A → C on deliberately blocked port</td>
+  <td>Blocked</td>
+</tr>
+<tr>
+  <td>A → external public website</td>
+  <td>Allowed</td>
+</tr>
+<tr>
+  <td>External user → A on HTTP 80</td>
+  <td>Allowed if configured</td>
+</tr>
+<tr>
+  <td>External user → A on unallowed port 5000</td>
+  <td>Blocked</td>
+</tr>
+</tbody>
+</table>
+<p>The lab demonstrates the difference between <strong>routing</strong> and <strong>security permissions</strong>.</p>
+</div></details>
+
+<details id="chapter-6" class="chapter"<summary><strong>6. Step 1 — Open AWS VPC Console and select Region</strong></summary><div class="chapter-content"><ol>
+<li>Open <a href="https://console.aws.amazon.com/vpc/">Amazon VPC Console</a>.</li>
+<li>Choose <strong>Asia Pacific (Mumbai)</strong>, Region <code>ap-south-1</code>.</li>
+<li>Keep all VPC, subnets, EC2, Internet Gateway, and related resources in this Region.</li>
+<li>Locate <strong>Your VPCs</strong>, <strong>Subnets</strong>, <strong>Route tables</strong>, <strong>Internet gateways</strong>, and <strong>Security groups</strong> in the VPC navigation.</li>
+</ol>
+</div></details>
+
+<details id="chapter-7" class="chapter"<summary><strong>7. Step 2 — Create CompanyABC-VPC</strong></summary><div class="chapter-content"><p>Go to <strong>Your VPCs → Create VPC</strong>.</p>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Value</th>
+  <th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Resources to create</td>
+  <td>VPC only</td>
+  <td>We create other resources manually for learning</td>
+</tr>
+<tr>
+  <td>Name tag</td>
+  <td><code>CompanyABC-VPC</code></td>
+  <td>Company network identifier</td>
+</tr>
+<tr>
+  <td>IPv4 CIDR</td>
+  <td>Manual input</td>
+  <td>Choose our own range</td>
+</tr>
+<tr>
+  <td>IPv4 CIDR value</td>
+  <td><code>10.0.0.0/16</code></td>
+  <td>Address space for multiple subnets</td>
+</tr>
+<tr>
+  <td>IPv6 CIDR</td>
+  <td>No IPv6 CIDR block</td>
+  <td>Simplify first lab</td>
+</tr>
+<tr>
+  <td>Tenancy</td>
+  <td>Default</td>
+  <td>Standard EC2 tenancy</td>
+</tr>
+</tbody>
+</table>
+<p>Select <strong>Create VPC</strong>.</p>
+<p>AWS creates the VPC and default supporting objects (main route table, default network ACL, default security group), but <strong>does not create our custom subnets or IGW</strong> when using <strong>VPC only</strong>.</p>
+</div></details>
+
+<details id="chapter-8" class="chapter"<summary><strong>8. Step 3 — Create Developer subnet</strong></summary><div class="chapter-content"><ol>
+<li>Navigate to <strong>Subnets → Create subnet</strong>.</li>
+<li>Select VPC <code>CompanyABC-VPC</code>.</li>
+<li>Supply these settings:</li>
+</ol>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Subnet name</td>
+  <td><code>Developer-Subnet</code></td>
+</tr>
+<tr>
+  <td>Availability Zone</td>
+  <td>Example: <code>ap-south-1a</code></td>
+</tr>
+<tr>
+  <td>IPv4 subnet CIDR block</td>
+  <td><code>10.0.1.0/24</code></td>
+</tr>
+</tbody>
+</table>
+<ol start="4">
+<li>Click <strong>Create subnet</strong>.</li>
+</ol>
+<p>EC2 instances DEV-A and DEV-B will live here.</p>
+</div></details>
+
+<details id="chapter-9" class="chapter"<summary><strong>9. Step 4 — Create Testing subnet</strong></summary><div class="chapter-content"><p>Repeat the subnet creation process.</p>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>VPC</td>
+  <td><code>CompanyABC-VPC</code></td>
+</tr>
+<tr>
+  <td>Subnet name</td>
+  <td><code>Testing-Subnet</code></td>
+</tr>
+<tr>
+  <td>Availability Zone</td>
+  <td>Same AZ as Developer subnet for this demonstration</td>
+</tr>
+<tr>
+  <td>IPv4 subnet CIDR block</td>
+  <td><code>10.0.2.0/24</code></td>
+</tr>
+</tbody>
+</table>
+<p>Click <strong>Create subnet</strong>. Both subnets are inside the same VPC. For a production design, distribute appropriately across multiple Availability Zones.</p>
+</div></details>
+
+<details id="chapter-10" class="chapter"<summary><strong>10. Step 5 — Public IP assignment for classroom RDP</strong></summary><div class="chapter-content"><p>New nondefault subnets might not automatically assign public IPv4 addresses.</p>
+<p>For this lab, leave subnet-level auto-assign disabled if desired and explicitly select <strong>Auto-assign public IP: Enable</strong> while launching each EC2 instance. This demonstrates that:</p>
+<ul>
+<li><strong>Public subnet status</strong> is determined by its associated route to an Internet Gateway.</li>
+<li><strong>Public IPv4 assignment</strong> is configured for the instance/network interface.</li>
+</ul>
+<p>Both are required for direct IPv4 internet access.</p>
+</div></details>
+
+<details id="chapter-11" class="chapter"<summary><strong>11. Step 6 — Create and attach CompanyABC-IGW</strong></summary><div class="chapter-content"><ol>
+<li>Navigate to <strong>Internet gateways → Create internet gateway</strong>.</li>
+<li>Set name tag <code>CompanyABC-IGW</code>.</li>
+<li>Click <strong>Create internet gateway</strong>.</li>
+<li>Select the IGW → <strong>Actions → Attach to VPC</strong>.</li>
+<li>Select <code>CompanyABC-VPC</code> → <strong>Attach internet gateway</strong>.</li>
+</ol>
+<p>At this stage the IGW is attached, but <strong>the subnets still need routing</strong> before they can use it.</p>
+</div></details>
+
+<details id="chapter-12" class="chapter"<summary><strong>12. Step 7 — Create public route table, inspect routes, and simulate route selection</strong></summary><div class="chapter-content"><ol>
+<li>Go to <strong>Route tables → Create route table</strong>.</li>
+<li>Name: <code>CompanyABC-Public-RT</code>.</li>
+<li>VPC: <code>CompanyABC-VPC</code>.</li>
+<li>Create it, select it, then choose <strong>Routes → Edit routes → Add route</strong>.</li>
+</ol>
+<table>
+<thead>
+<tr>
+  <th>Destination</th>
+  <th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>10.0.0.0/16</code></td>
+  <td><code>local</code> — created automatically</td>
+</tr>
+<tr>
+  <td><code>0.0.0.0/0</code></td>
+  <td>Internet Gateway <code>CompanyABC-IGW</code></td>
+</tr>
+</tbody>
+</table>
+<ol start="5">
+<li>Save changes.</li>
+</ol>
+<p><strong>Route examples:</strong></p>
+<ul>
+<li>DEV-A → <code>10.0.2.10</code> (TEST-C): matching route <code>10.0.0.0/16 → local</code>. The connection stays inside the VPC, not through the IGW.</li>
+<li>DEV-A → public IP <code>8.8.8.8</code>: matching route <code>0.0.0.0/0 → IGW</code>, assuming public IP assignment and permitted traffic.</li>
+</ul>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="459pt" height="318pt"
+ viewBox="0.00 0.00 458.58 318.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 295.04)">
+<title>G</title>
+<!-- A -->
+<g id="node1" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M263,-272C263,-272 150,-272 150,-272 144,-272 138,-266 138,-260 138,-260 138,-248 138,-248 138,-242 144,-236 150,-236 150,-236 263,-236 263,-236 269,-236 275,-242 275,-248 275,-248 275,-260 275,-260 275,-266 269,-272 263,-272"/>
+<text text-anchor="middle" x="206.5" y="-250.9" font-family="Arial" font-size="12.00">Packet from DEV&#45;A</text>
+</g>
+<!-- Q -->
+<g id="node2" class="node">
+<title>Q</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M195.18,-183.02C195.18,-183.02 86.82,-144.98 86.82,-144.98 81.16,-142.99 81.16,-139.01 86.82,-137.02 86.82,-137.02 195.18,-98.98 195.18,-98.98 200.84,-96.99 212.16,-96.99 217.82,-98.98 217.82,-98.98 326.18,-137.02 326.18,-137.02 331.84,-139.01 331.84,-142.99 326.18,-144.98 326.18,-144.98 217.82,-183.02 217.82,-183.02 212.16,-185.01 200.84,-185.01 195.18,-183.02"/>
+<text text-anchor="middle" x="206.5" y="-144.4" font-family="Arial" font-size="12.00">Destination inside</text>
+<text text-anchor="middle" x="206.5" y="-131.4" font-family="Arial" font-size="12.00">10.0.0.0/16?</text>
+</g>
+<!-- A&#45;&gt;Q -->
+<g id="edge1" class="edge">
+<title>A&#45;&gt;Q</title>
+<path fill="none" stroke="#64748b" d="M206.5,-235.66C206.5,-224.75 206.5,-210.03 206.5,-195.5"/>
+<polygon fill="#64748b" stroke="#64748b" points="209.3,-195.47 206.5,-187.47 203.7,-195.47 209.3,-195.47"/>
+</g>
+<!-- LOCAL -->
+<g id="node3" class="node">
+<title>LOCAL</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M177,-36C177,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 0,-6 6,0 12,0 12,0 177,0 177,0 183,0 189,-6 189,-12 189,-12 189,-24 189,-24 189,-30 183,-36 177,-36"/>
+<text text-anchor="middle" x="94.5" y="-14.9" font-family="Arial" font-size="12.00">Local route → EC2 private IP</text>
+</g>
+<!-- Q&#45;&gt;LOCAL -->
+<g id="edge2" class="edge">
+<title>Q&#45;&gt;LOCAL</title>
+<path fill="none" stroke="#64748b" d="M175,-105.97C156.22,-85.68 132.85,-60.43 116.14,-42.38"/>
+<polygon fill="#64748b" stroke="#64748b" points="117.79,-40.04 110.3,-36.07 113.68,-43.85 117.79,-40.04"/>
+<text text-anchor="middle" x="149" y="-63" font-family="Arial" font-size="10.00">Yes</text>
+</g>
+<!-- IGW -->
+<g id="node4" class="node">
+<title>IGW</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M400.5,-36C400.5,-36 236.5,-36 236.5,-36 230.5,-36 224.5,-30 224.5,-24 224.5,-24 224.5,-12 224.5,-12 224.5,-6 230.5,0 236.5,0 236.5,0 400.5,0 400.5,0 406.5,0 412.5,-6 412.5,-12 412.5,-12 412.5,-24 412.5,-24 412.5,-30 406.5,-36 400.5,-36"/>
+<text text-anchor="middle" x="318.5" y="-14.9" font-family="Arial" font-size="12.00">0.0.0.0/0 → Internet Gateway</text>
+</g>
+<!-- Q&#45;&gt;IGW -->
+<g id="edge3" class="edge">
+<title>Q&#45;&gt;IGW</title>
+<path fill="none" stroke="#64748b" d="M238,-105.97C256.78,-85.68 280.15,-60.43 296.86,-42.38"/>
+<polygon fill="#64748b" stroke="#64748b" points="299.32,-43.85 302.7,-36.07 295.21,-40.04 299.32,-43.85"/>
+<text text-anchor="middle" x="285" y="-63" font-family="Arial" font-size="10.00">No</text>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 5 · Offline vector illustration of the network architecture</figcaption></figure>
+<p>AWS generally uses the <strong>most specific matching route</strong> (longest prefix match).</p>
+<p>AWS reference: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html">Route tables</a>.</p>
+</div></details>
+
+<details id="chapter-13" class="chapter"<summary><strong>13. Step 8 — Associate both subnets with public route table</strong></summary><div class="chapter-content"><ol>
+<li>Select <code>CompanyABC-Public-RT</code>.</li>
+<li>Open <strong>Subnet associations → Edit subnet associations</strong>.</li>
+<li>Select both <code>Developer-Subnet</code> and <code>Testing-Subnet</code>.</li>
+<li>Save associations.</li>
+</ol>
+<p>Both become <strong>public subnets</strong> because their associated route table has a default route to the IGW. This does not automatically open their instance ports to the public.</p>
+</div></details>
+
+<details id="chapter-14" class="chapter"<summary><strong>14. Part 3 — Create Developer-SG and Tester-SG security groups</strong></summary><div class="chapter-content"><p>A security group is a stateful AWS virtual firewall attached to network interfaces. Create the following in <strong>EC2 Console → Network &amp; Security → Security Groups → Create security group</strong>. Choose <code>CompanyABC-VPC</code>.</p>
+<table>
+<thead>
+<tr>
+  <th>Security group</th>
+  <th>Applied to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>Developer-SG</code></td>
+  <td>DEV-A and DEV-B</td>
+</tr>
+<tr>
+  <td><code>Tester-SG</code></td>
+  <td>TEST-C and TEST-D</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Developer-SG inbound rules</strong></p>
+<table>
+<thead>
+<tr>
+  <th>Type</th>
+  <th>Port</th>
+  <th>Source</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>RDP</td>
+  <td>3389</td>
+  <td>My IP (<code>your-public-IP/32</code>)</td>
+  <td>RDP from your laptop</td>
+</tr>
+<tr>
+  <td>HTTP</td>
+  <td>80</td>
+  <td><code>0.0.0.0/0</code></td>
+  <td>Publish IIS demonstration</td>
+</tr>
+<tr>
+  <td>Custom TCP</td>
+  <td>5000</td>
+  <td><code>10.0.0.0/16</code></td>
+  <td>Internal app test</td>
+</tr>
+<tr>
+  <td>All ICMP – IPv4</td>
+  <td>All</td>
+  <td><code>10.0.0.0/16</code></td>
+  <td>Internal ping</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tester-SG inbound rules</strong></p>
+<table>
+<thead>
+<tr>
+  <th>Type</th>
+  <th>Port</th>
+  <th>Source</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>RDP</td>
+  <td>3389</td>
+  <td>My IP (<code>your-public-IP/32</code>)</td>
+  <td>RDP from your laptop</td>
+</tr>
+<tr>
+  <td>HTTP</td>
+  <td>80</td>
+  <td><code>10.0.0.0/16</code></td>
+  <td>Internal IIS tests only</td>
+</tr>
+<tr>
+  <td>Custom TCP</td>
+  <td>5000</td>
+  <td><code>10.0.0.0/16</code></td>
+  <td>Internal app tests</td>
+</tr>
+<tr>
+  <td>All ICMP – IPv4</td>
+  <td>All</td>
+  <td><code>10.0.0.0/16</code></td>
+  <td>Internal ping</td>
+</tr>
+</tbody>
+</table>
+<p>For this initial lab, leave the default outbound allow-all rule. Later tighten outbound access.</p>
+<p><strong>Why My IP for RDP?</strong> <code>0.0.0.0/0</code> on port 3389 allows connection attempts from anywhere, creating unnecessary exposure. Prefer your public IP with <code>/32</code>.</p>
+<p><strong>Also check Windows Defender Firewall</strong>, which is separate from the AWS security group.</p>
+</div></details>
+
+<details id="chapter-15" class="chapter"<summary><strong>15. Part 4, Step 9 — Launch DEV-A Windows Server 2022 with IIS user data</strong></summary><div class="chapter-content"><p>Go to <a href="https://console.aws.amazon.com/ec2/">Amazon EC2 Console</a> → <strong>Instances → Launch instances</strong>.</p>
+<table>
+<thead>
+<tr>
+  <th>Option</th>
+  <th>Selection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>AMI</td>
+  <td>Microsoft Windows Server 2022 Base, x86_64</td>
+</tr>
+<tr>
+  <td>Instance type</td>
+  <td><code>t3.small</code> if available; consider <code>t3.medium</code> for usable RDP performance</td>
+</tr>
+<tr>
+  <td>Key pair</td>
+  <td>New RSA key pair, <code>.pem</code> file</td>
+</tr>
+<tr>
+  <td>VPC</td>
+  <td><code>CompanyABC-VPC</code></td>
+</tr>
+<tr>
+  <td>Subnet</td>
+  <td><code>Developer-Subnet</code></td>
+</tr>
+<tr>
+  <td>Auto-assign public IP</td>
+  <td>Enable</td>
+</tr>
+<tr>
+  <td>Storage</td>
+  <td>AMI default root EBS volume (often around 30 GiB)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>DEV-A details:</strong></p>
+<table>
+<thead>
+<tr>
+  <th>Setting</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Name</td>
+  <td><code>DEV-A</code></td>
+</tr>
+<tr>
+  <td>Key pair</td>
+  <td><code>CompanyABC-Key.pem</code></td>
+</tr>
+<tr>
+  <td>Security group</td>
+  <td><code>Developer-SG</code></td>
+</tr>
+<tr>
+  <td>Primary private IPv4 address</td>
+  <td><code>10.0.1.10</code></td>
+</tr>
+</tbody>
+</table>
+<p>Expand <strong>Network settings</strong>, choose <strong>Edit</strong> if needed, and use network interface advanced settings to specify the primary private IPv4 address.</p>
+<p>Under <strong>Advanced details → User data</strong>, paste this PowerShell user-data script:</p>
+<pre><code class="language-powershell">&lt;powershell&gt;
+Install-WindowsFeature -Name Web-Server -IncludeManagementTools
+
+New-NetFirewallRule -DisplayName &quot;Allow HTTP 80&quot; `
+  -Direction Inbound -Protocol TCP -LocalPort 80 -Action Allow
+
+New-NetFirewallRule -DisplayName &quot;Allow Ping IPv4&quot; `
+  -Direction Inbound -Protocol ICMPv4 -IcmpType 8 `
+  -RemoteAddress 10.0.0.0/16 -Action Allow
+
+Set-Content -Path &quot;C:\inetpub\wwwroot\index.html&quot; `
+  -Value &quot;&lt;h1&gt;Hello from Developer A&lt;/h1&gt;&lt;p&gt;Company ABC&lt;/p&gt;&quot;
+&lt;/powershell&gt;
+</code></pre>
+<p>What this does:</p>
+<ol>
+<li>Installs the IIS web server role and management tools.</li>
+<li>Allows incoming TCP port 80 through Windows Firewall.</li>
+<li>Allows private VPC ICMP ping requests.</li>
+<li>Writes a simple IIS home page identifying Developer A.</li>
+</ol>
+<p>Choose <strong>Launch instance</strong>. Windows user data normally runs during initial boot. Verify initialization finishes before testing the page.</p>
+<p><strong>Cost warning:</strong> Four or five Windows instances plus EBS storage and public IPv4 addresses incur charges; the lab is not guaranteed to be free. Check regional pricing. <code>t3.small</code> with 2 GiB RAM may be slow; <code>t3.medium</code> is more comfortable, but more costly.</p>
+</div></details>
+
+<details id="chapter-16" class="chapter"<summary><strong>16. Step 10 — Launch DEV-B, TEST-C, and TEST-D</strong></summary><div class="chapter-content"><p>Repeat the EC2 launch procedure with the same Windows AMI, appropriate subnet, public IP setting, RSA key, storage, and security group.</p>
+<table>
+<thead>
+<tr>
+  <th>EC2</th>
+  <th>Subnet</th>
+  <th>Private IP</th>
+  <th>Security group</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>DEV-A</td>
+  <td>Developer-Subnet</td>
+  <td><code>10.0.1.10</code></td>
+  <td>Developer-SG</td>
+</tr>
+<tr>
+  <td>DEV-B</td>
+  <td>Developer-Subnet</td>
+  <td><code>10.0.1.11</code></td>
+  <td>Developer-SG</td>
+</tr>
+<tr>
+  <td>TEST-C</td>
+  <td>Testing-Subnet</td>
+  <td><code>10.0.2.10</code></td>
+  <td>Tester-SG</td>
+</tr>
+<tr>
+  <td>TEST-D</td>
+  <td>Testing-Subnet</td>
+  <td><code>10.0.2.11</code></td>
+  <td>Tester-SG</td>
+</tr>
+</tbody>
+</table>
+<p>Reuse the IIS user-data script for each server, changing the HTML heading to e.g. <code>Hello from Developer B</code>, <code>Hello from Tester C</code>, and <code>Hello from Tester D</code>. Alternatively, update the page after logging in.</p>
+</div></details>
+
+<details id="chapter-17" class="chapter"<summary><strong>17. Step 11 — Connect using RDP, decrypt Administrator password, verify IIS</strong></summary><div class="chapter-content"><p>For DEV-A:</p>
+<ol>
+<li>In EC2 <strong>Instances</strong>, select DEV-A → <strong>Connect</strong>.</li>
+<li>Choose <strong>RDP client</strong>.</li>
+<li>Select <strong>Get password</strong>.</li>
+<li>Upload the <code>.pem</code> <strong>private key</strong> you downloaded when you created the key pair.</li>
+<li>Select <strong>Decrypt password</strong>.</li>
+<li>Copy the generated Windows Administrator password.</li>
+<li>On your Windows laptop, run <code>mstsc</code> (Remote Desktop Connection).</li>
+<li>Enter DEV-A's <strong>public IPv4 address</strong>.</li>
+<li>Sign in as <code>Administrator</code> using the decrypted password.</li>
+<li>Repeat for DEV-B, TEST-C, and TEST-D.</li>
+</ol>
+<p><strong>The <code>.pem</code> key decrypts the Windows Administrator password. It is not itself the RDP password.</strong></p>
+<p>Run these commands in Administrator PowerShell on each EC2:</p>
+<pre><code class="language-powershell">hostname
+ipconfig
+Get-NetIPAddress -AddressFamily IPv4
+Get-Service W3SVC
+</code></pre>
+<p>Confirm the expected private IPv4 and that IIS (<code>W3SVC</code>) is running.</p>
+</div></details>
+
+<details id="chapter-18" class="chapter"<summary><strong>18. Part 5, Step 12 — DEV-A talks to DEV-B using private IP</strong></summary><div class="chapter-content"><p>Connect to DEV-A through RDP and run:</p>
+<pre><code class="language-powershell">Test-Connection 10.0.1.11 -Count 4
+</code></pre>
+<p>This sends 4 ICMP requests to DEV-B. Replies are expected when both Windows firewall and AWS security groups permit ICMP.</p>
+<p>Next test IIS:</p>
+<pre><code class="language-powershell">Test-NetConnection 10.0.1.11 -Port 80
+Invoke-WebRequest http://10.0.1.11 -UseBasicParsing
+</code></pre>
+<p>If working, <code>TcpTestSucceeded : True</code> appears and DEV-B's IIS page content is returned.</p>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="230pt" height="262pt"
+ viewBox="0.00 0.00 230.08 262.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 239.04)">
+<title>G</title>
+<!-- A -->
+<g id="node1" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M120,-216C120,-216 14,-216 14,-216 8,-216 2,-210 2,-204 2,-204 2,-192 2,-192 2,-186 8,-180 14,-180 14,-180 120,-180 120,-180 126,-180 132,-186 132,-192 132,-192 132,-204 132,-204 132,-210 126,-216 120,-216"/>
+<text text-anchor="middle" x="67" y="-194.9" font-family="Arial" font-size="12.00">DEV&#45;A · 10.0.1.10</text>
+</g>
+<!-- R -->
+<g id="node2" class="node">
+<title>R</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M122,-131C122,-131 12,-131 12,-131 6,-131 0,-125 0,-119 0,-119 0,-97 0,-97 0,-91 6,-85 12,-85 12,-85 122,-85 122,-85 128,-85 134,-91 134,-97 134,-97 134,-119 134,-119 134,-125 128,-131 122,-131"/>
+<text text-anchor="middle" x="67" y="-111.4" font-family="Arial" font-size="12.00">VPC local network</text>
+<text text-anchor="middle" x="67" y="-98.4" font-family="Arial" font-size="12.00">10.0.0.0/16</text>
+</g>
+<!-- A&#45;&gt;R -->
+<g id="edge1" class="edge">
+<title>A&#45;&gt;R</title>
+<path fill="none" stroke="#64748b" d="M67,-179.61C67,-168.08 67,-152.64 67,-139.14"/>
+<polygon fill="#64748b" stroke="#64748b" points="69.8,-139.04 67,-131.04 64.2,-139.04 69.8,-139.04"/>
+</g>
+<!-- B -->
+<g id="node3" class="node">
+<title>B</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M120,-36C120,-36 14,-36 14,-36 8,-36 2,-30 2,-24 2,-24 2,-12 2,-12 2,-6 8,0 14,0 14,0 120,0 120,0 126,0 132,-6 132,-12 132,-12 132,-24 132,-24 132,-30 126,-36 120,-36"/>
+<text text-anchor="middle" x="67" y="-14.9" font-family="Arial" font-size="12.00">DEV&#45;B · 10.0.1.11</text>
+</g>
+<!-- R&#45;&gt;B -->
+<g id="edge2" class="edge">
+<title>R&#45;&gt;B</title>
+<path fill="none" stroke="#64748b" d="M67,-84.79C67,-72.55 67,-57.29 67,-44.55"/>
+<polygon fill="#64748b" stroke="#64748b" points="69.8,-44.2 67,-36.2 64.2,-44.2 69.8,-44.2"/>
+</g>
+<!-- B&#45;&gt;A -->
+<g id="edge3" class="edge">
+<title>B&#45;&gt;A</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M102.05,-36.15C120.57,-47.28 141.57,-63.69 152,-85 160.99,-103.36 160.99,-112.64 152,-131 142.87,-149.65 125.65,-164.54 109.08,-175.43"/>
+<polygon fill="#64748b" stroke="#64748b" points="107.33,-173.22 102.05,-179.85 110.31,-177.96 107.33,-173.22"/>
+<text text-anchor="middle" x="171" y="-105.5" font-family="Arial" font-size="10.00">Reply</text>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 6 · Offline vector illustration of the network architecture</figcaption></figure>
+<p><strong>Internet Gateway is not required</strong> for private IP communication between A and B.</p>
+</div></details>
+
+<details id="chapter-19" class="chapter"<summary><strong>19. Step 13 — DEV-A talks to TEST-C across two subnets</strong></summary><div class="chapter-content"><p>From DEV-A run:</p>
+<pre><code class="language-powershell">Test-Connection 10.0.2.10 -Count 4
+Test-NetConnection 10.0.2.10 -Port 80
+Invoke-WebRequest http://10.0.2.10 -UseBasicParsing
+</code></pre>
+<p>The <strong>VPC local route</strong> makes inter-subnet communication possible; firewall rules still control whether each connection is accepted.</p>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="228pt" height="252pt"
+ viewBox="0.00 0.00 227.58 252.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 229.04)">
+<title>G</title>
+<!-- A -->
+<g id="node1" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M121.5,-206C121.5,-206 15.5,-206 15.5,-206 9.5,-206 3.5,-200 3.5,-194 3.5,-194 3.5,-182 3.5,-182 3.5,-176 9.5,-170 15.5,-170 15.5,-170 121.5,-170 121.5,-170 127.5,-170 133.5,-176 133.5,-182 133.5,-182 133.5,-194 133.5,-194 133.5,-200 127.5,-206 121.5,-206"/>
+<text text-anchor="middle" x="68.5" y="-184.9" font-family="Arial" font-size="12.00">DEV&#45;A · 10.0.1.10</text>
+</g>
+<!-- R -->
+<g id="node2" class="node">
+<title>R</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M120.5,-121C120.5,-121 16.5,-121 16.5,-121 10.5,-121 4.5,-115 4.5,-109 4.5,-109 4.5,-97 4.5,-97 4.5,-91 10.5,-85 16.5,-85 16.5,-85 120.5,-85 120.5,-85 126.5,-85 132.5,-91 132.5,-97 132.5,-97 132.5,-109 132.5,-109 132.5,-115 126.5,-121 120.5,-121"/>
+<text text-anchor="middle" x="68.5" y="-99.9" font-family="Arial" font-size="12.00">VPC local routing</text>
+</g>
+<!-- A&#45;&gt;R -->
+<g id="edge1" class="edge">
+<title>A&#45;&gt;R</title>
+<path fill="none" stroke="#64748b" d="M68.5,-169.8C68.5,-158.12 68.5,-142.46 68.5,-129.35"/>
+<polygon fill="#64748b" stroke="#64748b" points="71.3,-129.18 68.5,-121.18 65.7,-129.18 71.3,-129.18"/>
+</g>
+<!-- C -->
+<g id="node3" class="node">
+<title>C</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M125,-36C125,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 0,-6 6,0 12,0 12,0 125,0 125,0 131,0 137,-6 137,-12 137,-12 137,-24 137,-24 137,-30 131,-36 125,-36"/>
+<text text-anchor="middle" x="68.5" y="-14.9" font-family="Arial" font-size="12.00">TEST&#45;C · 10.0.2.10</text>
+</g>
+<!-- R&#45;&gt;C -->
+<g id="edge2" class="edge">
+<title>R&#45;&gt;C</title>
+<path fill="none" stroke="#64748b" d="M68.5,-84.8C68.5,-73.12 68.5,-57.46 68.5,-44.35"/>
+<polygon fill="#64748b" stroke="#64748b" points="71.3,-44.18 68.5,-36.18 65.7,-44.18 71.3,-44.18"/>
+</g>
+<!-- C&#45;&gt;A -->
+<g id="edge3" class="edge">
+<title>C&#45;&gt;A</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M101.92,-36.18C119.9,-47.4 140.4,-63.9 150.5,-85 157.41,-99.43 157.41,-106.57 150.5,-121 141.66,-139.46 124.86,-154.4 108.76,-165.37"/>
+<polygon fill="#64748b" stroke="#64748b" points="107.1,-163.11 101.92,-169.82 110.15,-167.8 107.1,-163.11"/>
+<text text-anchor="middle" x="168.5" y="-100.5" font-family="Arial" font-size="10.00">Reply</text>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 7 · Offline vector illustration of the network architecture</figcaption></figure>
+<p><strong>Key concept:</strong> Two subnets within the same VPC communicate over private IPs without using an IGW.</p>
+</div></details>
+
+<details id="chapter-20" class="chapter"<summary><strong>20. Step 14 — Demonstrate TCP port 5000: no listener, allowed, then blocked</strong></summary><div class="chapter-content"><p>First, on DEV-A:</p>
+<pre><code class="language-powershell">Test-NetConnection 10.0.2.10 -Port 5000
+</code></pre>
+<p>Initially, although <code>Tester-SG</code> permits port 5000 from the VPC, no application listens on this port, so it should fail.</p>
+<p>On TEST-C, run <strong>Administrator PowerShell</strong>:</p>
+<pre><code class="language-powershell">New-NetFirewallRule -DisplayName &quot;Demo Port 5000&quot; `
+  -Direction Inbound -Protocol TCP `
+  -LocalPort 5000 -RemoteAddress 10.0.0.0/16 `
+  -Action Allow
+
+$listener = [System.Net.HttpListener]::new()
+$listener.Prefixes.Add(&quot;http://+:5000/&quot;)
+$listener.Start()
+
+Write-Host &quot;Demo server running on port 5000&quot;
+
+while ($listener.IsListening) {
+    $context = $listener.GetContext()
+    $body = [Text.Encoding]::UTF8.GetBytes(
+        &quot;Hello from TEST-C on port 5000&quot;
+    )
+    $context.Response.ContentType = &quot;text/plain&quot;
+    $context.Response.ContentLength64 = $body.Length
+    $context.Response.OutputStream.Write($body, 0, $body.Length)
+    $context.Response.Close()
+}
+</code></pre>
+<p>Keep the PowerShell console running. If the listener fails with Access Denied, ensure it is an Administrator PowerShell window.</p>
+<p>From DEV-A:</p>
+<pre><code class="language-powershell">Test-NetConnection 10.0.2.10 -Port 5000
+Invoke-WebRequest http://10.0.2.10:5000 -UseBasicParsing
+</code></pre>
+<p>Expected content: <code>Hello from TEST-C on port 5000</code>.</p>
+<p><strong>Demonstrate a true security-group block:</strong></p>
+<ol>
+<li>In AWS EC2, open TEST-C's <code>Tester-SG</code>.</li>
+<li>Choose <strong>Edit inbound rules</strong>.</li>
+<li>Remove the TCP port <code>5000</code> rule; save.</li>
+<li>Test port 5000 again from DEV-A. Connection should now fail while the app is running.</li>
+<li>Restore the TCP 5000 inbound rule, source <code>10.0.0.0/16</code>, and test again. It should succeed.</li>
+<li>On TEST-C, stop the listener with Ctrl+C when done.</li>
+</ol>
+<p><strong>Lesson:</strong> Route tables determine <em>where</em> traffic is sent. Security groups and Windows Firewall determine <em>whether</em> the connection is permitted. Also verify an app is listening.</p>
+</div></details>
+
+<details id="chapter-21" class="chapter"<summary><strong>21. Part 6, Scenario A — Company ABC talks to Company XYZ on the public internet</strong></summary><div class="chapter-content"><p>Imagine Company XYZ runs a public website or REST API. DEV-A can access it over the internet through the Internet Gateway.</p>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="189pt" height="442pt"
+ viewBox="0.00 0.00 189.08 442.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 419.04)">
+<title>G</title>
+<!-- A -->
+<g id="node1" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M124.5,-396C124.5,-396 18.5,-396 18.5,-396 12.5,-396 6.5,-390 6.5,-384 6.5,-384 6.5,-372 6.5,-372 6.5,-366 12.5,-360 18.5,-360 18.5,-360 124.5,-360 124.5,-360 130.5,-360 136.5,-366 136.5,-372 136.5,-372 136.5,-384 136.5,-384 136.5,-390 130.5,-396 124.5,-396"/>
+<text text-anchor="middle" x="71.5" y="-374.9" font-family="Arial" font-size="12.00">DEV&#45;A · 10.0.1.10</text>
+</g>
+<!-- RT -->
+<g id="node2" class="node">
+<title>RT</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M123.5,-311C123.5,-311 19.5,-311 19.5,-311 13.5,-311 7.5,-305 7.5,-299 7.5,-299 7.5,-287 7.5,-287 7.5,-281 13.5,-275 19.5,-275 19.5,-275 123.5,-275 123.5,-275 129.5,-275 135.5,-281 135.5,-287 135.5,-287 135.5,-299 135.5,-299 135.5,-305 129.5,-311 123.5,-311"/>
+<text text-anchor="middle" x="71.5" y="-289.9" font-family="Arial" font-size="12.00">Public route table</text>
+</g>
+<!-- A&#45;&gt;RT -->
+<g id="edge1" class="edge">
+<title>A&#45;&gt;RT</title>
+<path fill="none" stroke="#64748b" d="M71.5,-359.8C71.5,-348.12 71.5,-332.46 71.5,-319.35"/>
+<polygon fill="#64748b" stroke="#64748b" points="74.3,-319.18 71.5,-311.18 68.7,-319.18 74.3,-319.18"/>
+</g>
+<!-- IGW -->
+<g id="node3" class="node">
+<title>IGW</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M129,-226C129,-226 14,-226 14,-226 8,-226 2,-220 2,-214 2,-214 2,-202 2,-202 2,-196 8,-190 14,-190 14,-190 129,-190 129,-190 135,-190 141,-196 141,-202 141,-202 141,-214 141,-214 141,-220 135,-226 129,-226"/>
+<text text-anchor="middle" x="71.5" y="-204.9" font-family="Arial" font-size="12.00">CompanyABC&#45;IGW</text>
+</g>
+<!-- RT&#45;&gt;IGW -->
+<g id="edge2" class="edge">
+<title>RT&#45;&gt;IGW</title>
+<path fill="none" stroke="#64748b" d="M71.5,-274.8C71.5,-263.12 71.5,-247.46 71.5,-234.35"/>
+<polygon fill="#64748b" stroke="#64748b" points="74.3,-234.18 71.5,-226.18 68.7,-234.18 74.3,-234.18"/>
+</g>
+<!-- NET -->
+<g id="node4" class="node">
+<title>NET</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M115,-141C115,-141 28,-141 28,-141 22,-141 16,-135 16,-129 16,-129 16,-117 16,-117 16,-111 22,-105 28,-105 28,-105 115,-105 115,-105 121,-105 127,-111 127,-117 127,-117 127,-129 127,-129 127,-135 121,-141 115,-141"/>
+<text text-anchor="middle" x="71.5" y="-119.9" font-family="Arial" font-size="12.00">Public internet</text>
+</g>
+<!-- IGW&#45;&gt;NET -->
+<g id="edge3" class="edge">
+<title>IGW&#45;&gt;NET</title>
+<path fill="none" stroke="#64748b" d="M71.5,-189.8C71.5,-178.12 71.5,-162.46 71.5,-149.35"/>
+<polygon fill="#64748b" stroke="#64748b" points="74.3,-149.18 71.5,-141.18 68.7,-149.18 74.3,-149.18"/>
+</g>
+<!-- XYZ -->
+<g id="node5" class="node">
+<title>XYZ</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M131,-46C131,-46 12,-46 12,-46 6,-46 0,-40 0,-34 0,-34 0,-12 0,-12 0,-6 6,0 12,0 12,0 131,0 131,0 137,0 143,-6 143,-12 143,-12 143,-34 143,-34 143,-40 137,-46 131,-46"/>
+<text text-anchor="middle" x="71.5" y="-26.4" font-family="Arial" font-size="12.00">Company XYZ</text>
+<text text-anchor="middle" x="71.5" y="-13.4" font-family="Arial" font-size="12.00">Public Website / API</text>
+</g>
+<!-- NET&#45;&gt;XYZ -->
+<g id="edge4" class="edge">
+<title>NET&#45;&gt;XYZ</title>
+<path fill="none" stroke="#64748b" d="M71.5,-104.93C71.5,-91.01 71.5,-71.01 71.5,-54.37"/>
+<polygon fill="#64748b" stroke="#64748b" points="74.3,-54.03 71.5,-46.03 68.7,-54.03 74.3,-54.03"/>
+</g>
+<!-- XYZ&#45;&gt;NET -->
+<g id="edge5" class="edge">
+<title>XYZ&#45;&gt;NET</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M84.79,-46.17C89.51,-56.59 93.08,-69.29 90.5,-81 89.3,-86.46 87.29,-92.05 85.03,-97.28"/>
+<polygon fill="#64748b" stroke="#64748b" points="82.44,-96.2 81.58,-104.63 87.51,-98.58 82.44,-96.2"/>
+<text text-anchor="middle" x="116" y="-73" font-family="Arial" font-size="10.00">HTTP reply</text>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 8 · Offline vector illustration of the network architecture</figcaption></figure>
+<p>On DEV-A:</p>
+<pre><code class="language-powershell">Test-NetConnection example.com -Port 443
+Invoke-WebRequest https://example.com -UseBasicParsing
+</code></pre>
+<p>Other-company users can likewise access a published IIS page on DEV-A using its public IPv4 address, if security groups, routes, and Windows Firewall allow HTTP 80:</p>
+<pre><code class="language-text">http://&lt;DEV-A-PUBLIC-IP&gt;
+</code></pre>
+<p>The other company <strong>does not need access to our VPC</strong> to consume a publicly published website or API.</p>
+</div></details>
+
+<details id="chapter-22" class="chapter"<summary><strong>22. Part 6, Scenario B — Private company-to-company communication using VPC Peering</strong></summary><div class="chapter-content"><p>Suppose Company XYZ has its own VPC with a private IP range. DEV-A wants to communicate privately with EMP-X.</p>
+<ul>
+<li>Company ABC VPC: <code>10.0.0.0/16</code>.</li>
+<li>Company XYZ VPC: <code>10.1.0.0/16</code>.</li>
+<li>Company XYZ employee X: <code>10.1.1.10</code>.</li>
+</ul>
+<p>An <strong>Internet Gateway alone is not enough</strong> for access to another VPC's private IPs. Use a private network connection, e.g., <strong>VPC Peering</strong>.</p>
+<figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="343pt" height="306pt"
+ viewBox="0.00 0.00 343.08 306.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 283.04)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_abc</title>
+<polygon fill="transparent" stroke="#13a88c" points="35,-174 35,-252 289,-252 289,-174 35,-174"/>
+<text text-anchor="middle" x="162" y="-235.2" font-family="Arial" font-size="16.00">Company ABC VPC · 10.0.0.0/16</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_xyz</title>
+<polygon fill="transparent" stroke="#3b82f6" points="8,-8 8,-86 261,-86 261,-8 8,-8"/>
+<text text-anchor="middle" x="134.5" y="-69.2" font-family="Arial" font-size="16.00">Company XYZ VPC · 10.1.0.0/16</text>
+</g>
+<!-- A -->
+<g id="node1" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M187,-218C187,-218 81,-218 81,-218 75,-218 69,-212 69,-206 69,-206 69,-194 69,-194 69,-188 75,-182 81,-182 81,-182 187,-182 187,-182 193,-182 199,-188 199,-194 199,-194 199,-206 199,-206 199,-212 193,-218 187,-218"/>
+<text text-anchor="middle" x="134" y="-196.9" font-family="Arial" font-size="12.00">DEV&#45;A · 10.0.1.10</text>
+</g>
+<!-- PC -->
+<g id="node2" class="node">
+<title>PC</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M174,-135C174,-135 94,-135 94,-135 88,-135 82,-129 82,-123 82,-123 82,-111 82,-111 82,-105 88,-99 94,-99 94,-99 174,-99 174,-99 180,-99 186,-105 186,-111 186,-111 186,-123 186,-123 186,-129 180,-135 174,-135"/>
+<text text-anchor="middle" x="134" y="-113.9" font-family="Arial" font-size="12.00">VPC peering</text>
+</g>
+<!-- A&#45;&gt;PC -->
+<g id="edge1" class="edge">
+<title>A&#45;&gt;PC</title>
+<path fill="none" stroke="#64748b" d="M134,-173.59C134,-163.91 134,-152.89 134,-143.23"/>
+<polygon fill="#64748b" stroke="#64748b" points="131.2,-173.82 134,-181.82 136.8,-173.82 131.2,-173.82"/>
+<polygon fill="#64748b" stroke="#64748b" points="136.8,-143.15 134,-135.15 131.2,-143.15 136.8,-143.15"/>
+</g>
+<!-- X -->
+<g id="node3" class="node">
+<title>X</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M188,-52C188,-52 80,-52 80,-52 74,-52 68,-46 68,-40 68,-40 68,-28 68,-28 68,-22 74,-16 80,-16 80,-16 188,-16 188,-16 194,-16 200,-22 200,-28 200,-28 200,-40 200,-40 200,-46 194,-52 188,-52"/>
+<text text-anchor="middle" x="134" y="-30.9" font-family="Arial" font-size="12.00">EMP&#45;X · 10.1.1.10</text>
+</g>
+<!-- PC&#45;&gt;X -->
+<g id="edge2" class="edge">
+<title>PC&#45;&gt;X</title>
+<path fill="none" stroke="#64748b" d="M134,-90.59C134,-80.91 134,-69.89 134,-60.23"/>
+<polygon fill="#64748b" stroke="#64748b" points="131.2,-90.82 134,-98.82 136.8,-90.82 131.2,-90.82"/>
+<polygon fill="#64748b" stroke="#64748b" points="136.8,-60.15 134,-52.15 131.2,-60.15 136.8,-60.15"/>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 9 · Offline vector illustration of the network architecture</figcaption></figure>
+<p>VPC peering can connect nonoverlapping VPCs within or across AWS Regions and across accounts, with the required routes and firewalls. Traffic uses AWS private networking, not a public internet path.</p>
+<p>AWS reference: <a href="https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html">VPC peering</a>.</p>
+</div></details>
+
+<details id="chapter-23" class="chapter"<summary><strong>23. Step 15 — Optional: Create Company XYZ VPC, subnet and Windows EC2</strong></summary><div class="chapter-content"><p>To simulate a second company in the same AWS account, create:</p>
+<table>
+<thead>
+<tr>
+  <th>Resource</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>VPC</td>
+  <td><code>CompanyXYZ-VPC</code></td>
+</tr>
+<tr>
+  <td>VPC CIDR</td>
+  <td><code>10.1.0.0/16</code></td>
+</tr>
+<tr>
+  <td>Subnet</td>
+  <td><code>XYZ-Subnet</code></td>
+</tr>
+<tr>
+  <td>Subnet CIDR</td>
+  <td><code>10.1.1.0/24</code></td>
+</tr>
+<tr>
+  <td>EC2</td>
+  <td><code>EMP-X</code> — Windows Server 2022</td>
+</tr>
+<tr>
+  <td>Private IP</td>
+  <td><code>10.1.1.10</code></td>
+</tr>
+</tbody>
+</table>
+<p>For simple RDP access in this lab, configure Company XYZ's own Internet Gateway and a public route table, assign EMP-X a public IPv4, and allow RDP from your IP.</p>
+<p>For tests, allow ICMP and HTTP from <code>10.0.0.0/16</code> in EMP-X's security group and Windows Firewall. Install IIS and ensure it listens on port 80.</p>
+<p><strong>Real-world note:</strong> The other VPC might be owned by a different AWS account and need permission/acceptance from its owner.</p>
+</div></details>
+
+<details id="chapter-24" class="chapter"<summary><strong>24. Step 16 — Create and accept ABC-to-XYZ VPC peering</strong></summary><div class="chapter-content"><p>Navigate to <strong>VPC Console → Peering connections → Create peering connection</strong>.</p>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Name</td>
+  <td><code>ABC-to-XYZ-Peering</code></td>
+</tr>
+<tr>
+  <td>Requester VPC</td>
+  <td><code>CompanyABC-VPC</code></td>
+</tr>
+<tr>
+  <td>Accepter VPC</td>
+  <td><code>CompanyXYZ-VPC</code></td>
+</tr>
+<tr>
+  <td>Account</td>
+  <td>My account</td>
+</tr>
+<tr>
+  <td>Region</td>
+  <td>This Region</td>
+</tr>
+</tbody>
+</table>
+<p>Create the request, then select it → <strong>Actions → Accept request</strong> if acceptance is pending. Its status should become <strong>Active</strong>.</p>
+</div></details>
+
+<details id="chapter-25" class="chapter"<summary><strong>25. Step 17 — Add cross-VPC routes in both directions</strong></summary><div class="chapter-content"><p><strong>Company ABC:</strong> Open <code>CompanyABC-Public-RT</code> and add:</p>
+<table>
+<thead>
+<tr>
+  <th>Destination</th>
+  <th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>10.1.0.0/16</code></td>
+  <td>VPC peering connection <code>ABC-to-XYZ-Peering</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Company XYZ:</strong> Edit the route table associated with <code>XYZ-Subnet</code> and add:</p>
+<table>
+<thead>
+<tr>
+  <th>Destination</th>
+  <th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>10.0.0.0/16</code></td>
+  <td>Same VPC peering connection</td>
+</tr>
+</tbody>
+</table>
+<p>Keep existing local and internet routes. Both sides need reciprocal routes and appropriate firewall permissions.</p>
+</div></details>
+
+<details id="chapter-26" class="chapter"<summary><strong>26. Step 18 — Test DEV-A to EMP-X using private IP</strong></summary><div class="chapter-content"><p>Confirm EMP-X allows ICMP from <code>10.0.0.0/16</code> in both its security group and Windows Firewall. On DEV-A:</p>
+<pre><code class="language-powershell">Test-Connection 10.1.1.10 -Count 4
+</code></pre>
+<p>To test EMP-X's IIS website:</p>
+<pre><code class="language-powershell">Test-NetConnection 10.1.1.10 -Port 80
+Invoke-WebRequest http://10.1.1.10 -UseBasicParsing
+</code></pre>
+<p>Expected result: private IP communication succeeds using the VPC peering connection, <strong>not</strong> Company ABC's Internet Gateway.</p>
+</div></details>
+
+<details id="chapter-27" class="chapter"<summary><strong>27. Part 7 — Public versus private subnet comparison</strong></summary><div class="chapter-content"><p>In the initial lab all four EC2s are in <strong>public subnets</strong> for easier RDP. A production architecture often uses <strong>private subnets</strong> for internal systems.</p>
+<table>
+<thead>
+<tr>
+  <th>Feature</th>
+  <th>Public subnet</th>
+  <th>Private subnet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Direct route to IGW</td>
+  <td>Yes</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Direct inbound internet access to appropriately configured IPv4 EC2</td>
+  <td>Possible</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Private VPC communication</td>
+  <td>Yes, if permitted</td>
+  <td>Yes, if permitted</td>
+</tr>
+<tr>
+  <td>Public internet downloads</td>
+  <td>Via public IP + IGW</td>
+  <td>Via NAT, proxy, or other outbound access</td>
+</tr>
+<tr>
+  <td>Typical role</td>
+  <td>Public web tier/load balancer</td>
+  <td>Internal application/database tier</td>
+</tr>
+</tbody>
+</table>
+<p>A subnet is <strong>private</strong> if it lacks a direct route to the IGW. Private resources may still use an appropriate outbound gateway or endpoint.</p>
+</div></details>
+
+<details id="chapter-28" class="chapter"<summary><strong>28. Secure architecture diagram — Public web tier, private developers/testers, NAT</strong></summary><div class="chapter-content"><figure class="diagram"><div class="diagram-art">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="421pt" height="544pt"
+ viewBox="0.00 0.00 421.08 544.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(23.04 521.04)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_vpc</title>
+<polygon fill="transparent" stroke="black" points="8,-8 8,-344 367,-344 367,-8 8,-8"/>
+<text text-anchor="middle" x="187.5" y="-327.2" font-family="Arial" font-size="16.00">Company ABC VPC</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_pub</title>
+<polygon fill="transparent" stroke="black" points="16,-232 16,-310 359,-310 359,-232 16,-232"/>
+<text text-anchor="middle" x="187.5" y="-293.2" font-family="Arial" font-size="16.00">Public subnet</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_dev</title>
+<polygon fill="transparent" stroke="#13a88c" points="45,-119 45,-197 243,-197 243,-119 45,-119"/>
+<text text-anchor="middle" x="144" y="-180.2" font-family="Arial" font-size="16.00">Private Developer subnet</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_test</title>
+<polygon fill="transparent" stroke="#3b82f6" points="90,-16 90,-94 297,-94 297,-16 90,-16"/>
+<text text-anchor="middle" x="193.5" y="-77.2" font-family="Arial" font-size="16.00">Private Testing subnet</text>
+</g>
+<!-- INTERNET -->
+<g id="node1" class="node">
+<title>INTERNET</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M204,-498C204,-498 154,-498 154,-498 148,-498 142,-492 142,-486 142,-486 142,-474 142,-474 142,-468 148,-462 154,-462 154,-462 204,-462 204,-462 210,-462 216,-468 216,-474 216,-474 216,-486 216,-486 216,-492 210,-498 204,-498"/>
+<text text-anchor="middle" x="179" y="-476.9" font-family="Arial" font-size="12.00">Internet</text>
+</g>
+<!-- IGW -->
+<g id="node2" class="node">
+<title>IGW</title>
+<path fill="#ffe7a0" stroke="#6c94b5" d="M229.5,-413C229.5,-413 128.5,-413 128.5,-413 122.5,-413 116.5,-407 116.5,-401 116.5,-401 116.5,-389 116.5,-389 116.5,-383 122.5,-377 128.5,-377 128.5,-377 229.5,-377 229.5,-377 235.5,-377 241.5,-383 241.5,-389 241.5,-389 241.5,-401 241.5,-401 241.5,-407 235.5,-413 229.5,-413"/>
+<text text-anchor="middle" x="179" y="-391.9" font-family="Arial" font-size="12.00">Internet Gateway</text>
+</g>
+<!-- INTERNET&#45;&gt;IGW -->
+<g id="edge1" class="edge">
+<title>INTERNET&#45;&gt;IGW</title>
+<path fill="none" stroke="#64748b" d="M179,-453.62C179,-443.38 179,-431.58 179,-421.34"/>
+<polygon fill="#64748b" stroke="#64748b" points="176.2,-453.8 179,-461.8 181.8,-453.8 176.2,-453.8"/>
+<polygon fill="#64748b" stroke="#64748b" points="181.8,-421.18 179,-413.18 176.2,-421.18 181.8,-421.18"/>
+</g>
+<!-- WEB -->
+<g id="node3" class="node">
+<title>WEB</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M142,-276C142,-276 36,-276 36,-276 30,-276 24,-270 24,-264 24,-264 24,-252 24,-252 24,-246 30,-240 36,-240 36,-240 142,-240 142,-240 148,-240 154,-246 154,-252 154,-252 154,-264 154,-264 154,-270 148,-276 142,-276"/>
+<text text-anchor="middle" x="89" y="-254.9" font-family="Arial" font-size="12.00">Public web server</text>
+</g>
+<!-- IGW&#45;&gt;WEB -->
+<g id="edge2" class="edge">
+<title>IGW&#45;&gt;WEB</title>
+<path fill="none" stroke="#64748b" d="M163.07,-370.11C146.77,-345.65 121.56,-307.84 105.17,-283.25"/>
+<polygon fill="#64748b" stroke="#64748b" points="160.83,-371.8 167.6,-376.9 165.49,-368.69 160.83,-371.8"/>
+<polygon fill="#64748b" stroke="#64748b" points="107.36,-281.49 100.59,-276.39 102.7,-284.6 107.36,-281.49"/>
+</g>
+<!-- NAT -->
+<g id="node4" class="node">
+<title>NAT</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M338.5,-276C338.5,-276 201.5,-276 201.5,-276 195.5,-276 189.5,-270 189.5,-264 189.5,-264 189.5,-252 189.5,-252 189.5,-246 195.5,-240 201.5,-240 201.5,-240 338.5,-240 338.5,-240 344.5,-240 350.5,-246 350.5,-252 350.5,-252 350.5,-264 350.5,-264 350.5,-270 344.5,-276 338.5,-276"/>
+<text text-anchor="middle" x="270" y="-254.9" font-family="Arial" font-size="12.00">NAT Gateway (optional)</text>
+</g>
+<!-- IGW&#45;&gt;NAT -->
+<g id="edge3" class="edge">
+<title>IGW&#45;&gt;NAT</title>
+<path fill="none" stroke="#64748b" d="M195.1,-370.11C211.59,-345.65 237.08,-307.84 253.65,-283.25"/>
+<polygon fill="#64748b" stroke="#64748b" points="192.68,-368.7 190.53,-376.9 197.32,-371.83 192.68,-368.7"/>
+<polygon fill="#64748b" stroke="#64748b" points="256.13,-284.58 258.28,-276.39 251.49,-281.45 256.13,-284.58"/>
+</g>
+<!-- A -->
+<g id="node5" class="node">
+<title>A</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M221.5,-163C221.5,-163 174.5,-163 174.5,-163 168.5,-163 162.5,-157 162.5,-151 162.5,-151 162.5,-139 162.5,-139 162.5,-133 168.5,-127 174.5,-127 174.5,-127 221.5,-127 221.5,-127 227.5,-127 233.5,-133 233.5,-139 233.5,-139 233.5,-151 233.5,-151 233.5,-157 227.5,-163 221.5,-163"/>
+<text text-anchor="middle" x="198" y="-141.9" font-family="Arial" font-size="12.00">DEV&#45;A</text>
+</g>
+<!-- WEB&#45;&gt;A -->
+<g id="edge6" class="edge">
+<title>WEB&#45;&gt;A</title>
+<path fill="none" stroke="#64748b" d="M106.03,-239.66C124.67,-220.68 154.64,-190.16 175.27,-169.15"/>
+<polygon fill="#64748b" stroke="#64748b" points="177.48,-170.89 181.09,-163.22 173.49,-166.97 177.48,-170.89"/>
+</g>
+<!-- NAT&#45;&gt;A -->
+<g id="edge4" class="edge">
+<title>NAT&#45;&gt;A</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M222.64,-239.96C212.44,-234 202.95,-226.16 197,-216 189.15,-202.58 189.39,-185.1 191.6,-170.96"/>
+<polygon fill="#64748b" stroke="#64748b" points="194.36,-171.46 193.08,-163.08 188.85,-170.43 194.36,-171.46"/>
+<text text-anchor="middle" x="229" y="-208" font-family="Arial" font-size="10.00">Outbound only</text>
+</g>
+<!-- C -->
+<g id="node7" class="node">
+<title>C</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M277,-60C277,-60 223,-60 223,-60 217,-60 211,-54 211,-48 211,-48 211,-36 211,-36 211,-30 217,-24 223,-24 223,-24 277,-24 277,-24 283,-24 289,-30 289,-36 289,-36 289,-48 289,-48 289,-54 283,-60 277,-60"/>
+<text text-anchor="middle" x="250" y="-38.9" font-family="Arial" font-size="12.00">TEST&#45;C</text>
+</g>
+<!-- NAT&#45;&gt;C -->
+<g id="edge5" class="edge">
+<title>NAT&#45;&gt;C</title>
+<path fill="none" stroke="#64748b" stroke-dasharray="5,2" d="M268.4,-239.85C264.89,-202.28 256.5,-112.58 252.38,-68.43"/>
+<polygon fill="#64748b" stroke="#64748b" points="255.14,-67.94 251.61,-60.23 249.57,-68.46 255.14,-67.94"/>
+</g>
+<!-- A&#45;&gt;C -->
+<g id="edge7" class="edge">
+<title>A&#45;&gt;C</title>
+<path fill="none" stroke="#64748b" d="M210.65,-119.43C218.76,-103.67 229.26,-83.29 237.37,-67.54"/>
+<polygon fill="#64748b" stroke="#64748b" points="207.99,-118.47 206.82,-126.87 212.97,-121.04 207.99,-118.47"/>
+<polygon fill="#64748b" stroke="#64748b" points="239.96,-68.61 241.14,-60.22 234.98,-66.05 239.96,-68.61"/>
+</g>
+<!-- B -->
+<g id="node6" class="node">
+<title>B</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M114.5,-163C114.5,-163 67.5,-163 67.5,-163 61.5,-163 55.5,-157 55.5,-151 55.5,-151 55.5,-139 55.5,-139 55.5,-133 61.5,-127 67.5,-127 67.5,-127 114.5,-127 114.5,-127 120.5,-127 126.5,-133 126.5,-139 126.5,-139 126.5,-151 126.5,-151 126.5,-157 120.5,-163 114.5,-163"/>
+<text text-anchor="middle" x="91" y="-141.9" font-family="Arial" font-size="12.00">DEV&#45;B</text>
+</g>
+<!-- D -->
+<g id="node8" class="node">
+<title>D</title>
+<path fill="#eaf4fd" stroke="#6c94b5" d="M164,-60C164,-60 110,-60 110,-60 104,-60 98,-54 98,-48 98,-48 98,-36 98,-36 98,-30 104,-24 110,-24 110,-24 164,-24 164,-24 170,-24 176,-30 176,-36 176,-36 176,-48 176,-48 176,-54 170,-60 164,-60"/>
+<text text-anchor="middle" x="137" y="-38.9" font-family="Arial" font-size="12.00">TEST&#45;D</text>
+</g>
+</g>
+</svg>
+</div><figcaption>Diagram 10 · Offline vector illustration of the network architecture</figcaption></figure>
+<p><strong>Hands-on private subnet variant:</strong></p>
+<ol>
+<li>Create <code>Private-Testing-Subnet</code>, CIDR <code>10.0.3.0/24</code> in <code>CompanyABC-VPC</code>.</li>
+<li>Associate it with a route table containing only the VPC <code>local</code> route (no <code>0.0.0.0/0</code> to IGW).</li>
+<li>Launch a test Windows EC2 without public IPv4.</li>
+<li>Observe that direct public-internet RDP from your laptop is not possible.</li>
+<li>Use an approved management path: properly configured AWS Systems Manager Session Manager, VPN, or a secured jump/bastion host.</li>
+<li>If outbound public internet access is needed, use a NAT Gateway or other suitable mechanism with a private route table; NAT Gateway has hourly and data processing charges.</li>
+</ol>
+<p><strong>Important:</strong> NAT enables outbound initiated connections, not unsolicited inbound access to private EC2 instances.</p>
+</div></details>
+
+<details id="chapter-29" class="chapter"<summary><strong>29. Part 8 — Complete student practical checklist</strong></summary><div class="chapter-content"><ul>
+<li>[ ] Create <code>CompanyABC-VPC</code> (<code>10.0.0.0/16</code>).</li>
+<li>[ ] Create <code>Developer-Subnet</code> and <code>Testing-Subnet</code>.</li>
+<li>[ ] Create and attach <code>CompanyABC-IGW</code>.</li>
+<li>[ ] Configure <code>CompanyABC-Public-RT</code> with <code>0.0.0.0/0 → IGW</code>.</li>
+<li>[ ] Associate both subnets with the public route table.</li>
+<li>[ ] Create <code>Developer-SG</code> and <code>Tester-SG</code>.</li>
+<li>[ ] Launch four Windows Server 2022 EC2s: DEV-A, DEV-B, TEST-C, TEST-D.</li>
+<li>[ ] Verify private IPs and IIS services.</li>
+<li>[ ] Test DEV-A → DEV-B private ping and HTTP.</li>
+<li>[ ] Test DEV-A → TEST-C cross-subnet ping and HTTP.</li>
+<li>[ ] Start a port 5000 HTTP server and verify it works.</li>
+<li>[ ] Remove security-group permission for port 5000 and prove it is blocked.</li>
+<li>[ ] Restore the rule and prove it works again.</li>
+<li>[ ] Access DEV-A IIS using its public IPv4 from an external browser.</li>
+<li>[ ] Create Company XYZ VPC and peer with Company ABC (optional).</li>
+<li>[ ] Test DEV-A → EMP-X private connectivity across VPC peering.</li>
+<li>[ ] Experiment with a genuinely private subnet (optional).</li>
+<li>[ ] Terminate lab instances and delete unused billable resources.</li>
+</ul>
+</div></details>
+
+<details id="chapter-30" class="chapter"<summary><strong>30. Troubleshooting — RDP, ICMP, IIS, NAT, and VPC Peering</strong></summary><div class="chapter-content"><table>
+<thead>
+<tr>
+  <th>Problem</th>
+  <th>What to check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>RDP connection times out</td>
+  <td>Public IP, subnet route, security-group inbound TCP 3389 from your IP, Windows Firewall, instance readiness</td>
+</tr>
+<tr>
+  <td>Ping fails</td>
+  <td>ICMP rules on destination security group and Windows Defender Firewall</td>
+</tr>
+<tr>
+  <td>Ping works but HTTP fails</td>
+  <td>IIS service, port 80 security group, Windows Firewall, correct IP and website</td>
+</tr>
+<tr>
+  <td>Private subnet cannot access public internet</td>
+  <td>Outbound route via NAT/proxy, associated security rules, DNS</td>
+</tr>
+<tr>
+  <td>VPC peering ping fails</td>
+  <td>Active peering, both route tables, nonoverlapping CIDRs, security groups, Windows Firewall</td>
+</tr>
+<tr>
+  <td>IIS page missing after launch</td>
+  <td>Check user-data initialization, IIS installation, web root file and service</td>
+</tr>
+</tbody>
+</table>
+<p>Remember: a ping failure alone does not prove an IP route is broken, because firewalls can block ICMP.</p>
+</div></details>
+
+<details id="chapter-31" class="chapter"<summary><strong>31. Cleanup — Avoid unexpected AWS charges</strong></summary><div class="chapter-content"><p>After the demonstration:</p>
+<ol>
+<li>Terminate DEV-A, DEV-B, TEST-C, TEST-D, and EMP-X (if launched).</li>
+<li>Confirm EBS volumes set to persist, if any, are not left unnecessarily.</li>
+<li>Delete NAT Gateways and release unused Elastic IP addresses, if created.</li>
+<li>Delete VPC peering connection if created.</li>
+<li>Remove custom security groups and detach/delete custom Internet Gateways as appropriate.</li>
+<li>Delete unused subnets and custom route tables.</li>
+<li>Delete <code>CompanyABC-VPC</code> and <code>CompanyXYZ-VPC</code> once all dependencies are removed.</li>
+<li>Check the EC2 and billing consoles for remaining chargeable resources, including public IPv4 addresses and EBS volumes.</li>
+</ol>
+<p>AWS services and prices vary by Region and configuration. Windows EC2 instances and NAT Gateways are not necessarily within free-tier benefits.</p>
+</div></details>
+
+<details id="chapter-32" class="chapter"<summary><strong>32. Final recap — Component, analogy, and purpose</strong></summary><div class="chapter-content"><table>
+<thead>
+<tr>
+  <th>AWS component</th>
+  <th>Real-world analogy</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>VPC</td>
+  <td>Company's private campus</td>
+  <td>Logically isolated network</td>
+</tr>
+<tr>
+  <td>Subnet</td>
+  <td>Department/network segment</td>
+  <td>Organizes IP address space, routing association, and policies</td>
+</tr>
+<tr>
+  <td>EC2</td>
+  <td>Employee's computer/server</td>
+  <td>Runs applications</td>
+</tr>
+<tr>
+  <td>Route table</td>
+  <td>Road directions</td>
+  <td>Determines next network hop</td>
+</tr>
+<tr>
+  <td>Security group</td>
+  <td>Access-control guard</td>
+  <td>Permits selected traffic to/from an instance</td>
+</tr>
+<tr>
+  <td>Internet Gateway</td>
+  <td>Connection to public roads</td>
+  <td>Public internet connectivity</td>
+</tr>
+<tr>
+  <td>NAT Gateway</td>
+  <td>Outbound internet access point</td>
+  <td>Allows private workloads to initiate outbound internet access</td>
+</tr>
+<tr>
+  <td>VPC Peering</td>
+  <td>Private connection between campuses</td>
+  <td>Connects two VPCs using private IP routes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key message:</strong> VPCs provide private network environments. Subnets organize those environments. Route tables decide packet destinations. Security groups control permitted connections. Internet Gateways enable public internet connectivity, while VPC peering enables private traffic between separate VPCs.</p>
+<h3>Official references</h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/">Amazon VPC User Guide</a></li>
+<li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html">Internet Gateway documentation</a></li>
+<li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html">Route tables</a></li>
+<li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html">Security groups</a></li>
+<li><a href="https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html">VPC Peering</a></li>
+<li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/connect-rdp.html">Connect to a Windows instance using RDP</a></li>
+</ul>
+</div></details>
+<hr />
+<p><em>End of tutorial — AWS VPC, Subnets, Internet Gateway, Windows Server EC2 communication, and cross-company VPC peering.</em></p>
+<footer>Offline training reference · All commands, tables and architecture diagrams included</footer></main></div></body></html>
