@@ -1,0 +1,14 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PartnerRead",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::444455556666:role/PartnerReader"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::companyabc-s3-lab-unique/exports/*"
+    }
+  ]
+}

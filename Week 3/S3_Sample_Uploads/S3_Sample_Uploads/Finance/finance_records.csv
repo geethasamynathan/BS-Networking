@@ -1,0 +1,3 @@
+InvoiceID,Department,AmountINR,Status
+F101,Training,2000,Paid
+F102,IT,1500,Pending

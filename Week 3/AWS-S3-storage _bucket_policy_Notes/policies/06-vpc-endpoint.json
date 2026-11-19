@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DenyReadOutsideEndpoint",
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::companyabc-s3-lab-unique/internal/*",
+      "Condition": {
+        "StringNotEquals": {
+          "aws:SourceVpce": "vpce-0abcdef1234567890"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadOneImage",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::111122223333:role/S3LabReader"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::companyabc-s3-lab-unique/images/logo.jpg"
+    }
+  ]
+}

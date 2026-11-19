@@ -1,0 +1,46 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DeveloperUpload",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::111122223333:role/DeveloperRole"
+      },
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": "arn:aws:s3:::companyabc-s3-lab-unique/project/*"
+    },
+    {
+      "Sid": "TesterRead",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::111122223333:role/TesterRole"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::companyabc-s3-lab-unique/project/*"
+    },
+    {
+      "Sid": "ListProject",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::111122223333:role/DeveloperRole",
+          "arn:aws:iam::111122223333:role/TesterRole"
+        ]
+      },
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::companyabc-s3-lab-unique",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": [
+            "project/",
+            "project/*"
+          ]
+        }
+      }
+    }
+  ]
+}

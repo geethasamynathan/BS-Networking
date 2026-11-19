@@ -1,0 +1,40 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "OfficeReader",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::111122223333:role/S3LabReader"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::companyabc-s3-lab-unique/reports/*",
+      "Condition": {
+        "IpAddress": {
+          "aws:SourceIp": [
+            "203.0.113.10/32",
+            "198.51.100.0/24"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "DenyOutsideOffice",
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::companyabc-s3-lab-unique/reports/*",
+      "Condition": {
+        "NotIpAddress": {
+          "aws:SourceIp": [
+            "203.0.113.10/32",
+            "198.51.100.0/24"
+          ]
+        },
+        "Bool": {
+          "aws:PrincipalIsAWSService": "false"
+        }
+      }
+    }
+  ]
+}
