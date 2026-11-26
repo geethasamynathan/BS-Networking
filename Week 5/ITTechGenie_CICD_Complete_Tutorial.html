@@ -1,0 +1,208 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ITTechGenie | CI/CD Complete Tutorial</title><style>*{box-sizing:border-box}body{margin:0;font:16px/1.65 system-ui,Arial;color:#1c293b;background:#f4f7fb}header.hero{background:#142d50;color:white;padding:38px max(5%,20px)}header h1{margin:0;font-size:clamp(27px,4vw,43px);line-height:1.2}header p{color:#c9d9ef}.layout{display:grid;grid-template-columns:280px minmax(0,1fr);max-width:1450px;margin:auto}nav{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;padding:20px}nav a{display:block;padding:6px 8px;color:#29466b;text-decoration:none;font-size:14px}nav a:hover{background:#dce8fa}main{padding:24px;min-width:0}section{background:white;padding:26px;margin:0 0 22px;border:1px solid #dce4ef;border-radius:12px;scroll-margin-top:15px}h2{color:#163b65;margin-top:0;line-height:1.3}h3{color:#245387}pre{position:relative;background:#142339;color:#e8eef8;padding:42px 18px 18px;border-radius:8px;overflow:auto;line-height:1.45;font-size:14px}code{font-family:Consolas,monospace}p code,li code{background:#edf2f8;padding:2px 4px;overflow-wrap:anywhere}button{background:#235ba6;color:white;border:0;border-radius:6px;padding:9px 14px;cursor:pointer}.copy{position:absolute;right:8px;top:8px;padding:5px 10px}table{border-collapse:collapse;width:100%;margin:16px 0; font-size:14px}td,th{border:1px solid #dce4ef;padding:9px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e6effb;color:#163b65}.flow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;background:#f1f6fd;padding:15px;border-radius:8px;margin:15px 0}.flow b,.branch span{background:white;border:1px solid #a8bfdf;padding:9px;border-radius:6px;font-size:14px}.flow span{color:#3869a6}.note{border-left:4px solid #b7791f;background:#fff8e6;padding:12px}.demo,.mock,.branch{border:1px solid #c9d8eb;padding:20px;border-radius:9px;background:#f2f7ff}.demo{text-align:center}.mock label{display:block;font-size:13px;margin-top:9px}.field{background:white;border:1px solid #bdcce0;border-radius:5px;padding:8px;margin-bottom:10px}.muted{color:#65758b}.branch{text-align:center}.branch div{display:flex;gap:12px;justify-content:center;margin-top:14px;flex-wrap:wrap}.check{display:block;padding:7px}details{border-bottom:1px solid #dce4ef;padding:10px}summary{cursor:pointer;font-weight:600}a{color:#225da8}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}#filter{padding:9px;border:1px solid #bdcce0;border-radius:5px;width:100%;margin-bottom:10px}@media(max-width:760px){.layout{display:block}nav{position:static;max-height:260px}main{padding:10px}section{padding:16px}}@media print{nav,.toolbar,.copy,button{display:none}.layout{display:block}main{padding:0}section{border:0;break-inside:auto}pre{white-space:pre-wrap;background:#eee;color:#111}header.hero{background:white;color:#111}header p{color:#333}}</style></head><body><header class="hero"><p>ITTECHGENIE • TRAINER EDITION</p><h1>GitHub Actions, Azure DevOps, YAML & CI/CD</h1><p>From fundamentals to automated deployment • One shared HTML/CSS/JavaScript application</p><div class="toolbar"><button onclick="window.print()">Print / Save PDF</button><button onclick="document.querySelectorAll('details').forEach(x=>x.open=true)">Expand recap</button></div></header><div class="layout"><nav><input id="filter" placeholder="Find a topic" oninput="document.querySelectorAll('nav a').forEach(a=>a.hidden=!a.textContent.toLowerCase().includes(this.value.toLowerCase()))"><strong>Contents</strong><a href="#s1">01. DevOps foundations</a><a href="#s2">02. CI/CD principles</a><a href="#s3">03. GitHub Actions and Azure DevOps</a><a href="#s4">04. YAML from scratch</a><a href="#s5">05. Lab preparation and shared website</a><a href="#s6">06. Upload source code to GitHub</a><a href="#s7">07. GitHub Actions: first workflow</a><a href="#s8">08. GitHub Actions: CI/CD to GitHub Pages</a><a href="#s9">09. Demonstrate success and failure</a><a href="#s10">10. Azure DevOps organization and initial pipeline</a><a href="#s11">11. Create Azure Static Web Apps hosting</a><a href="#s12">12. Configure secret and complete Azure CI/CD</a><a href="#s13">13. One change triggers both pipelines</a><a href="#s14">14. Continuous delivery, approvals and rollback</a><a href="#s15">15. Troubleshooting and security</a><a href="#s16">16. Classroom recap and assessment</a><a href="#s17">17. References and lab limitations</a></nav><main><section id="s1"><h2>01. DevOps foundations</h2><p>DevOps combines development and operations practices to deliver software reliably through collaboration, automation and feedback. Before automation, developers handed files to testers, who handed approved files to administrators for manual FTP/SFTP or server deployment.</p><div class="flow"><b>Developer</b><span>→</span><b>Manual testing</b><span>→</span><b>Manual deployment</b><span>→</span><b>Server</b></div><p>Manual handovers cause delays, inconsistent environments, incorrect versions and difficult rollback. DevOps automates repeatable work while retaining appropriate approvals.</p><div class="flow"><b>Plan</b><span>→</span><b>Code</b><span>→</span><b>Build</b><span>→</span><b>Test</b><span>→</span><b>Release</b><span>→</span><b>Deploy</b><span>→</span><b>Monitor</b><span>→</span><b>Feedback</b></div><table><tr><th>Activity</th><th>Example tools</th></tr><tr><td>Planning</td><td>Azure Boards, Jira</td></tr><tr><td>Version control</td><td>Git, GitHub, Azure Repos</td></tr><tr><td>CI/CD</td><td>Jenkins, GitHub Actions, Azure Pipelines</td></tr><tr><td>Testing</td><td>NUnit, Playwright, Selenium</td></tr><tr><td>Infrastructure</td><td>Terraform, Ansible</td></tr><tr><td>Monitoring</td><td>Azure Monitor, CloudWatch</td></tr></table></section><section id="s2"><h2>02. CI/CD principles</h2><h3>Continuous Integration (CI)</h3><p>Frequently integrate changes into a shared repository and automatically validate them. A failed check prevents the dependent deployment.</p><div class="flow"><b>Push / PR</b><span>→</span><b>Checkout</b><span>→</span><b>Validate</b><span>→</span><b>Package</b><span>→</span><b>Pass or fail</b></div><h3>Continuous Delivery</h3><p>Every passing change is prepared for release; production deployment can be approved manually.</p><div class="flow"><b>CI</b><span>→</span><b>Artifact</b><span>→</span><b>Approval</b><span>→</span><b>Production</b></div><h3>Continuous Deployment</h3><p>Every qualifying change automatically reaches production after required checks pass.</p><div class="flow"><b>CI</b><span>→</span><b>Artifact</b><span>→</span><b>Automatic deployment</b><span>→</span><b>Live site</b></div><table><tr><th>Concept</th><th>Output</th><th>Production approval</th></tr><tr><td>CI</td><td>Validated changes / optional artifact</td><td>Not applicable</td></tr><tr><td>Continuous delivery</td><td>Release-ready artifact</td><td>Typically manual</td></tr><tr><td>Continuous deployment</td><td>Live release</td><td>Automatic</td></tr></table></section><section id="s3"><h2>03. GitHub Actions and Azure DevOps</h2><h3>GitHub Actions</h3><p>Workflow automation built into GitHub. A repository event triggers jobs on runners. Earlier approaches included scripts, FTP, Jenkins, Travis CI, CircleCI and TeamCity; many remain in use.</p><div class="flow"><b>GitHub event</b><span>→</span><b>Workflow</b><span>→</span><b>Runner</b><span>→</span><b>Jobs / steps</b><span>→</span><b>Deployment</b></div><h3>Azure DevOps</h3><p>Microsoft’s application lifecycle platform integrates planning, repositories, CI/CD, testing and package management. Microsoft’s tooling evolved from Visual SourceSafe and Team Foundation Server to Visual Studio Online, Visual Studio Team Services (VSTS), and Azure DevOps (2018). TFS evolved into Azure DevOps Server.</p><table><tr><th>Service</th><th>Purpose</th></tr><tr><td>Boards</td><td>Stories, tasks, bugs, sprints</td></tr><tr><td>Repos</td><td>Git or TFVC source control</td></tr><tr><td>Pipelines</td><td>Build, test, deploy</td></tr><tr><td>Test Plans</td><td>Manual and exploratory test management</td></tr><tr><td>Artifacts</td><td>Package feeds (npm, NuGet, Maven)</td></tr></table><table><tr><th>Concept</th><th>GitHub Actions</th><th>Azure Pipelines</th></tr><tr><td>Definition file</td><td>.github/workflows/*.yml</td><td>azure-pipelines.yml</td></tr><tr><td>Execution machine</td><td>Runner</td><td>Agent</td></tr><tr><td>Reusable operation</td><td>Action</td><td>Task</td></tr><tr><td>Trigger</td><td>on</td><td>trigger / pr</td></tr><tr><td>Job dependency</td><td>needs</td><td>dependsOn</td></tr><tr><td>Code source</td><td>GitHub</td><td>GitHub or Azure Repos</td></tr><tr><td>Approvals</td><td>Environment protection</td><td>Environment approvals/checks</td></tr></table><p>GitHub is a source repository; GitHub Actions is its automation service. Azure DevOps does not require migration to Azure Repos: Azure Pipelines can use GitHub directly.</p></section><section id="s4"><h2>04. YAML from scratch</h2><p>YAML Ain’t Markup Language is a human-readable data serialization format. Pipeline as Code means storing automation instructions in version control. YAML describes the instructions; the pipeline engine executes them.</p><pre><button class="copy" onclick="copyCode(this)">Copy</button><code># comment
+application:
+  name: ITTechGenie
+  version: &quot;1.0&quot;
+  enabled: true
+  port: 8080
+  technologies:
+    - HTML
+    - CSS
+    - JavaScript
+  server:
+    host: localhost</code></pre><table><tr><th>Syntax</th><th>Meaning</th></tr><tr><td>key: value</td><td>Mapping</td></tr><tr><td>- item</td><td>Sequence item</td></tr><tr><td>#</td><td>Comment</td></tr><tr><td>Spaces</td><td>Nesting (not tabs)</td></tr><tr><td>|</td><td>Preserve multiline line breaks</td></tr><tr><td>&gt;</td><td>Fold consecutive text lines</td></tr><tr><td>[]</td><td>Inline list</td></tr><tr><td>---</td><td>Document start</td></tr></table><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>steps:
+  - name: Print messages
+    run: |
+      echo &quot;Starting build&quot;
+      echo &quot;Build completed&quot;</code></pre><p>Use consistent indentation (two spaces is customary). GitHub and Azure use the same YAML format but different schemas.</p><pre><button class="copy" onclick="copyCode(this)">Copy</button><code># GitHub Actions
+name: Hello
+on:
+  push:
+    branches: [main]
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo &quot;Hello&quot;</code></pre><pre><button class="copy" onclick="copyCode(this)">Copy</button><code># Azure Pipelines
+trigger:
+  - main
+pool:
+  vmImage: ubuntu-latest
+steps:
+  - script: echo &quot;Hello&quot;
+    displayName: Print message</code></pre></section><section id="s5"><h2>05. Lab preparation and shared website</h2><p>Use one small static website throughout the tutorial. No separate application, database or VM is needed. Install <a href="https://code.visualstudio.com/">VS Code</a>, <a href="https://git-scm.com/">Git</a>, optionally <a href="https://nodejs.org/">Node.js</a>, and have GitHub and Azure DevOps accounts plus an Azure subscription for the second deployment.</p><div class="flow"><b>Local website</b><span>→</span><b>GitHub repository</b><span>→</span><b>GitHub Actions / Azure Pipelines</b><span>→</span><b>Two hosting destinations</b></div><ol><li>Create <code>C:\DevOpsLabs\ITTechGenie-Web</code> and open it in VS Code.</li><li>Create the three files below.</li><li>Open index.html in a browser and click the button. Verify the message.</li></ol><h3>index.html</h3><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;ITTechGenie&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;&lt;h1&gt;ITTechGenie&lt;/h1&gt;&lt;p&gt;Learn. Develop. Deploy.&lt;/p&gt;&lt;/header&gt;
+  &lt;main&gt;&lt;h2&gt;Welcome to DevOps Training&lt;/h2&gt;
+    &lt;p&gt;My first CI/CD application.&lt;/p&gt;
+    &lt;button onclick=&quot;showMessage()&quot;&gt;Click Me&lt;/button&gt;
+    &lt;p id=&quot;message&quot;&gt;&lt;/p&gt;&lt;p&gt;Application Version 1.0&lt;/p&gt;
+  &lt;/main&gt;
+  &lt;script src=&quot;script.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><h3>style.css</h3><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>body { margin:0; font-family:Arial,sans-serif; text-align:center; background:#f0f5fb; color:#142d50; }
+header { background:#142d50; color:white; padding:25px; }
+main { padding:50px 20px; }
+button { background:#2563eb; color:white; border:0; padding:12px 24px; border-radius:6px; cursor:pointer; }
+#message { color:green; font-weight:bold; }</code></pre><h3>script.js</h3><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>function showMessage() {
+  document.getElementById(&quot;message&quot;).textContent = &quot;Congratulations! JavaScript is working.&quot;;
+}</code></pre><div class="demo"><h2>ITTechGenie</h2><p>Welcome to DevOps Training</p><button onclick="document.getElementById('demo-msg').textContent='Congratulations! JavaScript is working.'">Click Me</button><p id="demo-msg"></p><p>Application Version 1.0</p></div></section><section id="s6"><h2>06. Upload source code to GitHub</h2><ol><li>Sign in at <a href="https://github.com/">GitHub</a> → New repository. Name: <code>ittechgenie-web</code>. Choose Public for this non-confidential training sample; leave README unchecked for the CLI method.</li><li>Open VS Code terminal and execute the commands below. Replace username and email placeholders.</li><li>Authenticate using Git Credential Manager or the approved method. Verify the three files in GitHub.</li></ol><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>git --version
+git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;your-email@example.com&quot;
+git init
+git add .
+git commit -m &quot;Initial website development&quot;
+git branch -M main
+git remote add origin https://github.com/YOUR-USERNAME/ittechgenie-web.git
+git push -u origin main</code></pre><p>GUI alternative: repository → Add file → Upload files → Commit changes. Use one approach, not both. Never commit credentials.</p><table><tr><th>Command</th><th>Meaning</th></tr><tr><td>git add</td><td>Stage changes</td></tr><tr><td>git commit</td><td>Record a version</td></tr><tr><td>git push</td><td>Send commits to remote</td></tr><tr><td>git pull --rebase</td><td>Synchronize remote changes before pushing</td></tr></table></section><section id="s7"><h2>07. GitHub Actions: first workflow</h2><p>A workflow contains jobs; jobs run on runners and contain steps. An action is a reusable step. An artifact is a generated output.</p><ol><li>Create <code>.github/workflows/hello.yml</code> locally.</li><li>Add the following YAML, commit and push.</li><li>Open GitHub → Actions → My First Workflow → latest run → hello-job → Print welcome message.</li></ol><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>name: My First Workflow
+on:
+  push:
+    branches: [main]
+jobs:
+  hello-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print welcome message
+        run: echo &quot;Welcome to GitHub Actions&quot;</code></pre><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>git add .
+git commit -m &quot;Create first workflow&quot;
+git push</code></pre><p>Expected: green status and the welcome message in logs. This demonstrates automation, not deployment. Remove hello.yml when the introductory exercise is complete.</p></section><section id="s8"><h2>08. GitHub Actions: CI/CD to GitHub Pages</h2><p>GitHub Pages hosts static files. In your public sample repository choose Settings → Pages → Build and deployment → Source → GitHub Actions.</p><div class="flow"><b>Push to main</b><span>→</span><b>Build / validate</b><span>→</span><b>dist artifact</b><span>→</span><b>Deploy job</b><span>→</span><b>GitHub Pages</b></div><ol><li>Create <code>.github/workflows/deploy.yml</code> using the following code.</li><li>Commit and push.</li><li>Open Actions → ITTechGenie Website CI-CD → latest run. Inspect build and deploy jobs.</li><li>Open Settings → Pages and visit the published URL (typically https://YOUR-USERNAME.github.io/ittechgenie-web/).</li></ol><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>name: ITTechGenie Website CI-CD
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate files
+        run: |
+          set -e
+          test -s index.html
+          test -s style.css
+          test -s script.js
+      - name: Validate JavaScript
+        run: node --check script.js
+      - name: Package website
+        run: |
+          mkdir -p dist
+          cp index.html style.css script.js dist/
+      - uses: actions/configure-pages@v5
+        if: github.event_name != &#x27;pull_request&#x27;
+      - uses: actions/upload-pages-artifact@v4
+        if: github.event_name != &#x27;pull_request&#x27;
+        with:
+          path: dist
+  deploy:
+    needs: build
+    if: github.ref == &#x27;refs/heads/main&#x27; &amp;&amp; github.event_name != &#x27;pull_request&#x27;
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4</code></pre><table><tr><th>Keyword</th><th>Meaning</th></tr><tr><td>on</td><td>Event triggers</td></tr><tr><td>runs-on</td><td>Runner image</td></tr><tr><td>uses</td><td>Reusable action</td></tr><tr><td>run</td><td>Shell command</td></tr><tr><td>with</td><td>Action inputs</td></tr><tr><td>needs</td><td>Wait for successful dependency</td></tr><tr><td>if</td><td>Conditional execution</td></tr><tr><td>permissions</td><td>Workflow token permissions</td></tr><tr><td>environment</td><td>Deployment destination</td></tr><tr><td>workflow_dispatch</td><td>Manual run</td></tr></table><p>Plain HTML does not need compilation. Build means validating and copying files into dist. Pull requests validate only; main pushes deploy. These checks do not prove browser functionality.</p></section><section id="s9"><h2>09. Demonstrate success and failure</h2><h3>Successful change</h3><p>Change the HTML version to 2.0, then commit and push.</p><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>git add .
+git commit -m &quot;Release version 2.0&quot;
+git push</code></pre><p>Observe the green pipeline and refresh the live URL.</p><h3>Failure experiment</h3><p>In the training repository only, temporarily change script.js to the invalid code below.</p><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>function showMessage() { let message = ; }</code></pre><p>Commit and push. The node --check step fails, deployment is skipped and the previous site stays live. Restore the original script, commit and push again. In real projects use a feature branch and PR for failure demonstrations.</p><h3>Manual execution</h3><p>Actions → select workflow → Run workflow → main → Run workflow. This is enabled by workflow_dispatch.</p></section><section id="s10"><h2>10. Azure DevOps organization and initial pipeline</h2><p>Continue with the same GitHub repository. Do not create a second website project.</p><ol><li>Sign in at <a href="https://dev.azure.com/">Azure DevOps</a> and create or select an organization, e.g. ittechgenie-devops-lab.</li><li>Create private project <code>ITTechGenie-Web-Project</code>, Git version control, Basic or Agile process.</li><li>Organization settings → Pipelines → Parallel jobs and Agent pools. Confirm Microsoft-hosted capacity. New organizations may need a parallel-job grant or paid capacity.</li><li>Pipelines → New pipeline → GitHub → authorize Azure Pipelines for the sample repository → select ittechgenie-web → Starter pipeline.</li><li>Replace the starter YAML with the example below. Save and run, committing to main for the lab.</li><li>Open the run and inspect the output.</li></ol><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>trigger:
+  - main
+pool:
+  vmImage: ubuntu-latest
+steps:
+  - script: echo &quot;Welcome to Azure DevOps&quot;
+    displayName: Print welcome message</code></pre><p>Expected: Welcome to Azure DevOps. The root azure-pipelines.yml is now in GitHub. Synchronize your local copy before further local edits.</p><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>git pull --rebase origin main</code></pre><p>Direct Azure Repos project creation/import is not necessary for this GitHub-connected lab.</p></section><section id="s11"><h2>11. Create Azure Static Web Apps hosting</h2><p>Azure Static Web Apps is a managed hosting service for static frontends. We choose it instead of provisioning a VM or web server.</p><ol><li>Open <a href="https://portal.azure.com/">Azure Portal</a> → Resource groups → Create <code>RG-DevOps-Lab</code> in an allowed region.</li><li>Search Static Web Apps → Create. Select the training subscription, resource group, name <code>ittechgenie-web-swa</code> (use a unique suffix if required), Free plan if available, supported region.</li><li>Choose deployment source <strong>Other</strong> and deployment token authorization if displayed. Review + create → Create → Go to resource.</li><li>Overview → Manage deployment token → copy token privately. This is the Static Web App deployment token, NOT a GitHub PAT or Azure DevOps PAT.</li></ol><div class="note">Never paste tokens into YAML, screenshots, logs or GitHub. Reset exposed deployment tokens and update the secret.</div><div class="flow"><b>Azure Pipelines</b><span>→</span><b>Secret deployment token</b><span>→</span><b>Azure Static Web Apps</b></div></section><section id="s12"><h2>12. Configure secret and complete Azure CI/CD</h2><h3>Step 1 — Configure the secret before saving deployment YAML</h3><ol><li>Azure DevOps → Pipelines → select existing pipeline → Edit → Variables → New variable.</li><li>Name: <code>SWA_DEPLOYMENT_TOKEN</code>. Value: paste the Static Web Apps deployment token. Select Keep this value secret. Leave user override unchecked.</li><li>Confirm the variable and return to the YAML editor.</li></ol><h3>Step 2 — Replace existing azure-pipelines.yml</h3><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>trigger:
+  branches:
+    include: [main]
+pr:
+  branches:
+    include: [main]
+pool:
+  vmImage: ubuntu-latest
+stages:
+  - stage: CI
+    displayName: Continuous Integration
+    jobs:
+      - job: Build
+        steps:
+          - checkout: self
+          - script: |
+              set -e
+              test -s index.html
+              test -s style.css
+              test -s script.js
+            displayName: Validate application files
+          - script: node --check script.js
+            displayName: Validate JavaScript syntax
+          - script: |
+              set -e
+              mkdir -p &quot;$(Build.ArtifactStagingDirectory)/website&quot;
+              cp index.html style.css script.js &quot;$(Build.ArtifactStagingDirectory)/website/&quot;
+            displayName: Prepare deployment files
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: &#x27;$(Build.ArtifactStagingDirectory)/website&#x27;
+              artifact: website
+              publishLocation: pipeline
+  - stage: CD
+    displayName: Continuous Deployment
+    dependsOn: CI
+    condition: |
+      and(succeeded(),
+          eq(variables[&#x27;Build.SourceBranch&#x27;], &#x27;refs/heads/main&#x27;),
+          ne(variables[&#x27;Build.Reason&#x27;], &#x27;PullRequest&#x27;))
+    jobs:
+      - job: Deploy
+        steps:
+          - checkout: none
+          - download: current
+            artifact: website
+          - task: AzureStaticWebApp@0
+            displayName: Deploy website to Azure
+            inputs:
+              cwd: &#x27;$(Pipeline.Workspace)/website&#x27;
+              app_location: &#x27;/&#x27;
+              api_location: &#x27;&#x27;
+              output_location: &#x27;&#x27;
+              skip_app_build: true
+              skip_api_build: true
+              azure_static_web_apps_api_token: $(SWA_DEPLOYMENT_TOKEN)</code></pre><h3>Step 3 — Validate and save</h3><ol><li>Select Validate and save (or Save, depending on editor version). Resolve any YAML errors.</li><li>In the Save dialog enter a commit message, e.g. Implement Azure website CI CD. For this lab choose Commit directly to main. Confirm Save.</li><li>The main-branch commit may automatically queue the pipeline. Check Runs before starting a duplicate run.</li></ol><h3>Step 4 — Run manually if needed</h3><div class="mock"><strong>Run pipeline</strong><label>Branch/tag</label><div class="field">main</div><label>Commit (optional)</label><div class="field muted">Leave empty</div><button onclick="this.nextElementSibling.hidden=false">Run (illustration)</button><p hidden>Expected: latest main commit selected.</p></div><p><strong>Important:</strong> The commit message belongs in the Save dialog. The optional Commit field in Run pipeline is for an actual commit identifier. Leave it empty to run the latest main commit. Do not enter the commit message there.</p><h3>Step 5 — Verify the run</h3><div class="flow"><b>CI: validate</b><span>→</span><b>Publish website</b><span>→</span><b>CD: download</b><span>→</span><b>Deploy to Azure</b></div><ol><li>Pipelines → Runs → latest run. Check the source branch and commit.</li><li>Open CI logs and verify required files, JavaScript syntax, packaging and published website artifact.</li><li>Open CD logs and verify artifact download and AzureStaticWebApp task success.</li><li>Azure Portal → Static Web Apps → Overview → click the actual generated HTTPS URL. Verify version and button functionality.</li></ol><table><tr><th>Keyword / variable</th><th>Meaning</th></tr><tr><td>stages / jobs / steps</td><td>Pipeline hierarchy</td></tr><tr><td>checkout: self</td><td>Fetch source</td></tr><tr><td>dependsOn</td><td>Stage dependency</td></tr><tr><td>condition</td><td>Success and main-branch restrictions</td></tr><tr><td>PublishPipelineArtifact@1</td><td>Publish prepared files</td></tr><tr><td>download: current</td><td>Fetch artifact from this run</td></tr><tr><td>$(Build.ArtifactStagingDirectory)</td><td>Packaging location</td></tr><tr><td>$(Pipeline.Workspace)</td><td>Downloaded artifact workspace</td></tr><tr><td>skip_app_build</td><td>Deploy prebuilt files</td></tr><tr><td>$(SWA_DEPLOYMENT_TOKEN)</td><td>Secret authentication value</td></tr></table></section><section id="s13"><h2>13. One change triggers both pipelines</h2><p>Both tools monitor the same GitHub repository and deploy independently to different destinations.</p><div class="branch"><b>Git push → GitHub repository</b><div><span>GitHub Actions → GitHub Pages</span><span>Azure Pipelines → Azure Static Web Apps</span></div></div><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>git pull --rebase origin main
+# Edit index.html: Application Version 3.0
+git add index.html
+git commit -m &quot;Release version 3.0&quot;
+git push origin main</code></pre><p>Verify both runs and both live URLs. If Azure approvals have been configured, approve deployment first. Azure Repos is an alternative source control service, not a required extra project.</p></section><section id="s14"><h2>14. Continuous delivery, approvals and rollback</h2><h3>Manual production approval (optional extension)</h3><ol><li>Azure DevOps → Pipelines → Environments → New environment → Production (resource None).</li><li>Production → Approvals and checks → Add check → Approvals. Select an authorized approver and configure timeout.</li><li>Replace the CD jobs section with the deployment job below. Retain the existing CD stage condition and dependency.</li><li>Save, run, and authorize the environment if required. Observe CI success followed by approval waiting. Approve to deploy.</li></ol><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>jobs:
+  - deployment: Deploy
+    environment: Production
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - checkout: none
+            - download: none
+            - download: current
+              artifact: website
+            - task: AzureStaticWebApp@0
+              inputs:
+                cwd: &#x27;$(Pipeline.Workspace)/website&#x27;
+                app_location: &#x27;/&#x27;
+                api_location: &#x27;&#x27;
+                output_location: &#x27;&#x27;
+                skip_app_build: true
+                skip_api_build: true
+                azure_static_web_apps_api_token: $(SWA_DEPLOYMENT_TOKEN)</code></pre><h3>Rollback</h3><p>Find the problematic commit and revert it without rewriting shared history. Review conflicts or subsequent changes before pushing. Required approvals still apply.</p><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>git log --oneline
+git revert ACTUAL_COMMIT_SHA
+git push origin main</code></pre><div class="flow"><b>Version 2 working</b><span>→</span><b>Version 3 issue</b><span>→</span><b>Revert commit</b><span>→</span><b>Working content restored</b></div></section><section id="s15"><h2>15. Troubleshooting and security</h2><table><tr><th>Symptom</th><th>Check / resolution</th></tr><tr><td>Workflow not visible</td><td>.github/workflows/*.yml and correct branch</td></tr><tr><td>YAML invalid</td><td>Indentation and schema</td></tr><tr><td>Push rejected</td><td>Synchronize remote changes</td></tr><tr><td>Pages permission error</td><td>Pages source and job token permissions</td></tr><tr><td>No hosted parallelism</td><td>Organization parallel jobs / approved agent</td></tr><tr><td>Azure CI fails</td><td>Inspect failed step; verify files and Node</td></tr><tr><td>CD skipped</td><td>CI failure, PR or non-main branch</td></tr><tr><td>Invalid deployment token</td><td>Use SWA deployment token, verify secret variable</td></tr><tr><td>Run dialog invalid commit</td><td>Leave optional Commit blank for latest main</td></tr><tr><td>Artifact missing</td><td>Check publication and download names</td></tr><tr><td>Site blank</td><td>Check index.html and relative asset paths</td></tr><tr><td>Old site</td><td>Verify run completion, URL and browser refresh</td></tr><tr><td>Approval pending</td><td>Authorized approver must review</td></tr><tr><td>Portal option unavailable</td><td>Check subscription policy, region and permissions</td></tr></table><p>Use public sample code only. Protect production branches, require PR checks and reviews, restrict credentials, and pin third-party actions to reviewed commit SHAs for production. Use real functional and security tests in production. Remove unused Azure lab resources after class.</p></section><section id="s16"><h2>16. Classroom recap and assessment</h2><p>Suggested delivery: foundations and YAML (60 min), website and Git (30 min), GitHub Actions (75 min), Azure DevOps and deployment (90 min), approvals and rollback (45 min), assessment (30 min). Approximately 5.5 hours; provisioning delays may vary.</p><label class="check"><input type="checkbox"> Explain CI vs delivery vs deployment</label><label class="check"><input type="checkbox"> Create and test the three website files</label><label class="check"><input type="checkbox"> Push to GitHub</label><label class="check"><input type="checkbox"> Run hello workflow</label><label class="check"><input type="checkbox"> Deploy via GitHub Pages</label><label class="check"><input type="checkbox"> Demonstrate failed validation and recovery</label><label class="check"><input type="checkbox"> Create Azure organization/project and first pipeline</label><label class="check"><input type="checkbox"> Create Static Web App and secret</label><label class="check"><input type="checkbox"> Validate and save YAML, run latest main</label><label class="check"><input type="checkbox"> Verify both deployments</label><label class="check"><input type="checkbox"> Demonstrate approval and rollback</label><details><summary>What does YAML do?</summary><p>Describes configuration; the pipeline engine executes it.</p></details><details><summary>What is a runner or agent?</summary><p>A machine executing pipeline jobs.</p></details><details><summary>What is an artifact?</summary><p>A generated output passed to deployment or retained for download.</p></details><details><summary>Why checkout?</summary><p>To fetch repository files into the job environment.</p></details><details><summary>Why use a secret variable?</summary><p>To avoid exposing deployment credentials in source code.</p></details><details><summary>What happens when CI fails?</summary><p>Dependent CD normally skips.</p></details><details><summary>Can Azure Pipelines use GitHub?</summary><p>Yes; Azure Repos is optional.</p></details><details><summary>What goes in the Run pipeline Commit field?</summary><p>An actual commit ID if a specific version is needed; otherwise leave blank.</p></details><details><summary>What does skip_app_build do?</summary><p>Tells the deployment task to use already prepared frontend files.</p></details><details><summary>Does node --check test the button?</summary><p>No; it checks JavaScript syntax. Browser testing is separate.</p></details></section><section id="s17"><h2>17. References and lab limitations</h2><p>Official references: <a href="https://docs.github.com/en/actions">GitHub Actions</a> · <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages">GitHub Pages workflows</a> · <a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline">Azure first pipeline</a> · <a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/">Azure YAML schema</a> · <a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-static-web-app-v0">Static Web App task</a> · <a href="https://learn.microsoft.com/en-us/azure/static-web-apps/">Azure Static Web Apps</a> · <a href="https://yaml.org/">YAML specification</a>.</p><p>Portal mockups are illustrative, not screenshots. Pipeline examples have not been executed in your accounts. Hosting choices and organization capacity depend on subscription and permissions. The linked chat was available as relevant recovered excerpts, not a complete verbatim transcript; the operational corrections recovered from it have been integrated.</p></section></main></div><script>async function copyCode(btn){const text=btn.nextElementSibling.textContent;try{await navigator.clipboard.writeText(text)}catch(e){const t=document.createElement("textarea");t.value=text;document.body.append(t);t.select();document.execCommand("copy");t.remove()}btn.textContent="Copied";setTimeout(()=>btn.textContent="Copy",1200)}</script></body></html>
